@@ -1,0 +1,115 @@
+<header class="navbar-shell">
+  <div class="navbar-shell__start">
+    <button
+      type="button"
+      class="navbar-shell__toggle"
+      (click)="layoutService.toggleSidebar()"
+      [attr.aria-label]="layoutService.sidebarCollapsed() ? 'Abrir menú' : 'Cerrar menú'"
+      pTooltip="Menú"
+      tooltipPosition="bottom">
+      <i class="pi pi-bars"></i>
+    </button>
+
+    <div class="navbar-brand" aria-label="Identidad del sistema">
+      <span class="navbar-brand__logo">
+        <img [src]="branding().sidebarLogo" [alt]="branding().productName" />
+      </span>
+
+      <div class="navbar-brand__copy">
+        <strong>{{ branding().productName }}</strong>
+        <span>Módulo {{ branding().moduleLabel }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="navbar-shell__center">
+    <label class="navbar-search" aria-label="Buscar dentro del sistema">
+      <i class="pi pi-search"></i>
+      <input
+        type="text"
+        pInputText
+        placeholder="Buscar módulos, usuarios o acciones..."
+        class="navbar-search__input" />
+    </label>
+  </div>
+
+  <div class="navbar-shell__end">
+    <button
+      type="button"
+      class="navbar-icon-btn"
+      aria-label="Notificaciones"
+      pTooltip="Notificaciones"
+      tooltipPosition="bottom">
+      <i class="pi pi-bell"></i>
+      <span class="navbar-icon-btn__dot"></span>
+    </button>
+
+    <button
+      type="button"
+      class="navbar-icon-btn"
+      aria-label="Ayuda rápida"
+      pTooltip="Ayuda rápida"
+      tooltipPosition="bottom">
+      <i class="pi pi-question-circle"></i>
+    </button>
+
+    <div class="navbar-user-wrap">
+      <button
+        type="button"
+        class="navbar-user"
+        (click)="toggleUserMenu($event)"
+        [attr.aria-expanded]="userMenuOpen()"
+        aria-haspopup="menu"
+        aria-label="Abrir menú de usuario">
+        <div class="navbar-user__meta">
+          <span class="navbar-user__name">{{ displayName() }}</span>
+          <span class="navbar-user__role">{{ displayRole() }}</span>
+        </div>
+
+        <span class="navbar-user__avatar">{{ avatarInitials() }}</span>
+        <i class="pi pi-angle-down navbar-user__chevron" [class.is-open]="userMenuOpen()"></i>
+      </button>
+
+      @if (userMenuOpen()) {
+        <div class="navbar-user-menu" role="menu" (click)="$event.stopPropagation()">
+          <button type="button" class="navbar-user-menu__item" (click)="openPasswordPanel($event)">
+            <i class="pi pi-key"></i>
+            <div>
+              <span>Cambiar contraseña</span>
+              <small>Gestiona tu acceso seguro</small>
+            </div>
+          </button>
+
+          <button type="button" class="navbar-user-menu__item navbar-user-menu__item--danger" (click)="logout($event)">
+            <i class="pi pi-sign-out"></i>
+            <div>
+              <span>Cerrar sesión</span>
+              <small>Salir de manera segura</small>
+            </div>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</header>
+
+@if (passwordPanelOpen()) {
+  <div class="navbar-floating-panel" (click)="$event.stopPropagation()">
+    <div class="navbar-floating-panel__icon">
+      <i class="pi pi-shield"></i>
+    </div>
+
+    <div class="navbar-floating-panel__body">
+      <strong>Cambiar contraseña</strong>
+      <p>
+        La opción ya está integrada en la nueva experiencia visual. Si tu flujo actual aún lo gestiona desde el acceso,
+        puedes volver al inicio de sesión seguro desde aquí.
+      </p>
+
+      <div class="navbar-floating-panel__actions">
+        <button type="button" class="navbar-link-btn" (click)="closePasswordPanel()">Ahora no</button>
+        <button type="button" class="navbar-primary-btn" (click)="goToAccess()">Ir al acceso</button>
+      </div>
+    </div>
+  </div>
+}

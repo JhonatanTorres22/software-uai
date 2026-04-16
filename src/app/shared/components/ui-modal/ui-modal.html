@@ -1,0 +1,24 @@
+<div class="ui-modal flex flex-column h-full">
+
+  <!-- HEADER -->
+  <div class="ui-modal-header sticky top-0 z-2 flex align-items-center justify-content-between px-3 py-2 border-bottom-1 surface-border surface-card">
+    
+    <h3 class="m-0 text-base font-semibold">
+      {{ title }}
+    </h3>
+
+    <ui-icon-button 
+      icon="pi pi-times" 
+      color="danger"
+      (onClick)="close()">
+    </ui-icon-button>
+
+  </div>
+
+  <!-- CONTENT -->
+  <div class="flex-1 min-h-0 overflow-auto px-3 py-3">
+    <ng-container #container></ng-container>
+  </div>
+
+</div>
+

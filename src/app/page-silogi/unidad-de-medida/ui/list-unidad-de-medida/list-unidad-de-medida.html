@@ -1,0 +1,62 @@
+<!-- <pre> {{listUnidadDeMedida() | json}} </pre> -->
+@if (loading()) {
+    <app-ui-loading></app-ui-loading>
+}
+@else {
+    <p-table #dt size="small" [value]="listUnidadDeMedida()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 25]"
+    [globalFilterFields]="['nombre', 'descripcion']" [sortMode]="'single'" [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
+        <ng-template #caption>
+        <div class="flex items-center gap-3">
+
+            <p-tag [value]="listUnidadDeMedida().length + ' unidades de medida'" severity="info" [rounded]="true"
+                class="whitespace-nowrap" icon="pi pi-list" />
+            <div class="flex-1">
+                <p-iconfield iconPosition="left" class="w-full">
+                    <p-inputicon>
+                        <i class="pi pi-search"></i>
+                    </p-inputicon>
+                    <input pInputText type="text" class="w-full"
+                        (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar unidad de medida..." />
+                </p-iconfield>
+            </div>
+
+            <ui-button label="Agregar Unidad de Medida" icon="pi pi-plus" (onClick)="openAddEditUnidadDeMedida(selectUnidadDeMedidaDefault)"></ui-button>
+
+        </div>
+    </ng-template>
+
+        <ng-template #header>
+        <tr>
+            <th pSortableColumn="nombre">
+                Nombre <p-sortIcon field="nombre" />
+            </th>
+            <th pSortableColumn="descripcion">
+                Descripción <p-sortIcon field="descripcion" />
+            </th>
+            <th>Acciones </th>
+        </tr>
+    </ng-template>
+
+    <ng-template #body let-unidadDeMedida>
+        <tr>
+            <td> <span class="text-xs"> {{ unidadDeMedida.nombre }}</span> </td>
+            <td><span class="text-xs">{{ unidadDeMedida.descripcion }}</span></td>
+            <td>
+                <ui-icon-button icon="pi pi-pencil" tooltip="Editar" (onClick)="openAddEditUnidadDeMedida(unidadDeMedida)"></ui-icon-button>
+                <ui-icon-button icon="pi pi-trash" tooltip="Eliminar" color="danger" (onClick)="confirmEliminar(unidadDeMedida)"></ui-icon-button>
+            </td>
+
+        </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="6" class="text-center p-4">
+                <app-ui-card-no-items message="No se encontraron unidades de medida"></app-ui-card-no-items>
+            </td>
+        </tr>
+    </ng-template>
+    </p-table>
+}

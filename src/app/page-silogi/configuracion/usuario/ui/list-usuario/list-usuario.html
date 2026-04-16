@@ -1,0 +1,82 @@
+@if (loading()) {
+    <app-ui-loading></app-ui-loading>
+}
+@else {
+        <!-- Tabla con filtro global activado -->
+    <p-table #dt size="small" [value]="listUsuario()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 25]"
+        [globalFilterFields]="['id', 'apePaterno', 'apMaterno', 'nombres', 'correo', 'nDocumento']"
+        [sortMode]="'single'" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
+
+        <ng-template #caption>
+            <div class="flex items-center gap-3">
+
+                <p-tag [value]="listUsuario().length + ' usuarios'" severity="info" [rounded]="true"
+                    class="whitespace-nowrap" icon="pi pi-list" />
+                <div class="flex-1">
+                    <p-iconfield iconPosition="left" class="w-full">
+                        <p-inputicon>
+                            <i class="pi pi-search"></i>
+                        </p-inputicon>
+                        <input pInputText type="text" class="w-full"
+                            (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Buscar usuario..." />
+                    </p-iconfield>
+                </div>
+
+                <ui-button label="Agregar Usuario" icon="pi pi-plus" (onClick)="openAddEditUsuario(selectUsuarioDefault, AddEditUsuarioComponent)"></ui-button>
+
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="apePaterno">
+                    Ap. Paterno <p-sortIcon field="apePaterno" />
+                </th>
+                <th pSortableColumn="apMaterno">
+                    Ap. Materno <p-sortIcon field="apMaterno" />
+                </th>
+                <th pSortableColumn="nombres">
+                    Nombres <p-sortIcon field="nombres" />
+                </th>
+                <th pSortableColumn="correo">
+                    Correo <p-sortIcon field="correo" />
+                </th>
+                <th pSortableColumn="nDocumento" style="width: 130px">
+                    N° Documento <p-sortIcon field="nDocumento" />
+                </th>
+                <th>Acciones </th>
+            </tr>
+        </ng-template>
+
+        <ng-template #body let-usuario>
+            <tr>
+                <td> <span class="text-xs"> {{ usuario.apePaterno }}</span> </td>
+                <td><span class="text-xs">{{ usuario.apMaterno }}</span></td>
+                <td><span class="text-xs">{{ usuario.nombres }}</span></td>
+                <td><span class="text-xs">{{ usuario.correo | lowercase }}</span></td>
+                <td><span class="text-xs">{{ usuario.nDocumento }}</span></td>
+                <td>
+                    <ui-icon-button icon="pi pi-pencil" tooltip="Editar"
+                        (onClick)="openAddEditUsuario(usuario, AddEditUsuarioComponent)"></ui-icon-button>
+                    <ui-icon-button icon="pi pi-trash" tooltip="Eliminar" color="danger"
+                        (onClick)="confirmarEliminar(usuario)"></ui-icon-button>
+
+                    <ui-icon-button icon="pi pi-users" tooltip="Detalles" color="success"
+                    (onClick)="openAddEditUsuario(usuario, AsignarRolesComponent)"></ui-icon-button>
+                </td>
+
+            </tr>
+        </ng-template>
+
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="6" class="text-center p-4">
+                    <app-ui-card-no-items message="No se encontraron usuarios"></app-ui-card-no-items>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+}

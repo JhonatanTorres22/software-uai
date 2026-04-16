@@ -1,0 +1,27 @@
+<div class="layout-shell">
+  <button
+    type="button"
+    class="layout-backdrop"
+    [class.is-visible]="!layoutService.sidebarCollapsed()"
+    (click)="layoutService.collapseSidebar()"
+    aria-label="Cerrar navegación lateral">
+  </button>
+
+  <app-sidebar
+    class="layout-sidebar"
+    [class.layout-sidebar--collapsed]="layoutService.sidebarCollapsed()" />
+
+  <div
+    class="layout-main-column"
+    [class.layout-main-column--collapsed]="layoutService.sidebarCollapsed()">
+    <app-navbar class="layout-navbar" />
+
+    <main class="layout-main">
+      <div class="layout-main__content page-enter">
+        <router-outlet />
+      </div>
+    </main>
+
+    <app-footer class="layout-footer" />
+  </div>
+</div>

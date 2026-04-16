@@ -1,0 +1,87 @@
+<div class="flex flex-column gap-4">
+
+    <!-- HEADER -->
+    <div class="flex align-items-center gap-3">
+        <p-avatar [label]="rolSeleccionado()?.modulo?.charAt(0) || 'M'" size="large"
+            [style]="{'background-color': '#EBF2FF','color': '#1A56DB'}" />
+
+        <div class="flex flex-column">
+            <span class="text-sm text-500">Sistema</span>
+            <span class="font-semibold text-900">
+                {{ rolSeleccionado()?.modulo }}
+            </span>
+        </div>
+    </div>
+
+    <div class="flex align-items-center gap-3 flex-wrap text-sm">
+
+        <!-- Estado -->
+        <div class="flex align-items-center gap-2 text-green-600 font-medium">
+            <div class="bg-green-500 border-circle" style="width: 8px; height: 8px;"></div>
+            Acceso habilitado
+        </div>
+
+        <span class="text-400">|</span>
+
+        <!-- DNI -->
+        <div class="flex align-items-center gap-1 text-700">
+            <i class="pi pi-id-card text-500"></i>
+            {{ userNameIngresado() }}
+        </div>
+
+        <span class="text-400">|</span>
+
+        <!-- Rol -->
+        <div class="flex align-items-center gap-1 text-700">
+            <i class="pi pi-user text-500"></i>
+            {{ rolSeleccionado()?.rol }}
+        </div>
+
+        <span class="text-400">|</span>
+
+        <!-- Módulo -->
+        <div class="flex align-items-center gap-1 text-700">
+            <i class="pi pi-box text-500"></i>
+            {{ rolSeleccionado()?.modulo }}
+        </div>
+
+    </div>
+
+    <p-divider />
+
+    <!-- TÍTULO -->
+    <div class="text-2xl font-semibold text-center">
+        INICIAR SESIÓN
+    </div>
+
+    <!-- FORM -->
+    <div class="flex flex-column gap-3 pt-2">
+
+        <p-password placeholder="Ingrese su contraseña" [feedback]="false" [toggleMask]="true" class="w-full"
+            [ngModel]="password()"
+            (ngModelChange)="password.set($event ?? '')"
+            inputStyleClass="w-full h-4rem border-round-lg">
+        </p-password>
+
+        @if (authErrorMessage()) {
+        <small class="text-red-500 font-medium">
+            {{ authErrorMessage() }}
+        </small>
+        } @else {
+        <small class="text-500">
+            Ingresa tu contraseña para continuar
+        </small>
+        }
+
+        <div class="flex justify-content-between pt-3">
+            <ui-button label="Volver" icon="pi pi-arrow-left" (onClick)="stepAnterior()">
+            </ui-button>
+
+            <ui-button [label]="loading() ? 'Ingresando...' : 'Ingresar'" icon="pi pi-sign-in"
+                [disabled]="!canSubmit()" (onClick)="ingresar()">
+            </ui-button>
+        </div>
+
+    </div>
+
+</div>

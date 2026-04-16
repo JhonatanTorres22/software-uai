@@ -1,0 +1,118 @@
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(240, 244, 249, 0.85);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-card {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 44px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 580px;
+}
+
+// ── Logo ────────────────────────────────────────────────
+.loading-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--brand-800);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.logo-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+// ── Pulse Grid ──────────────────────────────────────────
+.pulse-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 10px);
+  gap: 7px;
+}
+
+.dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--brand-100);
+  animation: dotPulse 2.1s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { background: var(--brand-100); transform: scale(1); }
+  50%       { background: var(--brand-600); transform: scale(1.35); }
+}
+
+// ── Texto de estado ─────────────────────────────────────
+.loading-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  text-align: center;
+}
+
+.status-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.status-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+// ── Barra de progreso indeterminada ─────────────────────
+.progress-track {
+  width: 100%;
+  height: 7px;
+  background: var(--surface-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 40%;
+  background: var(--brand-600);
+  border-radius: 2px;
+  animation: sweep 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes sweep {
+  0%   { transform: translateX(-100%); width: 40%; }
+  50%  { width: 65%; }
+  100% { transform: translateX(260%); width: 40%; }
+}

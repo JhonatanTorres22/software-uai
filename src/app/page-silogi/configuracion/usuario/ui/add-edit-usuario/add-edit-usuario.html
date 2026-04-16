@@ -1,0 +1,27 @@
+<!-- <pre> {{selectUsuario() | json}} </pre> -->
+<form [formGroup]="formUsuario" class="flex flex-column w-full h-full min-h-0">
+  <div class="flex flex-column gap-3 flex-1 min-h-0 w-full"> 
+    <ui-input formControlName="nombres" label="Nombre" [maxlength]="maxLengthNombre" [minlength]="minLengthNombre"
+    [expReg]="expLockNombre" patternErrorMessage="No se permiten números, espacios innecesarios, ni caracteres especiales"></ui-input>
+    <ui-input formControlName="apPaterno" label="Apellido Paterno" [maxlength]="maxLengthNombre" [minlength]="minLengthNombre"
+    [expReg]="expLockNombre" patternErrorMessage="No se permiten números, espacios innecesarios, ni caracteres especiales"></ui-input>
+    <ui-input formControlName="apMaterno" label="Apellido Materno" [maxlength]="maxLengthNombre" [minlength]="minLengthNombre" 
+    [expReg]="expLockNombre" patternErrorMessage="No se permiten números, espacios innecesarios, ni caracteres especiales"></ui-input>
+    <ui-input formControlName="nDocumento" label="Número de Documento" [maxlength]="maxLengthDocumento" [minlength]="minLengthDocumento" 
+    [expReg]="expLockDocumento" patternErrorMessage="No se permiten letras, ni caracteres especiales"></ui-input>
+    <ui-input formControlName="correo" label="Correo"></ui-input>
+
+  </div>
+
+
+  <!-- campos -->
+  <!-- <input pInputText formControlName="nombre" /> -->
+  
+  <!-- footer -->
+  <ui-modal-footer
+  [label]="selectUsuario().id !== 0 ? 'Actualizar Usuario' : 'Crear Usuario'"
+  [disabled]="formUsuario.invalid"
+  (cancel)="cancelar()"
+  (submit)="guardar()">
+</ui-modal-footer>
+</form>

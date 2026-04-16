@@ -1,0 +1,22 @@
+/* 🔒 DISABLED GLOBAL BUTTON */
+button:disabled,
+button[disabled],
+.p-button:disabled {
+
+  background: #e5e7eb !important; /* gris suave */
+  color: #9ca3af !important;      /* texto apagado */
+  border: 1px solid var(--brand-200) !important;
+
+  cursor: not-allowed !important;
+  pointer-events: none !important; /* 🚫 elimina hover */
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* 🚫 EVITAR HOVER COMPLETAMENTE */
+button:disabled:hover,
+.p-button:disabled:hover {
+  background: #e5e7eb !important;
+  color: #9ca3af !important;
+  border-color: var(--brand-200) !important;
+}

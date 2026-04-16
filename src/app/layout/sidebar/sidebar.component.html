@@ -1,0 +1,61 @@
+<aside class="sidebar-shell" [class.sidebar-shell--collapsed]="layoutService.sidebarCollapsed()">
+  <div class="sidebar-shell__inner">
+    <div class="sidebar-profile" [class.sidebar-profile--collapsed]="layoutService.sidebarCollapsed()">
+      <div class="sidebar-profile__avatar" [attr.aria-label]="displayName()">{{ avatarInitials() }}</div>
+
+      @if (!layoutService.sidebarCollapsed()) {
+        <div class="sidebar-profile__meta">
+          <span class="sidebar-profile__name">{{ displayName() }}</span>
+          <span class="sidebar-profile__role">
+            <i class="pi pi-verified"></i>
+            {{ displayRole() }}
+          </span>
+        </div>
+      }
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Navegación principal">
+      @for (item of navItems(); track item.route || item.label || $index) {
+        <ng-container>
+          <div
+            class="sidebar-item"
+            [class.sidebar-item--logout]="isLogoutItem(item)"
+            [routerLink]="isLogoutItem(item) || hasChildren(item) ? null : item.route"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: false }"
+            [pTooltip]="layoutService.sidebarCollapsed() ? item.label : ''"
+            tooltipPosition="right"
+            (click)="onNavItemClick(item, $event)">
+            <span class="sidebar-item__icon">
+              <i [class]="item.icon"></i>
+            </span>
+
+            @if (!layoutService.sidebarCollapsed()) {
+              <span class="sidebar-item__label">{{ item.label }}</span>
+
+              @if (hasChildren(item)) {
+                <i class="pi sidebar-item__chevron" [ngClass]="isExpanded(item) ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+              }
+            }
+          </div>
+
+          @if (!layoutService.sidebarCollapsed() && hasChildren(item) && isExpanded(item)) {
+            <div class="sidebar-submenu">
+              @for (child of item.items ?? []; track child.route || child.label || $index) {
+                <div
+                  class="sidebar-submenu__item"
+                  [routerLink]="child.route"
+                  routerLinkActive="is-active"
+                  [routerLinkActiveOptions]="{ exact: false }"
+                  (click)="handleLeafItemClick()">
+                  <i [class]="child.icon"></i>
+                  <span>{{ child.label }}</span>
+                </div>
+              }
+            </div>
+          }
+        </ng-container>
+      }
+    </nav>
+  </div>
+</aside>

@@ -1,0 +1,58 @@
+@if (loading()) {
+<app-ui-loading message="Cargando módulos..." />
+} @else {
+<div class="flex flex-column gap-4">
+
+    <div class="text-center">
+        <span class="text-2xl font-bold">
+            Selecciona el rol con el que deseas ingresar
+        </span>
+    </div>
+
+    @if (listModulos().length === 0) {
+    <app-ui-card-no-items [message]="authErrorMessage() || `No se encontraron roles disponibles para el usuario ${userNameIngresado()}`"
+        [showButton]="true" buttonText="Volver" buttonIcon="pi pi-arrow-left" (onClick)="volver()">
+    </app-ui-card-no-items>
+    }
+    @else {
+
+    <div class="flex align-items-center gap-3 p-2 bg-green-50 border-round-lg border-1 border-green-200">
+        <div class="flex align-items-center justify-content-center border-circle bg-green-100"
+            style="width: 30px; height: 30px; flex-shrink: 0;">
+            <i class="pi pi-check text-green-600 text-lg"></i>
+        </div>
+        <div class="flex flex-column gap-1">
+            <span class="text-sm font-bold text-green-600">Usuario encontrado</span>
+            <span class="font-bold text-sm text-green-700">{{ userNameIngresado() }}</span>
+        </div>
+    </div>
+
+    <div class="flex flex-column gap-3 overflow-auto pr-2" style="max-height: 400px;">
+        @for (modulo of listModulos(); track $index) {
+        <p-fieldset [legend]="modulo.nombre" [toggleable]="true" [collapsed]="!isOpen($index)"
+            (onBeforeToggle)="toggle($index)">
+            <div class="flex flex-wrap gap-2 pt-2">
+                @for (rol of modulo.roles; track $index) {
+                <span (click)="seleccionarRol(modulo, rol); continuar()"
+                    class="px-3 py-2 border-round-xl text-sm cursor-pointer transition-all transition-duration-150"
+                    [ngClass]="{
+                        'bg-blue-600 text-white': rolSeleccionado()?.rol === rol.nombre,
+                        'bg-blue-100 text-blue-700 hover:bg-blue-200': rolSeleccionado()?.rol !== rol.nombre
+                      }">
+                    {{ rol.nombre }}
+                </span>
+                }
+            </div>
+        </p-fieldset>
+        }
+    </div>
+
+    <div class="flex justify-content-start">
+        <ui-button label="Volver" icon="pi pi-arrow-left" (onClick)="volver()"></ui-button>
+    </div>
+    }
+
+
+</div>
+
+}

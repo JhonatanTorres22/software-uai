@@ -1,0 +1,15 @@
+<form [formGroup]="formMarca">
+    <div class="flex flex-column gap-4 flex-1 min-h-0 w-full">
+        <ui-input label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre" [minlength]="minLengthNombre"
+            [expReg]="expLockNombre" [patternErrorMessage]="'No debe incluir espacios al final de la palabra'">
+        </ui-input>
+
+        <ui-input label="Descripción" formControlName="descripcion" [maxlength]="maxLengthDescripcion"
+            [minlength]="minLengthDescripcion" [expReg]="expLockDescripcion"
+            [patternErrorMessage]="'No debe incluir espacios al final de la palabra'">
+        </ui-input>
+    </div>
+
+    <ui-modal-footer [label]="selectMarca().idMarca !== 0 ? 'Actualizar Marca' : 'Crear Marca'"
+        [disabled]="formMarca.invalid" (cancel)="cancelar()" (submit)="guardar()"></ui-modal-footer>
+</form>

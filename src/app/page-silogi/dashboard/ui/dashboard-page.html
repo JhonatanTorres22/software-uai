@@ -1,0 +1,145 @@
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Dashboard General</h1>
+    <p class="page-subtitle">Resumen del negocio — Marzo 2025</p>
+  </div>
+  <div class="header-actions">
+    <button pButton label="Filtrar periodo" icon="pi pi-calendar"
+      class="p-button-outlined" severity="secondary"></button>
+    <button pButton label="Nueva oportunidad" icon="pi pi-plus"
+      class="p-button-primary"></button>
+  </div>
+</div>
+
+<div class="metrics-grid">
+  <div class="metric-card" *ngFor="let m of metrics">
+    <div class="metric-icon-wrap" [ngClass]="m.iconClass">
+      <i [class]="m.icon"></i>
+    </div>
+    <div class="metric-label">{{ m.label }}</div>
+    <div class="metric-value">{{ m.value }}</div>
+    <div class="metric-delta" [ngClass]="m.deltaType === 'up' ? 'delta-up' : 'delta-dn'">
+      <i [class]="m.deltaType === 'up' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+      {{ m.delta }}
+    </div>
+  </div>
+</div>
+
+<div class="grid-row two-col mb-4">
+
+  <div class="erp-card">
+    <div class="erp-card-header">
+      <span class="erp-card-title">Ingresos mensuales</span>
+      <a class="erp-card-link">Ver reporte completo <i class="pi pi-arrow-right"></i></a>
+    </div>
+    <div class="erp-card-body">
+      <div class="chart-meta">
+        <span class="chart-range">Ene – Dic 2025</span>
+        <span class="chart-total">Total: S/. 2.14M</span>
+      </div>
+      <div class="bar-chart">
+        <div
+          *ngFor="let h of chartBars; let i = index"
+          class="bar"
+          [style.height.%]="h"
+          [class.bar-active]="i === 9"
+        ></div>
+      </div>
+      <div class="chart-labels">
+        <span *ngFor="let m of chartMonths; let i = index"
+          [class.label-active]="i === 9">{{ m }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="erp-card">
+    <div class="erp-card-header">
+      <span class="erp-card-title">Actividad reciente</span>
+      <a class="erp-card-link">Ver todo <i class="pi pi-arrow-right"></i></a>
+    </div>
+    <div class="erp-card-body activity-body">
+      <div class="activity-item" *ngFor="let a of activities">
+        <div class="activity-dot" [ngClass]="a.dotClass"></div>
+        <div class="activity-content">
+          <div class="activity-text">
+            {{ a.text }}
+            <strong *ngIf="a.entity"> {{ a.entity }}</strong>
+          </div>
+          <div class="activity-time">{{ a.time }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="erp-card mb-4">
+  <div class="erp-card-header">
+    <span class="erp-card-title">Pipeline de ventas</span>
+    <a class="erp-card-link">Gestionar pipeline <i class="pi pi-arrow-right"></i></a>
+  </div>
+  <div class="erp-card-body p-0">
+    <div class="pipeline">
+      <div class="pipeline-stage" *ngFor="let stage of pipeline; let i = index">
+        <div class="stage-header" [ngClass]="stage.colorClass">
+          <span class="stage-label">{{ stage.label }}</span>
+          <span class="stage-count">{{ stage.count }}</span>
+        </div>
+        <div class="stage-body">
+          <div class="deal-card" *ngFor="let deal of stage.deals">
+            <div class="deal-name">{{ deal.name }}</div>
+            <div class="deal-company">{{ deal.company }}</div>
+            <div class="deal-value">{{ deal.value }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="erp-card">
+  <div class="erp-card-header">
+    <span class="erp-card-title">Últimas oportunidades</span>
+    <a class="erp-card-link">Ver todas <i class="pi pi-arrow-right"></i></a>
+  </div>
+  <div class="erp-card-body p-0">
+    <p-table [value]="deals" [tableStyle]="{'min-width': '60rem'}" styleClass="p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Cliente</th>
+          <th>Oportunidad</th>
+          <th>Responsable</th>
+          <th>Valor</th>
+          <th>Fecha cierre</th>
+          <th>Estado</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-deal>
+        <tr>
+          <td>
+            <div class="client-cell">
+              <p-avatar [label]="getInitials(deal.cliente)" shape="circle" size="normal" styleClass="client-avatar" />
+              <strong>{{ deal.cliente }}</strong>
+            </div>
+          </td>
+          <td>{{ deal.oportunidad }}</td>
+          <td>
+            <div class="responsable-cell">
+              <p-avatar [label]="getInitials(deal.responsable)" shape="circle" styleClass="resp-avatar"/>
+              {{ deal.responsable }}
+            </div>
+          </td>
+          <td><strong class="deal-val-text">{{ deal.valor }}</strong></td>
+          <td class="text-muted">{{ deal.fechaCierre }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusClass(deal.estado)">
+              {{ deal.estado }}
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<span>BIENVENIDO A SILOGI </span>

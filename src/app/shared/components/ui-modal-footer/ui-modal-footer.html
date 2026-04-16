@@ -1,0 +1,15 @@
+<div class="ui-modal-footer mt-auto flex justify-content-end gap-2 px-3 py-2 border-top-1 surface-border surface-card">
+
+  <ui-button 
+    label="Cancelar"
+    color="secondary"
+    (onClick)="cancel.emit()">
+  </ui-button>
+
+  <ui-button 
+    [label]="label()"
+    color="primary"
+    [disabled]="disabled()"
+    (onClick)="submit.emit()">
+  </ui-button>
+</div>

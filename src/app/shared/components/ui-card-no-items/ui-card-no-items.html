@@ -1,0 +1,21 @@
+<section class="empty-card" role="status" aria-live="polite">
+  <div class="empty-card__icon-wrapper" aria-hidden="true">
+    <i class="pi pi-inbox empty-card__icon"></i>
+  </div>
+
+  <p class="empty-card__message">
+    {{ message() }}
+  </p>
+
+  @if (showButton()) {
+    <div class="empty-card__action">
+      <ui-button
+        [label]="buttonText()"
+        [icon]="buttonIcon()"
+        [classButton]="'w-full sm:w-auto px-4'"
+        color="primary"
+        (onClick)="onAction()"
+      />
+    </div>
+  }
+</section>

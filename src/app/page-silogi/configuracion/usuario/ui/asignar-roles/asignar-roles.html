@@ -1,0 +1,88 @@
+<div class="flex flex-column h-full min-h-0 w-full">
+
+    <!-- HEADER -->
+    <!-- <div class="px-3 py-2 border-bottom-1 surface-border bg-surface-ground">
+        <div class="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-2">
+            <div class="flex flex-column gap-1">
+                <span class="text-sm text-500">Usuario seleccionado</span>
+                <span class="font-semibold text-base">
+                    {{ selectUsuario().nombres }} {{ selectUsuario().apePaterno }} {{ selectUsuario().apMaterno }}
+                </span>
+            </div>
+
+            <div class="flex align-items-center gap-2">
+                <span class="text-sm text-500">Permisos asignados:</span>
+                <span class="font-semibold text-base">{{ permisosSeleccionados().length }}</span>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- CONTENT -->
+    <div class="flex-1 min-h-0 px-3 py-3 overflow-hidden">
+
+        <!-- 🔥 SCROLL SOLO AQUÍ -->
+        <div class="h-full overflow-auto">
+
+            @if (loading()) {
+            <app-ui-loading></app-ui-loading>
+            }
+
+            @if (!loading()) {
+            @if (error()) {
+            <div class="p-2 border-1 border-red-200 border-round bg-red-50 text-red-600 text-sm mb-3">
+                {{ error() }}
+            </div>
+            }
+
+            @if (modulos().length === 0 && !error()) {
+            <div class="p-2 border-1 surface-border border-round text-600 text-sm">
+                No hay permisos disponibles para mostrar.
+            </div>
+            }
+
+            <div class="flex flex-column gap-3">
+                @for (modulo of modulos(); track modulo.nombreModulo) {
+                <p-fieldset [legend]="modulo.nombreModulo" [toggleable]="true" styleClass="w-full">
+                    <div class="flex flex-column gap-3">
+                        @for (rol of modulo.roles; track rol.nombreRol) {
+                        <p-fieldset [legend]="rol.nombreRol" [toggleable]="true" styleClass="w-full">
+                            <div class="flex flex-column gap-2">
+                                <span class="text-sm text-500">{{ rol.descripcionRol }}</span>
+
+                                <div class="grid">
+                                    @for (permiso of rol.permisos; track permiso.idPermiso) {
+                                    <div class="col-12 md:col-6">
+                                        <div
+                                            class="flex align-items-center gap-2 border-1 surface-border border-round p-2 h-full hover:bg-surface-hover cursor-pointer">
+                                            <p-checkbox [binary]="true" [inputId]="'permiso-' + permiso.idPermiso"
+                                                [ngModel]="isPermisoSeleccionado(permiso.idPermiso)"
+                                                [disabled]="loading()" (onChange)="togglePermiso(permiso.idPermiso)">
+                                            </p-checkbox>
+
+                                            <label [for]="'permiso-' + permiso.idPermiso"
+                                                class="text-sm flex-1 cursor-pointer m-0">
+                                                {{ permiso.descripcionPermiso }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+
+                            </div>
+                        </p-fieldset>
+                        }
+                    </div>
+                </p-fieldset>
+                }
+            </div>
+            }
+
+        </div>
+    </div>
+
+    <!-- ✅ FOOTER (FIJO ABAJO) -->
+    <ui-modal-footer [label]="hayPendientes() ? 'Guardar cambios' : 'Cerrar'" [disabled]="loading() || !hayPendientes()"
+        (cancel)="cerrar()" (submit)="hayPendientes() ? guardar() : cerrar()">
+    </ui-modal-footer>
+
+</div>
