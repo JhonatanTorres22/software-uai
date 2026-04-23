@@ -20,6 +20,7 @@ export class AuthenticatedSignal {
   private readonly storage = inject(AuthenticatedStorageService);
 
   readonly userNameIngresado = signal<string>('');
+  readonly correoIngresado = signal<string>('');
   readonly passwordIngresado = signal<string>('');
   readonly role = signal<string>('');
   readonly rolSeleccionado = signal<AuthenticatedRoleSelection | null>(this.storage.getRoleSelection());
@@ -102,6 +103,7 @@ export class AuthenticatedSignal {
   clearAllState(): void {
     this.clearAccessState();
     this.userNameIngresado.set('');
+    this.correoIngresado.set('');
     this.resetRolesState();
     this.step.set(1);
     this.storage.clearAll();

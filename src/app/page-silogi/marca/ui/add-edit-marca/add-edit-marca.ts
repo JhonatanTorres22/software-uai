@@ -10,11 +10,10 @@ import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MarcaValidation } from '../../domain/validation/marca.validation';
 import { UiInputComponent } from '@/shared/components/ui-input/ui-input.component';
-import { UiModalFooter } from "@/shared/components/ui-modal-footer/ui-modal-footer";
 
 @Component({
   selector: 'app-add-edit-marca',
-  imports: [ReactiveFormsModule, UiInputComponent, UiModalFooter, FormsModule],
+  imports: [ReactiveFormsModule, UiInputComponent, FormsModule],
   templateUrl: './add-edit-marca.html',
   styleUrl: './add-edit-marca.scss',
 })
@@ -47,6 +46,14 @@ export class AddEditMarca implements OnInit {
 
   ngOnInit(): void {
     this.selectMarca().idMarca !== 0 ? this.patchValue() : null;
+  }
+
+  get modalPrimaryLabel(): string {
+    return this.selectMarca().idMarca !== 0 ? 'Actualizar Marca' : 'Crear Marca';
+  }
+
+  get modalPrimaryDisabled(): boolean {
+    return this.formMarca.invalid;
   }
 
   guardar() {

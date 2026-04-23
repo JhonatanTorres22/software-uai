@@ -8,13 +8,12 @@ import { NotificationService } from '@/shared/services/notification.service';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { UiModalFooter } from "@/shared/components/ui-modal-footer/ui-modal-footer";
 import { CategoriaValidation } from '@/page-silogi/categoria/domain/validators/categoria.validator';
 import { UiInputComponent } from '@/shared/components/ui-input/ui-input.component';
 
 @Component({
   selector: 'app-add-edit-unidad-de-medida',
-  imports: [FormsModule, ReactiveFormsModule, UiModalFooter, UiInputComponent],
+  imports: [FormsModule, ReactiveFormsModule, UiInputComponent],
   templateUrl: './add-edit-unidad-de-medida.html',
   styleUrl: './add-edit-unidad-de-medida.scss',
 })
@@ -49,6 +48,16 @@ export class AddEditUnidadDeMedida implements OnInit {
 
   ngOnInit(): void {
     this.selectUnidadDeMedida().idUnidadDeMedida !== 0 ? this.patchValue() : ''
+  }
+
+  get modalPrimaryLabel(): string {
+    return this.selectUnidadDeMedida().idUnidadDeMedida !== 0
+      ? 'Actualizar Unidad de Medida'
+      : 'Crear Unidad de Medida';
+  }
+
+  get modalPrimaryDisabled(): boolean {
+    return this.formUnidadDeMedida.invalid;
   }
 
   guardar() {

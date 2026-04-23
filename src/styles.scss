@@ -108,13 +108,20 @@ body {
   box-shadow: 0 0 0 2px rgba(55, 138, 221, 0.15) !important;
 }
 
-/* SOLO ESTE MODAL */
+/* ─────────────────────────────
+   ROOT DIALOG
+───────────────────────────── */
 .ui-modal-wrapper.p-dialog {
   max-width: 96vw !important;
   max-height: 85vh !important;
-  overflow: hidden !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  overflow: hidden !important; /* 🔥 evita scroll externo */
 }
 
+/* MAXIMIZADO */
 .ui-modal-wrapper.p-dialog.p-dialog-maximized {
   width: 100vw !important;
   max-width: 100vw !important;
@@ -124,59 +131,48 @@ body {
   left: 0 !important;
 }
 
-/* HEADER PRIMENG INVISIBLE PERO ACTIVO SOLO EN ESTE MODAL */
-.ui-modal-wrapper.p-dialog .p-dialog-header {
+/* ─────────────────────────────
+   HEADER INVISIBLE (drag)
+───────────────────────────── */
+.ui-modal-wrapper .p-dialog-header {
   background: transparent !important;
-  border: 0 !important;
-  color: var(--text-primary) !important;
+  border: none !important;
   padding: 0 !important;
-  min-height: 0 !important;
+
   height: 0 !important;
+  min-height: 0 !important;
+
+  overflow: hidden !important;
   cursor: move !important;
-  position: relative !important;
-  overflow: visible !important;
 }
 
-.ui-modal-wrapper.p-dialog .p-dialog-title {
+.ui-modal-wrapper .p-dialog-title {
   display: none !important;
 }
 
-.ui-modal-wrapper.p-dialog .p-dialog-header-actions {
-  display: flex !important;
+/* botones de maximizar (si usas) */
+.ui-modal-wrapper .p-dialog-header-actions {
   position: absolute !important;
   right: 3.25rem !important;
   top: 0.25rem !important;
   z-index: 3 !important;
 }
 
-.ui-modal-wrapper.p-dialog .p-dialog-header-maximize-button {
-  color: var(--text-secondary) !important;
-}
-
-.ui-modal-wrapper.p-dialog .p-dialog-header-maximize-button:hover {
-  background: var(--surface-hover) !important;
-  color: var(--brand-800) !important;
-}
-
-/* CONTENT SOLO DE ESTE MODAL */
-.ui-modal-wrapper.p-dialog .p-dialog-content {
-  padding: 0 !important;
-  margin: 0 !important;
-  overflow: hidden !important;
-}
-
-/* FIX EXTRA SOLO ESTE MODAL */
-.ui-modal-wrapper.p-dialog .p-dialog-content > div {
+/* ─────────────────────────────
+   CONTENT PRIME (SIN SCROLL)
+───────────────────────────── */
+.ui-modal-wrapper .p-dialog-content {
   display: flex !important;
   flex-direction: column !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  margin-top: 0 !important;
-  padding-top: 0 !important;
+
+  height: 100% !important;
+  max-height: 100% !important;
+
+  padding: 0 !important;
+
+  overflow: hidden !important; /* 🔥 CLAVE: elimina doble scroll */
 }
 
-/* Card */
 .p-card {
   border-radius: var(--radius-lg) !important;
   border: 1px solid var(--surface-border) !important;

@@ -1,0 +1,71 @@
+<!-- Sin categoría seleccionada -->
+ @if (selectCategoria().id == 0) {
+   <p-card styleClass="text-center p-4">
+     <div class="flex flex-column align-items-center gap-3 py-4">
+       <i class="pi pi-arrow-up text-4xl text-300"></i>
+       <p class="text-500 m-0">Selecciona una categoría para ver sus subcategorías</p>
+     </div>
+   </p-card>
+ }
+<!-- Con categoría seleccionada -->
+@if (selectCategoria().id !== 0) {
+  <ng-container>
+
+    <div class="flex align-items-center justify-content-between mb-3">
+      <div class="flex align-items-center gap-2">
+        <i class="pi pi-folder-open text-blue-800"></i>
+        <span class="font-bold text-lg text-900">{{ selectCategoria().nombre }}</span>
+        <p-badge [value]="selectCategoria().subcategorias.length.toString()" severity="secondary"></p-badge>
+      </div>
+      <ui-button label="Agregar Subcategoría" icon="pi pi-plus" (onClick)="openAddEditSubcategoria(selectSubCategoriaDefault)"></ui-button>
+    </div>
+  
+    <!-- Sin subcategorías -->
+     @if (selectCategoria().subcategorias.length === 0) {
+       <p-card styleClass="text-center">
+         <div class="py-4 text-500">
+           <i class="pi pi-inbox text-3xl mb-2 block text-300"></i>
+           Sin subcategorías aún
+         </div>
+       </p-card>
+     }
+  
+     @if (selectCategoria().subcategorias.length> 0) {
+       <p-dataView *ngIf="selectCategoria().subcategorias.length > 0" [value]="selectCategoria().subcategorias">
+         <ng-template let-items #list>
+           <div class="flex flex-column gap-2">
+            @for (sub of items; track $index) {
+              <div class="flex align-items-center justify-content-between p-3 border-1 border-round surface-border hover:bg-blue-100 cursor-pointer transition-colors transition-duration-150"
+                [class.border-primary]="subcategoriaActivaId === sub.id"
+                [class.surface-50]="subcategoriaActivaId === sub.id">
+      
+                <!-- Info subcategoría -->
+                <div class="flex align-items-center gap-3 flex-1 min-w-0">
+                  <div class="w-2rem h-2rem border-circle bg-blue-100 flex align-items-center justify-content-center flex-shrink-0">
+                    <i class="pi pi-file text-blue-500 text-sm"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="font-semibold text-900 white-space-nowrap overflow-hidden text-overflow-ellipsis">
+                      {{ sub.nombre }}
+                    </div>
+                    <div class="text-500 text-sm white-space-nowrap overflow-hidden text-overflow-ellipsis">
+                      {{ sub.descripcion }}
+                    </div>
+                  </div>
+                </div>
+      
+                <!-- Acciones -->
+                <div class="flex gap-1 flex-shrink-0 ml-2">
+                  <ui-icon-button icon="pi pi-eye" color="success" tooltip="Ver detalle" (onClick)="ver(sub)"></ui-icon-button>
+                  <ui-icon-button icon="pi pi-pencil" color="info" tooltip="Editar"></ui-icon-button>
+                  <ui-icon-button icon="pi pi-trash" color="danger" tooltip="Eliminar"></ui-icon-button>
+                </div>
+              </div>
+            }
+           </div>
+         </ng-template>
+       </p-dataView>
+     }
+  </ng-container>
+}
+

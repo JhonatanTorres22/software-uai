@@ -5,7 +5,6 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { NotificationService } from '@/shared/services/notification.service';
 import { ActualizarUsuario, CrearUsuario, ListarUsuario } from '../../domain/entities/usuario.entity';
 import { UsuarioSignal } from '../../domain/signals/usuario.signal';
-import { UiModalFooter } from "@/shared/components/ui-modal-footer/ui-modal-footer";
 import { UiInputComponent } from "@/shared/components/ui-input/ui-input.component";
 import { UsuarioValidator } from '../../domain/validators/usuario.validator';
 import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
@@ -15,7 +14,7 @@ import { EditarUsuarioUseCase } from '../../application/use-cases/usuarios/edita
 @Component({
   selector: 'app-add-edit-usuario',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, UiModalFooter, UiInputComponent],
+  imports: [CommonModule, ReactiveFormsModule, UiInputComponent],
   templateUrl: './add-edit-usuario.html',
   styleUrl: './add-edit-usuario.scss',
 })
@@ -54,6 +53,14 @@ export class AddEditUsuario implements OnInit {
 
   ngOnInit(): void {
     this.selectUsuario().id !== 0 ? this.patchValue() : ''
+  }
+
+  get modalPrimaryLabel(): string {
+    return this.selectUsuario().id !== 0 ? 'Actualizar Usuario' : 'Crear Usuario';
+  }
+
+  get modalPrimaryDisabled(): boolean {
+    return this.formUsuario.invalid;
   }
   patchValue() {
 

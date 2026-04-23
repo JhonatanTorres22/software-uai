@@ -1,0 +1,109 @@
+<p-card styleClass="h-full">
+
+  <!-- Header -->
+  <ng-template #header>
+    <div class="flex align-items-center justify-content-between px-3 pt-3">
+      <div class="gap-4 flex align-items-center">
+        <span class="font-bold text-lg text-900">
+          {{ selectSubCategoria().nombre }}
+        </span>
+
+        <p-tag [value]="'S/ ' + (selectSubCategoria().costo).toFixed(2)" severity="success"
+          styleClass="white-space-nowrap text-sm font-semibold">
+        </p-tag>
+      </div>
+
+      <ui-icon-button icon="pi pi-times" pTooltip="Cerrar" color="danger" (onClick)="cerrar.emit()">
+      </ui-icon-button>
+    </div>
+  </ng-template>
+
+  <!-- TIMELINE -->
+  <div class="mb-3">
+
+    <div class="flex align-items-center gap-2 mb-3">
+      <i class="pi pi-clock text-blue-600"></i>
+      <span class="font-bold">Tiempos Máximos por Área</span>
+    </div>
+
+    <p-timeline [value]="selectSubCategoria().areas" layout="horizontal" align="top" styleClass="custom-timeline">
+
+      <!-- MARKER -->
+      <ng-template pTemplate="marker" let-i="index">
+        <div class="custom-marker">
+          <i class="pi pi-file-pdf"></i>
+        </div>
+      </ng-template>
+
+      <!-- CONTENT -->
+      <ng-template pTemplate="content" let-area>
+        <div class="text-center mt-2">
+          <div class="step-title">
+            {{ area.nombre }}
+          </div>
+          <small class="step-sub">
+            {{ area.sla }} {{ area.sla === 1 ? 'día' : 'días' }}
+          </small>
+        </div>
+      </ng-template>
+
+    </p-timeline>
+
+  </div>
+
+  <p-divider styleClass="my-4"></p-divider>
+
+  <!-- DOCUMENTOS -->
+  <div class="mb-2">
+
+    @if (selectSubCategoria().requiereDocumentos) {
+
+    <div class="surface-50 border-round border-1 surface-border p-3">
+
+      <div class="flex align-items-center justify-content-between mb-3">
+        <span class="font-bold text-base">Documentos Adjuntos</span>
+
+        <p-tag [value]="selectSubCategoria().documentos.length + ' documentos'" severity="info" icon="pi pi-list">
+        </p-tag>
+      </div>
+
+      <div class="flex flex-column gap-2">
+
+        @for (doc of selectSubCategoria().documentos; track $index) {
+
+        <div class="flex align-items-center justify-content-between p-2 border-round hover:surface-100">
+
+          <div class="flex align-items-center gap-2">
+            <i class="pi pi-file text-500"></i>
+
+            <div class="flex flex-column">
+              <span class="font-bold">{{ doc.nombre }}</span>
+
+              @if (!doc.requerido) {
+              <small class="text-400">Opcional</small>
+              }
+            </div>
+          </div>
+
+          <p-tag [value]="doc.tipo" [severity]="doc.tipo === 'PDF' ? 'danger' : 'info'">
+          </p-tag>
+
+        </div>
+
+        }
+
+      </div>
+    </div>
+    }
+
+  </div>
+
+  <!-- Footer -->
+  <ng-template #footer>
+    <div class="flex gap-2 justify-content-end pt-2">
+      <ui-button label="Volver" icon="pi pi-arrow-left" (onClick)="cerrar.emit()">
+      </ui-button>
+    </div>
+  </ng-template>
+
+</p-card>

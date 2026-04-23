@@ -10,21 +10,30 @@
     </div>
 
     @if (listModulos().length === 0) {
-    <app-ui-card-no-items [message]="authErrorMessage() || `No se encontraron roles disponibles para el usuario ${userNameIngresado()}`"
+    <app-ui-card-no-items
+        [message]="authErrorMessage() || `No se encontraron roles disponibles para el usuario ${userNameIngresado()}`"
         [showButton]="true" buttonText="Volver" buttonIcon="pi pi-arrow-left" (onClick)="volver()">
     </app-ui-card-no-items>
     }
     @else {
 
-    <div class="flex align-items-center gap-3 p-2 bg-green-50 border-round-lg border-1 border-green-200">
-        <div class="flex align-items-center justify-content-center border-circle bg-green-100"
-            style="width: 30px; height: 30px; flex-shrink: 0;">
-            <i class="pi pi-check text-green-600 text-lg"></i>
+    <div class="flex gap-3 p-2 border-round-xl align-items-start border-1 border-blue-200 bg-blue-100">
+        <!-- Icono -->
+        <div class="flex align-items-center justify-content-center border-circle m-2">
+            <i class="pi pi-info-circle text-blue-600 text-xl"></i>
         </div>
+
+        <!-- Texto -->
         <div class="flex flex-column gap-1">
-            <span class="text-sm font-bold text-green-600">Usuario encontrado</span>
-            <span class="font-bold text-sm text-green-700">{{ userNameIngresado() }}</span>
+            <span class="text-sm text-600 line-height-2">
+                Al seleccionar un rol, se enviará un código de verificación a tu correo
+                <span class="font-semibold text-blue-700">
+                    {{ correoIngresado() }}
+                </span>
+                para confirmar tu identidad.
+            </span>
         </div>
+
     </div>
 
     <div class="flex flex-column gap-3 overflow-auto pr-2" style="max-height: 400px;">

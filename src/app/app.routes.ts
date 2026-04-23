@@ -12,6 +12,11 @@ const octdaChildren: Routes = [
     loadComponent: () =>
       import('./pages-octda/dashboard/dashboard.component').then((m) => m.DashboardComponent)
   },
+    {
+    path: 'categoria',
+    loadComponent: () =>
+      import('./pages-octda/categoria/ui/page-categoria').then((m) => m.PageCategoria)
+  },
   {
     path: '**',
     loadComponent: () =>
@@ -42,7 +47,7 @@ const silogiChildren: Routes = [
     loadComponent: () =>
       import('./page-silogi/marca/ui/page-marca').then((m) => m.PageMarca)
   },
-    {
+  {
     path: 'unidad-medida',
     loadComponent: () =>
       import('./page-silogi/unidad-de-medida/ui/page-unidad-de-medida').then((m) => m.PageUnidadDeMedida)
@@ -70,7 +75,7 @@ export const routes: Routes = [
     path: 'octda',
     component: LayoutComponent,
     canActivate: [authGuard],
-    canActivateChild: [permissionGuard],
+    // canActivateChild: [permissionGuard],
     children: octdaChildren
   },
   {

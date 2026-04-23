@@ -1,0 +1,298 @@
+<!-- <div class="grid flex flex-column gap-4 w-full"> -->
+    <div class="col-12">
+        <p-card>
+            <ng-template #header>
+                <div class="flex align-items-center gap-2 px-3 pt-3">
+                    <div class="w-2rem h-2rem border-circle bg-blue-700 flex align-items-center justify-content-center">
+                        <span class="text-white font-bold text-sm">1</span>
+                    </div>
+                    <span class="font-semibold text-900">Datos Generales</span>
+                </div>
+            </ng-template>
+
+            <div class="grid mt-1">
+                <!-- Nombre -->
+                <div class="col-12 md:col-6 flex flex-column gap-1">
+                    <label class="font-semibold text-sm text-700">Nombre de la subcategoría *</label>
+                    <input pInputText [(ngModel)]="form.nombre" placeholder="Ej: Emisión de Título" class="w-full" />
+                    <small *ngIf="submitted && !form.nombre" class="text-red-500">Campo requerido</small>
+                </div>
+
+                <!-- Descripción -->
+                <div class="col-12 md:col-6 flex flex-column gap-1">
+                    <label class="font-semibold text-sm text-700">Descripción</label>
+                    <textarea pTextarea [(ngModel)]="form.descripcion" rows="2"
+                        placeholder="Breve descripción del trámite..." class="w-full">
+            </textarea>
+                </div>
+
+                <!-- Toggle monto -->
+                <div class="col-12 flex align-items-center gap-3 pt-1">
+                    <p-toggleSwitch [(ngModel)]="form.tieneCosto"></p-toggleSwitch>
+                    <span class="font-semibold text-sm text-700">¿Este trámite tiene costo?</span>
+                </div>
+
+                <!-- InputNumber monto (solo si tieneCosto) -->
+                <div class="col-12 md:col-4 flex flex-column gap-1" *ngIf="form.tieneCosto">
+                    <label class="font-semibold text-sm text-700">Monto (S/) *</label>
+                    <p-inputNumber [(ngModel)]="form.costo" mode="currency" currency="PEN" locale="es-PE" [min]="0"
+                        placeholder="0.00" styleClass="w-full">
+                    </p-inputNumber>
+                </div>
+
+                <div class="col-12 md:col-4 flex align-items-center" *ngIf="!form.tieneCosto">
+                    <div class="surface-100 border-round px-3 py-2 flex align-items-center gap-2">
+                        <i class="pi pi-info-circle text-500"></i>
+                        <span class="text-500 text-sm">Costo: <strong>S/ 0.00</strong> (Gratuito)</span>
+                    </div>
+                </div>
+            </div>
+        </p-card>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SECCIÓN 2 — ÁREAS PARTICIPANTES
+    ═══════════════════════════════════════════ -->
+    <div class="col-12">
+        <p-card>
+            <ng-template #header>
+                <div class="flex align-items-center gap-2 px-3 pt-3">
+                    <div class="w-2rem h-2rem border-circle bg-blue-700 flex align-items-center justify-content-center">
+                        <span class="text-white font-bold text-sm">2</span>
+                    </div>
+                    <span class="font-semibold text-900">Áreas Participantes en el Flujo</span>
+                </div>
+            </ng-template>
+
+            <!-- Buscador de áreas -->
+            <div class="flex align-items-center gap-2 mb-3">
+                <p-autoComplete [(ngModel)]="areaQuery" [dropdown]="true" [suggestions]="areasSugeridas"
+                    optionLabel="nombre" placeholder="Buscar y agregar área..." (completeMethod)="buscarAreas($event)"
+                    (onSelect)="agregarArea($event)" [forceSelection]="true" styleClass="flex-1"
+                    inputStyleClass="w-full" appendTo="body">
+                    <ng-template let-area #item>
+                        <div class="flex align-items-center gap-2">
+                            <i [class]="area.icono + ' text-primary'"></i>
+                            <span>{{ area.nombre }}</span>
+                        </div>
+                    </ng-template>
+                </p-autoComplete>
+                <small class="text-500 white-space-nowrap">
+                    <i class="pi pi-info-circle"></i> Arrastra para reordenar
+                </small>
+            </div>
+
+            <!-- Sin áreas -->
+            <div *ngIf="form.areas.length === 0"
+                class="surface-50 border-round border-1 border-dashed surface-border p-4 text-center text-500">
+                <i class="pi pi-share-alt text-3xl text-300 mb-2 block"></i>
+                Agrega áreas para construir el flujo del trámite
+            </div>
+
+            <!--
+          ✅ FIX DRAG HORIZONTAL:
+          - El overflow-x va en el wrapper EXTERNO
+          - cdkDropList usa estilos inline (NO clases flex de PrimeFlex)
+          - cdkDrag es el hijo DIRECTO del cdkDropList
+          - El conector va DENTRO del cdkDrag pero FUERA del nodo visual
+        -->
+            <div *ngIf="form.areas.length > 0" style="overflow-x: auto; padding-bottom: 12px;">
+                <div cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropArea($event)"
+                    style="display: flex; flex-direction: row; align-items: flex-start; min-width: max-content;">
+
+                    <ng-container *ngFor="let area of form.areas; let i = index; let last = last">
+
+                        <!-- cdkDrag: es el hijo directo del dropList, incluye nodo + conector -->
+                        <div cdkDrag style="display: flex; flex-direction: row; align-items: center; flex-shrink: 0;">
+
+                            <!-- Nodo visual del área -->
+                            <div
+                                style="display: flex; flex-direction: column; align-items: center; width: 110px; position: relative;">
+
+                                <!-- Handle de arrastre (icono de barras arriba) -->
+                                <div cdkDragHandle
+                                    style="cursor: grab; color: #bbb; margin-bottom: 2px; user-select: none;"
+                                    title="Arrastra para reordenar">
+                                    <i class="pi pi-bars" style="font-size: 0.7rem;"></i>
+                                </div>
+
+                                <!-- Card del área -->
+                                <div class="border-round-xl shadow-2 border-2 p-2"
+                                    [style.border-color]="getAreaColor(i)" [style.background]="getAreaColorLight(i)"
+                                    style="display: flex; flex-direction: column; align-items: center; width: 94px;">
+
+                                    <!-- Ícono circular -->
+                                    <div class="border-round-full shadow-1 mb-1"
+                                        [style.background-color]="getAreaColor(i)"
+                                        style="width: 2.6rem; height: 2.6rem; display: flex; align-items: center; justify-content: center;">
+                                        <i [class]="area.icono + ' text-white'" style="font-size: 1rem;"></i>
+                                    </div>
+
+                                    <!-- Nombre del área -->
+                                    <span class="text-xs font-semibold text-center text-800"
+                                        style="max-width: 82px; line-height: 1.3; margin-bottom: 4px;">
+                                        {{ area.nombre }}
+                                    </span>
+
+                                    <!-- SLA inline -->
+                                    <div style="display: flex; align-items: center; gap: 3px;">
+                                        <span class="text-xs text-500">SLA:</span>
+                                        <p-inputNumber [(ngModel)]="area.sla" [min]="1" [max]="30" [showButtons]="false"
+                                            inputStyleClass="w-3rem text-center text-xs p-1 border-round"
+                                            styleClass="w-3rem" (click)="$event.stopPropagation()">
+                                        </p-inputNumber>
+                                        <span class="text-xs text-500">d</span>
+                                    </div>
+                                </div>
+
+                                <!-- Número de paso -->
+                                <div class="border-round-full bg-primary-100 mt-1"
+                                    style="width: 1.2rem; height: 1.2rem; display: flex; align-items: center; justify-content: center;">
+                                    <span class="text-primary font-bold" style="font-size: 10px;">{{ i + 1
+                                        }}</span>
+                                </div>
+
+                                <!-- Botón eliminar (esquina superior derecha) -->
+                                <button type="button" (click)="eliminarArea(i); $event.stopPropagation()" style="
+                      position: absolute; top: 18px; right: 2px;
+                      width: 1.2rem; height: 1.2rem;
+                      border-radius: 50%;
+                      background: #ef4444; color: white;
+                      border: none; cursor: pointer;
+                      display: flex; align-items: center; justify-content: center;
+                      font-size: 9px; z-index: 10; padding: 0; line-height: 1;">
+                                    <i class="pi pi-times" style="font-size: 8px;"></i>
+                                </button>
+                            </div><!-- fin nodo -->
+
+                            <!-- Conector flecha (no se arrastra, solo visual) -->
+                            <div *ngIf="!last" style="display: flex; flex-direction: column; align-items: center;
+                            padding: 0 4px; padding-bottom: 28px; flex-shrink: 0;">
+                                <i class="pi pi-arrow-right" style="color: #ccc; font-size: 0.8rem;"></i>
+                                <span style="color: #ccc; font-size: 9px;">{{ area.sla }}d</span>
+                            </div>
+
+                        </div><!-- fin cdkDrag -->
+
+                    </ng-container>
+
+                </div><!-- fin cdkDropList -->
+            </div><!-- fin scroll wrapper -->
+
+            <!-- Resumen total días -->
+            <div *ngIf="form.areas.length > 0" class="flex align-items-center gap-2 mt-3 surface-100 border-round p-2">
+                <i class="pi pi-clock text-primary"></i>
+                <span class="text-sm text-700">
+                    Tiempo total estimado:
+                    <strong class="text-primary">{{ totalDias }} día{{ totalDias !== 1 ? 's' : ''
+                        }}</strong>
+                    · {{ form.areas.length }} área{{ form.areas.length !== 1 ? 's' : '' }} en el flujo
+                </span>
+            </div>
+        </p-card>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SECCIÓN 3 — DOCUMENTOS REQUERIDOS
+    ═══════════════════════════════════════════ -->
+    <div class="col-12">
+        <p-card>
+            <ng-template #header>
+                <div class="flex align-items-center justify-content-between px-3 pt-3">
+                    <div class="flex align-items-center gap-2">
+                        <div
+                            class="w-2rem h-2rem border-circle bg-blue-700 flex align-items-center justify-content-center">
+                            <span class="text-white font-bold text-sm">3</span>
+                        </div>
+                        <span class="font-semibold text-900">Documentos Requeridos</span>
+                    </div>
+                    <p-toggleSwitch [(ngModel)]="form.requiereDocumentos"></p-toggleSwitch>
+                </div>
+            </ng-template>
+
+            <!-- Sin documentos requeridos -->
+            <div *ngIf="!form.requiereDocumentos"
+                class="surface-50 border-round p-3 flex align-items-center gap-2 text-500">
+                <i class="pi pi-check-circle text-green-400"></i>
+                <span class="text-sm">Este trámite no requiere documentos adjuntos</span>
+            </div>
+
+            <!-- Con documentos -->
+            <ng-container *ngIf="form.requiereDocumentos">
+
+                <!-- Buscador documentos -->
+                <div class="flex align-items-center gap-2 mb-3">
+                    <p-autoComplete [dropdown]="true" [(ngModel)]="docQuery" [suggestions]="docsSugeridos"
+                        optionLabel="nombre" placeholder="Buscar y agregar documento..."
+                        (completeMethod)="buscarDocumentos($event)" (onSelect)="agregarDocumento($event)"
+                        [forceSelection]="true" styleClass="flex-1" inputStyleClass="w-full" appendTo="body">
+                        <ng-template let-doc #item>
+                            <div class="flex align-items-center gap-2">
+                                <p-tag [value]="doc.tipo" [severity]="doc.tipo === 'PDF' ? 'danger' : 'info'"
+                                    styleClass="text-xs"></p-tag>
+                                <span>{{ doc.nombre }}</span>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+
+                    <!-- O agregar documento libre -->
+                    <input pInputText [(ngModel)]="nuevoDocNombre" placeholder="O escribe nombre..." class="flex-1" />
+                    <ui-button icon="pi pi-plus" label="Agregar" (onClick)="agregarDocumentoLibre()"
+                        [disabled]="!nuevoDocNombre.trim()"></ui-button>
+                </div>
+
+                <!-- Sin docs seleccionados -->
+                <div *ngIf="form.documentos.length === 0"
+                    class="surface-50 border-round border-1 border-dashed surface-border p-4 text-center text-500">
+                    <i class="pi pi-file text-3xl text-300 mb-2 block"></i>
+                    Selecciona o escribe los documentos que se necesitan
+                </div>
+
+                <!-- Lista de documentos seleccionados -->
+                <div *ngIf="form.documentos.length > 0" class="flex flex-column gap-2">
+                    <div *ngFor="let doc of form.documentos; let i = index"
+                        class="flex align-items-center gap-2 p-2 border-1 surface-border border-round surface-50">
+
+                        <!-- Número -->
+                        <span
+                            class="w-1rem h-1rem border-circle bg-blue-100 text-blue-700 text-xs font-bold flex align-items-center justify-content-center flex-shrink-0">
+                            {{ i + 1 }}
+                        </span>
+
+                        <!-- Nombre editable -->
+                        <input pInputText [(ngModel)]="doc.nombre" class="flex-1" style="font-size: 0.875rem" />
+
+                        <!-- Tipo -->
+                        <p-tag [value]="doc.tipo" severity="info"></p-tag>
+
+                        <!-- Toggle requerido -->
+                        <!-- <div class="flex align-items-center gap-1 flex-shrink-0">
+                                <p-toggleSwitch [(ngModel)]="doc.requerido" [inputId]="'req_' + i"></p-toggleSwitch>
+                                <label [for]="'req_' + i" class="text-xs text-500 cursor-pointer">Obligatorio</label>
+                            </div> -->
+
+                        <!-- Eliminar -->
+                        <ui-icon-button icon="pi pi-trash" color="danger"
+                            (onClick)="eliminarDocumento(i)"></ui-icon-button>
+                    </div>
+                </div>
+
+                <!-- Resumen documentos -->
+                <div *ngIf="form.documentos.length > 0" class="flex gap-3 mt-3 surface-100 border-round p-2">
+                    <span class="text-sm text-700">
+                        <i class="pi pi-file text-primary mr-1"></i>
+                        Total: <strong>{{ form.documentos.length }}</strong> doc(s)
+                    </span>
+                    <!-- <span class="text-sm text-700">
+                            <i class="pi pi-check text-green-500 mr-1"></i>
+                            Obligatorios: <strong class="text-green-600">{{ docsObligatorios }}</strong>
+                        </span>
+                        <span class="text-sm text-700">
+                            <i class="pi pi-minus-circle text-orange-400 mr-1"></i>
+                            Opcionales: <strong class="text-orange-500">{{ docsOpcionales }}</strong>
+                        </span> -->
+                </div>
+            </ng-container>
+        </p-card>
+    </div>
+<!-- </div> -->

@@ -9,7 +9,4 @@
             [patternErrorMessage]="'No debe incluir espacios al final de la palabra'">
         </ui-input>
     </div>
-
-    <ui-modal-footer [label]="selectUnidadDeMedida().idUnidadDeMedida !== 0 ? 'Actualizar Unidad de Medida' : 'Crear Unidad de Medida'"
-        [disabled]="formUnidadDeMedida.invalid" (cancel)="cancelar()" (submit)="guardar()"></ui-modal-footer>
 </form>
