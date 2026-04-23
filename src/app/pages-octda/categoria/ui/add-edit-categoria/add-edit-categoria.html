@@ -1,0 +1,14 @@
+
+<form [formGroup]="formCategoria">
+    <div class="flex flex-column gap-4 flex-1 min-h-0 w-full">
+        <ui-input label="Nombre" formControlName="nombre" [maxlength]="maxLengthNombre"
+        [minlength]="minLengthNombre" [expReg]="expLockInputNombre"
+            [patternErrorMessage]="'No debe incluir espacios al final de la palabra'">
+        </ui-input>
+
+        <ui-input label="Descripción" formControlName="descripcion" [maxlength]="maxLengthDescripcion"
+        [minlength]="minLengthDescripcion" [expReg]="expLockInputDescripcion"
+            [patternErrorMessage]="'No debe incluir espacios al final de la palabra'">
+        </ui-input>
+    </div>
+</form>

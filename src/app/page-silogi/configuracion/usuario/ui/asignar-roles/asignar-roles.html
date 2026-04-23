@@ -1,23 +1,5 @@
 <div class="flex flex-column h-full min-h-0 w-full">
 
-    <!-- HEADER -->
-    <!-- <div class="px-3 py-2 border-bottom-1 surface-border bg-surface-ground">
-        <div class="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-2">
-            <div class="flex flex-column gap-1">
-                <span class="text-sm text-500">Usuario seleccionado</span>
-                <span class="font-semibold text-base">
-                    {{ selectUsuario().nombres }} {{ selectUsuario().apePaterno }} {{ selectUsuario().apMaterno }}
-                </span>
-            </div>
-
-            <div class="flex align-items-center gap-2">
-                <span class="text-sm text-500">Permisos asignados:</span>
-                <span class="font-semibold text-base">{{ permisosSeleccionados().length }}</span>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- CONTENT -->
     <div class="flex-1 min-h-0 px-3 py-3 overflow-hidden">
 
         <!-- 🔥 SCROLL SOLO AQUÍ -->
@@ -79,10 +61,4 @@
 
         </div>
     </div>
-
-    <!-- ✅ FOOTER (FIJO ABAJO) -->
-    <ui-modal-footer [label]="hayPendientes() ? 'Guardar cambios' : 'Cerrar'" [disabled]="loading() || !hayPendientes()"
-        (cancel)="cerrar()" (submit)="hayPendientes() ? guardar() : cerrar()">
-    </ui-modal-footer>
-
 </div>

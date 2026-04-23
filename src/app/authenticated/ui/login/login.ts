@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, inject, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,10 +10,11 @@ import { AuthenticatedSignal } from '@/authenticated/domain/signals/authenticate
 import { AuthenticateUserUseCase } from '@/authenticated/application/use-cases/authenticate.usecase';
 import { GetAuthorizedMenuUseCase } from '@/authenticated/application/use-cases/load-menu.usecase';
 import { AuthenticatedStorageService } from '@/authenticated/infrastructure/services/authenticated-storage.service';
-
+import { InputOtp } from 'primeng/inputotp';
+import { NotificationService } from '@/shared/services/notification.service';
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, PasswordModule, UiButtonComponent, Divider, AvatarModule],
+  imports: [FormsModule, PasswordModule, UiButtonComponent, Divider, AvatarModule, InputOtp],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -26,12 +26,14 @@ export class Login {
   private readonly getAuthorizedMenuUseCase = inject(GetAuthorizedMenuUseCase);
   private readonly storage = inject(AuthenticatedStorageService);
   private readonly router = inject(Router);
+  private readonly notifications = inject(NotificationService);
 
   readonly userNameIngresado = this.authenticatedSignal.userNameIngresado;
+  readonly correoIngresado = this.authenticatedSignal.correoIngresado;
   readonly rolSeleccionado = this.authenticatedSignal.rolSeleccionado;
   readonly password = this.authenticatedSignal.passwordIngresado;
   readonly loading = this.authenticatedSignal.loadingLogin;
-  readonly authErrorMessage = this.authenticatedSignal.authErrorMessage;
+  // readonly authErrorMessage = this.authenticatedSignal.authErrorMessage;
 
   readonly canSubmit = computed(() => {
     const hasPassword = this.password().trim().length > 0;
@@ -40,7 +42,7 @@ export class Login {
 
   stepAnterior(): void {
     this.password.set('');
-    this.authErrorMessage.set(null);
+    // this.authErrorMessage.set(null);
     this.pasoAnterior.emit();
   }
 
@@ -50,19 +52,11 @@ export class Login {
     const userName = this.userNameIngresado().trim();
 
     if (!selectedRole || !password || !userName) {
-      this.authErrorMessage.set('Completa tus credenciales para continuar.');
+        this.notifications.error('Por favor, complete todos los campos requeridos.');
       return;
     }
-
     this.loading.set(true);
-    this.authenticatedSignal.loadingMenu.set(true);
-    this.authErrorMessage.set(null);
-
-    this.authenticateUserUseCase.execute({
-      userName,
-      password,
-      role: selectedRole.rol,
-    })
+    this.authenticateUserUseCase.execute({userName,password,role: selectedRole.rol,})
       .pipe(
         tap((response) => {
           const token = response.data.token;
@@ -78,47 +72,14 @@ export class Login {
       .subscribe({
         next: (menuAccess) => {
           this.authenticatedSignal.setMenuAccess(menuAccess);
+          this.notifications.success('Autenticación exitosa. ¡Bienvenido!');
           void this.router.navigate([`/${selectedRole.moduleRoute}`]);
         },
         error: (error: unknown) => {
           this.authenticatedSignal.clearAccessState();
-          this.authErrorMessage.set(this.getErrorMessage(error));
+          this.notifications.error('Error de autenticación. Por favor, verifique sus credenciales e intente nuevamente.');
+          // this.authErrorMessage.set(this.getErrorMessage(error));
         }
       });
-  }
-
-  private getErrorMessage(error: unknown): string {
-    if (error instanceof HttpErrorResponse) {
-      return this.getPayloadMessage(error.error) ?? error.message ?? 'No fue posible iniciar sesión.';
-    }
-
-    if (error instanceof Error && error.message.trim().length > 0) {
-      return error.message;
-    }
-
-    return 'No fue posible iniciar sesión. Verifica tus credenciales e inténtalo nuevamente.';
-  }
-
-  private getPayloadMessage(payload: unknown): string | null {
-    if (!payload || typeof payload !== 'object') {
-      return null;
-    }
-
-    const payloadRecord = payload as Record<string, unknown>;
-    const message = payloadRecord['message'];
-    if (typeof message === 'string' && message.trim().length > 0) {
-      return message;
-    }
-
-    const errors = payloadRecord['errors'];
-    if (Array.isArray(errors)) {
-      const firstError = errors.find(
-        (item): item is string => typeof item === 'string' && item.trim().length > 0
-      );
-
-      return firstError ?? null;
-    }
-
-    return null;
   }
 }

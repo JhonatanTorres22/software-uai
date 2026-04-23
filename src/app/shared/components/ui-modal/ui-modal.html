@@ -1,24 +1,38 @@
-<div class="ui-modal flex flex-column h-full">
+<div class="ui-modal">
 
   <!-- HEADER -->
-  <div class="ui-modal-header sticky top-0 z-2 flex align-items-center justify-content-between px-3 py-2 border-bottom-1 surface-border surface-card">
-    
-    <h3 class="m-0 text-base font-semibold">
+  <div class="ui-modal-header">
+    <h3 class="m-0 flex-1">
       {{ title }}
     </h3>
 
-    <ui-icon-button 
-      icon="pi pi-times" 
+    <ui-icon-button
+      icon="pi pi-times"
       color="danger"
       (onClick)="close()">
     </ui-icon-button>
-
   </div>
 
   <!-- CONTENT -->
-  <div class="flex-1 min-h-0 overflow-auto px-3 py-3">
+  <div class="ui-modal-content">
     <ng-container #container></ng-container>
   </div>
 
-</div>
+  <!-- FOOTER -->
+  <div class="ui-modal-footer">
 
+    <ui-button
+      [label]="footer.cancelLabel || 'Cancelar'"
+      [color]="'secondary'"
+      (onClick)="onCancel()">
+    </ui-button>
+
+    <ui-button
+      [label]="footer.primaryLabel || 'Guardar'"
+      [color]="'primary'"
+      (onClick)="onPrimary()">
+    </ui-button>
+
+  </div>
+
+</div>

@@ -9,7 +9,4 @@
             [patternErrorMessage]="'No debe incluir espacios al final de la palabra'">
         </ui-input>
     </div>
-
-    <ui-modal-footer [label]="selectMarca().idMarca !== 0 ? 'Actualizar Marca' : 'Crear Marca'"
-        [disabled]="formMarca.invalid" (cancel)="cancelar()" (submit)="guardar()"></ui-modal-footer>
 </form>

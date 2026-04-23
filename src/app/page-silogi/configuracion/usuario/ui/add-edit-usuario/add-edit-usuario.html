@@ -12,16 +12,4 @@
     <ui-input formControlName="correo" label="Correo"></ui-input>
 
   </div>
-
-
-  <!-- campos -->
-  <!-- <input pInputText formControlName="nombre" /> -->
-  
-  <!-- footer -->
-  <ui-modal-footer
-  [label]="selectUsuario().id !== 0 ? 'Actualizar Usuario' : 'Crear Usuario'"
-  [disabled]="formUsuario.invalid"
-  (cancel)="cancelar()"
-  (submit)="guardar()">
-</ui-modal-footer>
 </form>

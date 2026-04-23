@@ -25,6 +25,7 @@ export class ListRoles implements OnInit {
 
   readonly loading = this.authenticatedSignal.loadingRoles;
   readonly userNameIngresado = this.authenticatedSignal.userNameIngresado;
+  readonly correoIngresado = this.authenticatedSignal.correoIngresado;
   readonly rolSeleccionado = this.authenticatedSignal.rolSeleccionado;
   readonly abiertos = this.authenticatedSignal.abiertos;
   readonly listModulos = this.authenticatedSignal.listModulos;
@@ -34,42 +35,33 @@ export class ListRoles implements OnInit {
   readonly pasoAnterior = output<void>();
 
   ngOnInit(): void {
-    this.obtenerRolesAsignados();
+    // this.obtenerRolesAsignados();
   }
 
-  obtenerRolesAsignados(): void {
-    const userName = this.userNameIngresado().trim();
+  // obtenerRolesAsignados(): void {
+  //   const userName = this.userNameIngresado().trim();
 
-    if (!userName) {
-      this.listModulos.set([]);
-      return;
-    }
+  //   if (!userName) {
+  //     this.listModulos.set([]);
+  //     return;
+  //   }
 
-    this.loading.set(true);
-    this.authErrorMessage.set(null);
+  //   this.loading.set(true);
 
-    this.getRolUseCase.execute(userName)
-      .pipe(finalize(() => this.loading.set(false)))
-      .subscribe({
-        next: (response) => {
-          if (!response.isSuccess) {
-            this.listModulos.set([]);
-            this.authErrorMessage.set(response.message || 'No se encontraron roles disponibles para el usuario.');
-            return;
-          }
-
-          this.listModulos.set(response.data.modulos);
-          this.abiertos.set([]);
-        },
-        error: (error: unknown) => {
-          console.error('Error al obtener roles del usuario', error);
-          this.listModulos.set([]);
-          this.authenticatedSignal.resetRolesState();
-          this.userNameIngresado.set(userName);
-          this.authErrorMessage.set('No se pudieron cargar los roles del usuario.');
-        }
-      });
-  }
+  //   this.getRolUseCase.execute(userName).subscribe({
+  //       next: (response) => {
+  //         this.loading.set(false);
+  //         this.listModulos.set(response.data.modulos);
+  //         this.abiertos.set([]);
+  //       },
+  //       error: (error: unknown) => {
+  //         this.loading.set(false);
+  //         this.authenticatedSignal.resetRolesState();
+  //         this.userNameIngresado.set(userName);
+  //         this.authErrorMessage.set('No se pudieron cargar los roles del usuario.');
+  //       }
+  //     });
+  // }
 
   isOpen(index: number): boolean {
     return this.abiertos().includes(index);

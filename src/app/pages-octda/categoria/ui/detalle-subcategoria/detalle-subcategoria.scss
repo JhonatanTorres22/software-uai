@@ -1,0 +1,61 @@
+/* Distribución uniforme */
+.custom-timeline .p-timeline-event {
+  flex: 1;
+}
+
+/* Línea base */
+.custom-timeline .p-timeline-event-connector {
+  height: 3px;
+  background: linear-gradient(to right, #3b82f6, #93c5fd);
+  border-radius: 2px;
+}
+
+/* Marker container */
+.custom-timeline .p-timeline-event-marker {
+  width: 42px !important;
+  height: 42px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CÍRCULO BONITO */
+.custom-marker {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* glow suave */
+  box-shadow:
+    0 0 0 4px #eff6ff,
+    0 4px 10px rgba(59, 130, 246, 0.3);
+
+  transition: transform 0.2s ease;
+}
+
+/* Hover bonito */
+.custom-marker:hover {
+  transform: scale(1.1);
+}
+
+/* Icono */
+.custom-marker i {
+  color: white;
+  font-size: 14px;
+}
+
+/* Texto */
+.step-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: #374151;
+}
+
+.step-sub {
+  color: #6b7280;
+  font-size: 12px;
+}

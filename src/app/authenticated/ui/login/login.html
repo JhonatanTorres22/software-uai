@@ -49,39 +49,27 @@
 
     <p-divider />
 
+
     <!-- TÍTULO -->
     <div class="text-2xl font-semibold text-center">
-        INICIAR SESIÓN
+        INGRESE CÓDIGO DE VERIFICACIÓN
     </div>
+    <p-divider></p-divider>
 
     <!-- FORM -->
     <div class="flex flex-column gap-3 pt-2">
 
-        <p-password placeholder="Ingrese su contraseña" [feedback]="false" [toggleMask]="true" class="w-full"
-            [ngModel]="password()"
-            (ngModelChange)="password.set($event ?? '')"
-            inputStyleClass="w-full h-4rem border-round-lg">
-        </p-password>
-
-        @if (authErrorMessage()) {
-        <small class="text-red-500 font-medium">
-            {{ authErrorMessage() }}
-        </small>
-        } @else {
-        <small class="text-500">
-            Ingresa tu contraseña para continuar
-        </small>
-        }
-
+        <div class="flex justify-content-center">
+            <p-inputotp [ngModel]="password()" size="large" [length]="8" (ngModelChange)="password.set($event ?? '')" />
+        </div>
         <div class="flex justify-content-between pt-3">
             <ui-button label="Volver" icon="pi pi-arrow-left" (onClick)="stepAnterior()">
             </ui-button>
 
-            <ui-button [label]="loading() ? 'Ingresando...' : 'Ingresar'" icon="pi pi-sign-in"
-                [disabled]="!canSubmit()" (onClick)="ingresar()">
+            <ui-button [label]="loading() ? 'Ingresando...' : 'Ingresar'" icon="pi pi-sign-in" [disabled]="!canSubmit()"
+                (onClick)="ingresar()">
             </ui-button>
         </div>
 
     </div>
-
 </div>

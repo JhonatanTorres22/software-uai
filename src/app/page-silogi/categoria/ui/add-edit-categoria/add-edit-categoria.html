@@ -9,7 +9,4 @@
             [patternErrorMessage]="'No debe incluir espacios al final de la palabra'">
         </ui-input>
     </div>
-
-    <ui-modal-footer [label]="selectCategoria().idCategoria !== 0 ? 'Actualizar Categoria' : 'Crear Categoria'"
-        [disabled]="formCategoria.invalid" (cancel)="cancelar()" (submit)="guardar()"></ui-modal-footer>
 </form>

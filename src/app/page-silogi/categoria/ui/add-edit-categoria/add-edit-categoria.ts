@@ -7,13 +7,12 @@ import { NotificationService } from '@/shared/services/notification.service';
 import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
 import { CategoriaSignal } from '../../domain/signals/categoria.signal';
 import { UiInputComponent } from '@/shared/components/ui-input/ui-input.component';
-import { UiModalFooter } from "@/shared/components/ui-modal-footer/ui-modal-footer";
 import { CrearCategoria, EditarCategoria } from '../../domain/entities/categoria.entity';
 import { CategoriaValidation } from '../../domain/validators/categoria.validator';
 
 @Component({
   selector: 'app-add-edit-categoria',
-  imports: [FormsModule, ReactiveFormsModule, UiInputComponent, UiModalFooter],
+  imports: [FormsModule, ReactiveFormsModule, UiInputComponent],
   templateUrl: './add-edit-categoria.html',
   styleUrl: './add-edit-categoria.scss',
 })
@@ -59,6 +58,14 @@ export class AddEditCategoria implements OnInit {
 
   ngOnInit(): void {
     this.selectCategoria().idCategoria !== 0 ? this.patchValue() : ''
+  }
+
+  get modalPrimaryLabel(): string {
+    return this.selectCategoria().idCategoria !== 0 ? 'Actualizar Categoria' : 'Crear Categoria';
+  }
+
+  get modalPrimaryDisabled(): boolean {
+    return this.formCategoria.invalid;
   }
 
   patchValue() {

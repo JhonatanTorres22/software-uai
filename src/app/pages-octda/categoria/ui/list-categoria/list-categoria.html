@@ -1,0 +1,22 @@
+<div class="flex align-items-center gap-2">
+  <span class="p-input-icon-left flex-1">
+    <p-autoComplete [(ngModel)]="selectCategoria().nombre"
+    [dropdown]="true" [suggestions]="sugerencias" optionLabel="nombre"
+      placeholder="Buscar categorías..." (completeMethod)="filtrarCategorias($event)" (onSelect)="seleccionar($event)"
+      (onClear)="limpiar()" [showClear]="true" styleClass="w-full" inputStyleClass="w-full" appendTo="body">
+
+      <ng-template let-cat #item>
+        <div class="flex align-items-center justify-content-between w-full gap-2 py-1">
+          <span class="font-medium">{{ cat.nombre }}</span>
+          <div class="flex gap-1" (click)="$event.stopPropagation()">
+            <ui-icon-button icon="pi pi-pencil" color="info" tooltip="Editar" (onClick)="openAddEditCategoria(cat)"></ui-icon-button>
+            <ui-icon-button icon="pi pi-trash" color="danger" tooltip="Eliminar"></ui-icon-button>
+          </div>
+        </div>
+      </ng-template>
+    </p-autoComplete>
+  </span>
+
+  <!-- Botón Crear Categoría -->
+  <ui-button label="Agregar Categoría" icon="pi pi-plus" (onClick)="openAddEditCategoria(selectCategoriaDefault)"></ui-button>
+</div>

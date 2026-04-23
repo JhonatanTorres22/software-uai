@@ -8,7 +8,6 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
 import { NotificationService } from '@/shared/services/notification.service';
 import { UiLoading } from '@/shared/components/ui-loading/ui-loading';
-import { UiModalFooter } from '@/shared/components/ui-modal-footer/ui-modal-footer';
 import { AsignarPermisosUseCase } from '../../application/use-cases/permisos/asignarPermisos.use-case';
 import { EliminarPermisosUseCase } from '../../application/use-cases/permisos/eliminarPermisos.use-case';
 import { ObtenerPermisosUseCase } from '../../application/use-cases/permisos/obtenerPermisos.use-case';
@@ -19,7 +18,7 @@ import { UsuarioSignal } from '../../domain/signals/usuario.signal';
 
 @Component({
   selector: 'app-asignar-roles',
-  imports: [CommonModule, FormsModule, CheckboxModule, FieldsetModule, UiLoading, UiModalFooter],
+  imports: [CommonModule, FormsModule, CheckboxModule, FieldsetModule, UiLoading],
   templateUrl: './asignar-roles.html',
   styleUrl: './asignar-roles.scss',
 })
@@ -42,6 +41,18 @@ export class AsignarRoles implements OnInit {
   readonly modulos = this.permisoSignal.modulos;
   readonly permisosSeleccionados = this.permisoSignal.permisosSeleccionados;
   readonly hayPendientes = this.permisoSignal.hayPendientes;
+
+  get modalPrimaryLabel(): string {
+    return this.hayPendientes() ? 'Guardar cambios' : 'Cerrar';
+  }
+
+  get modalPrimaryDisabled(): boolean {
+    return this.loading();
+  }
+
+  modalOnPrimary(): void {
+    this.hayPendientes() ? this.guardar() : this.cerrar();
+  }
 
   ngOnInit(): void {
     this.cargarPermisos();

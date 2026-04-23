@@ -1,3 +1,12 @@
+:host {
+  display: block;
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
 .ui-modal-footer {
   width: 100%;
   flex-shrink: 0;
