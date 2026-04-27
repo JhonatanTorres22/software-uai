@@ -108,6 +108,28 @@ body {
   box-shadow: 0 0 0 2px rgba(55, 138, 221, 0.15) !important;
 }
 
+.p-floatlabel label {
+  color: var(--text-secondary) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Cuando está enfocado o con valor */
+.p-floatlabel:has(input:focus) label,
+.p-floatlabel:has(input.p-filled) label,
+.p-floatlabel:has(.p-inputwrapper-focus) label,
+.p-floatlabel:has(.p-inputwrapper-filled) label,
+.p-floatlabel:has(.p-password input:focus) label {
+  color: var(--brand-600) !important;
+  font-weight: 500 !important;
+}
+
+/* También para p-password */
+.p-floatlabel:has(.p-password input:focus) label {
+  color: var(--text-primary) !important;
+}
+
 /* ─────────────────────────────
    ROOT DIALOG
 ───────────────────────────── */
@@ -132,30 +154,37 @@ body {
 }
 
 /* ─────────────────────────────
-   HEADER INVISIBLE (drag)
+   HEADER (ALIGNED + DRAG)
 ───────────────────────────── */
 .ui-modal-wrapper .p-dialog-header {
-  background: transparent !important;
-  border: none !important;
-  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
 
-  height: 0 !important;
-  min-height: 0 !important;
+  background: var(--surface-card) !important;
+  border-bottom: 1px solid var(--surface-border) !important;
+  padding: 0.75rem 1rem !important;
 
-  overflow: hidden !important;
   cursor: move !important;
 }
 
 .ui-modal-wrapper .p-dialog-title {
-  display: none !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  line-height: 1.25rem !important;
+  color: var(--text-primary) !important;
 }
 
-/* botones de maximizar (si usas) */
 .ui-modal-wrapper .p-dialog-header-actions {
-  position: absolute !important;
-  right: 3.25rem !important;
-  top: 0.25rem !important;
-  z-index: 3 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.25rem !important;
+  margin: 0 !important;
+}
+
+.ui-modal-wrapper .p-dialog-header-actions .p-dialog-header-icon {
+  width: 2rem !important;
+  height: 2rem !important;
 }
 
 /* ─────────────────────────────
@@ -318,6 +347,33 @@ body {
   border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
+}
+
+/* SELECT */
+.p-select {
+  border-radius: var(--radius-md) !important;
+  font-size: 13px !important;
+  border: 1px solid var(--surface-border) !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* focus */
+.p-select.p-focus {
+  border-color: var(--brand-400) !important;
+  box-shadow: 0 0 0 2px rgba(55, 138, 221, 0.15) !important;
+}
+
+/* hover opcional */
+.p-select:hover {
+  border-color: var(--brand-400) !important;
+}
+
+.p-rating .p-rating-icon,
+.p-rating .p-rating-icon.p-rating-icon-active,
+.p-rating .p-rating-icon.p-focus,
+.p-rating svg {
+  color: #D4A017 !important; /* amarillo mostaza */
+  fill: #D4A017 !important;
 }
 
 /* --- Page transition animation --- */

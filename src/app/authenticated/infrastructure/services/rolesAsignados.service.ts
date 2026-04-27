@@ -19,13 +19,13 @@ import {
 export class AuthenticatedService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.EndPoint;
+  private readonly urlListarRoles = `/api/usuario/ListarRoles?nombreUsuario=`;
+  private readonly urlAutenticar = `/api/usuario/Autenticar`;
+  private readonly urlListarMenu = `/api/usuario/ListarMenu`;
 
-  obtenerRolesAsignados(userName: string): Observable<AuthenticatedApiResponse<AuthenticatedDto | AuthenticatedDto[]>> {
-    return this.http.get<AuthenticatedApiResponse<AuthenticatedDto | AuthenticatedDto[]>>(
-      `${this.apiUrl}/api/usuario/ListarRoles`,
-      {
-        params: { nombreUsuario: userName }
-      }
+  obtenerRolesAsignados(userName: string, correo: string): Observable<AuthenticatedApiResponse<AuthenticatedDto | AuthenticatedDto[]>> {
+        return this.http.get<AuthenticatedApiResponse<AuthenticatedDto | AuthenticatedDto[]>>(
+          `${this.apiUrl}${this.urlListarRoles}${userName}&correo=${correo}`,
     );
   }
 
@@ -37,14 +37,14 @@ export class AuthenticatedService {
     };
 
     return this.http.post<AuthenticatedApiResponse<AuthenticatedLoginResponseDto>>(
-      `${this.apiUrl}/api/usuario/Autenticar`,
+      `${this.apiUrl}${this.urlAutenticar}`,
       payload
     );
   }
 
   obtenerMenu(): Observable<AuthenticatedApiResponse<AuthenticatedMenuPayloadDto>> {
     return this.http.get<AuthenticatedApiResponse<AuthenticatedMenuPayloadDto>>(
-      `${this.apiUrl}/api/usuario/ListarMenu`
+      `${this.apiUrl}${this.urlListarMenu}`
     );
   }
 }

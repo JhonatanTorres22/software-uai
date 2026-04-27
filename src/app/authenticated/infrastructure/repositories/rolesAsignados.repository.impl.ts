@@ -18,8 +18,8 @@ import { AuthenticatedService } from "../services/rolesAsignados.service";
 export class AuthenticatedRepositoryImpl implements AuthenticatedRepository {
   private readonly service = inject(AuthenticatedService);
 
-  listarRoles(nombreUsuario: string): Observable<AuthenticatedApiResponse<AuthenticatedEntity>> {
-    return this.service.obtenerRolesAsignados(nombreUsuario).pipe(
+  listarRoles(nombreUsuario: string, correo: string): Observable<AuthenticatedApiResponse<AuthenticatedEntity>> {
+    return this.service.obtenerRolesAsignados(nombreUsuario, correo).pipe(
       map((response) => ({
         ...response,
         data: AuthenticatedMapper.toDomain(response.data),

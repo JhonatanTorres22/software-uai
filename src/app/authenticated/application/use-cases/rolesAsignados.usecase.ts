@@ -9,11 +9,12 @@ import { AuthenticatedRepository } from "../ports/rolesAsignados.repository";
 export class GetRolesAsignadosUseCase {
   private readonly repository = inject(AuthenticatedRepository);
 
-  execute(nombreUsuario: string): Observable<AuthenticatedApiResponse<AuthenticatedEntity>> {
+  execute(nombreUsuario: string, correo: string): Observable<AuthenticatedApiResponse<AuthenticatedEntity>> {
     if (!nombreUsuario?.trim()) {
       return throwError(() => new Error("Usuario requerido"));
     }
 
-    return this.repository.listarRoles(nombreUsuario.trim());
+    return this.repository.listarRoles(nombreUsuario.trim(), correo?.trim());
+
   }
 }
