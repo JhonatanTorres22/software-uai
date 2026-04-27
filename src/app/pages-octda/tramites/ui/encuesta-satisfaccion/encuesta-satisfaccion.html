@@ -1,0 +1,205 @@
+<div class="flex justify-content-center p-1">
+    <div class="w-full">
+        <div class="surface-card border-1 surface-border border-round-xl p-1 md:p-2 mb-3">
+            <div class="flex align-items-center gap-3">
+                <div class="flex align-items-center justify-content-center border-round-lg bg-blue-100 w-2rem h-2rem">
+                    <i class="pi pi-list-check text-xl text-blue-600"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="font-bold text-base white-space-nowrap overflow-hidden text-overflow-ellipsis">{{
+                        survey.tramite }}</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm font-semibold">{{ survey.usuario }}</div>
+                    <p-tag [value]="(survey.fecha | date:'dd/MM/yyyy') ?? undefined" severity="info"></p-tag>
+                </div>
+            </div>
+        </div>
+
+        @if (!submitted) {
+        <div class="surface-card border-1 surface-border border-round-xl p-2 md:p-2">
+            <div class="flex align-items-center gap-2 mb-3">
+                <span
+                    class="inline-flex align-items-center justify-content-center border-circle bg-brand text-white font-bold"
+                    style="width:20px;height:20px">1</span>
+                <span class="text-base font-semibold">Calificación General del Trámite</span>
+            </div>
+
+            <div class="grid w-full">
+                @for (opt of emojiOptions; track opt.value) {
+                <div class="col flex-1">
+                    <button type="button"
+                        class="w-full h-full border-round-xl p-3 cursor-pointer border-1 border-solid flex flex-column align-items-center justify-content-center gap-2"
+                        [style.background]="survey.calificacionGeneral === opt.value ? opt.bgColor : 'var(--surface-ground)'"
+                        [style.borderColor]="survey.calificacionGeneral === opt.value ? opt.borderColor : 'var(--surface-border)'"
+                        (click)="selectCalificacion(opt.value)">
+                        <span style="font-size: 1.8rem; line-height:1;">
+                            {{ opt.emoji }}
+                        </span>
+
+                        <span class="text-center text-xs font-medium"
+                            [style.color]="survey.calificacionGeneral === opt.value ? opt.color : 'var(--text-color-secondary)'">
+                            {{ opt.label }}
+                        </span>
+                    </button>
+                </div>
+                }
+            </div>
+
+            @if (selectedEmoji) {
+            <div class="mt-3 border-round-lg p-3 border-1 border-solid flex align-items-center justify-content-center gap-2"
+                [style.background]="selectedEmoji.bgColor" [style.borderColor]="selectedEmoji.borderColor">
+                <span class="text-2xl">
+                    {{ selectedEmoji.emoji }}
+                </span>
+
+                <span class="font-semibold text-sm" [style.color]="selectedEmoji.color">
+                    {{ selectedEmoji.label }}
+                </span>
+            </div>
+            }
+
+            <p-divider />
+
+            <div class="mb-2">
+                <p class="text-sm text-color-secondary font-medium mb-2 m-0">
+                    ¿Qué destacarías? <span class="text-xs">(Opcional, puedes elegir varias)</span>
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    @for (opt of quickFeedbackOptions; track opt) {
+                    <button type="button" class="border-round-xl px-3 py-2 cursor-pointer border-1 text-sm"
+                        [style.background]="isQuickFeedbackSelected(opt) ? 'var(--primary-color)' : 'var(--surface-ground)'"
+                        [style.borderColor]="isQuickFeedbackSelected(opt) ? 'var(--primary-color)' : 'var(--surface-border)'"
+                        [style.color]="isQuickFeedbackSelected(opt) ? 'var(--primary-color-text)' : 'var(--text-color-secondary)'"
+                        (click)="toggleQuickFeedback(opt)">
+                        {{ opt }}
+                    </button>
+                    }
+                </div>
+            </div>
+
+            <p-divider />
+
+            <div class="flex align-items-center gap-2 mb-3">
+                <span
+                    class="inline-flex align-items-center justify-content-center border-circle bg-brand text-white font-bold"
+                    style="width:20px;height:20px">2</span>
+                <span class="text-base font-semibold">Atención al Usuario</span>
+            </div>
+
+            @for (item of atencionItems; track item.key) {
+            <div
+                class="py-2 border-bottom-1 surface-border flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-2">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi {{ item.icon }} text-color-secondary text-sm"></i>
+                    <span class="text-sm font-medium">{{ item.label }}</span>
+                </div>
+                <div class="flex align-items-center gap-2">
+                    <p-rating [ngModel]="getAtencionValue(item.key)"
+                        (ngModelChange)="setAtencionValue(item.key, $event)" [stars]="5" />
+                </div>
+            </div>
+            }
+
+            <p-divider />
+
+            <div class="flex align-items-center gap-2 mb-3 mt-1">
+                <span
+                    class="inline-flex align-items-center justify-content-center border-circle bg-brand text-white font-bold"
+                    style="width:20px;height:20px">3</span>
+                <span class="text-base font-semibold">Plataforma / Sistema</span>
+            </div>
+
+            @for (item of plataformaItems; track item.key) {
+            <div
+                class="py-2 border-bottom-1 surface-border flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-2">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi {{ item.icon }} text-color-secondary text-sm"></i>
+                    <span class="text-sm font-medium">{{ item.label }}</span>
+                </div>
+                <div class="flex align-items-center gap-2">
+                    <p-rating [ngModel]="getPlataformaValue(item.key)"
+                        (ngModelChange)="setPlataformaValue(item.key, $event)" [stars]="5" />
+                </div>
+            </div>
+            }
+
+            <p-divider />
+
+            <div class="flex align-items-center gap-2 mb-3 mt-1">
+                <span
+                    class="inline-flex align-items-center justify-content-center border-circle bg-brand text-white font-bold"
+                    style="width:20px;height:20px">4</span>
+                <span class="text-base font-semibold">Resultado del Trámite</span>
+            </div>
+
+            @for (item of resultadoItems; track item.key) {
+            <div
+                class="py-2 border-bottom-1 surface-border flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-2">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi {{ item.icon }} text-color-secondary text-sm"></i>
+                    <span class="text-sm font-medium">{{ item.label }}</span>
+                </div>
+                <div class="flex align-items-center gap-2">
+                    <p-rating [ngModel]="getResultadoValue(item.key)"
+                        (ngModelChange)="setResultadoValue(item.key, $event)" [stars]="5" />
+                </div>
+            </div>
+            }
+
+            <p-divider />
+
+            <div>
+                <label class="text-sm font-medium text-color-secondary mb-2 block">
+                    <i class="pi pi-comment mr-1"></i>
+                    Comentarios adicionales
+                    <span class="text-xs ml-1">(Opcional)</span>
+                </label>
+                <textarea [(ngModel)]="survey.comentarios" rows="3"
+                    placeholder="¿Algo que quieras contarnos? Tu opinión nos ayuda a mejorar..."
+                    class="w-full border-round-lg resize-none p-2 border-1"
+                    style="border-color: var(--surface-border); background: var(--surface-ground);"
+                    maxlength="300"></textarea>
+                <div class="text-right text-xs text-color-secondary mt-1">{{ survey.comentarios.length }}/300</div>
+            </div>
+        </div>
+        }
+
+        @if (submitted) {
+        <div class="surface-card border-1 surface-border border-round-xl p-4 text-center">
+            <div class="flex align-items-center justify-content-center border-circle mx-auto mb-4 bg-green-100"
+                style="width:72px;height:72px;">
+                <i class="pi pi-check-circle text-4xl text-green-500"></i>
+            </div>
+            <h2 class="text-xl font-bold mb-2 mt-0">¡Gracias por tu opinión!</h2>
+            <p class="text-color-secondary text-sm mb-4 line-height-3">
+                Tu respuesta fue registrada. Con tu ayuda seguimos mejorando el servicio.
+            </p>
+
+            @if (selectedEmoji) {
+            <div class="border-round-lg p-3 mb-4 text-left border-1"
+                style="background: var(--surface-ground); border-color: var(--surface-border);">
+                <div class="flex align-items-center gap-2">
+                    <span style="font-size:1.6rem">{{ selectedEmoji.emoji }}</span>
+                    <div>
+                        <div class="text-xs text-color-secondary">Calificación general</div>
+                        <div class="font-semibold text-sm">{{ selectedEmoji.label }}</div>
+                    </div>
+                </div>
+                @if (survey.quickFeedback.length > 0) {
+                <p-divider styleClass="my-2" />
+                <div class="flex flex-wrap gap-1">
+                    @for (tag of survey.quickFeedback; track tag) {
+                    <p-tag [value]="tag" styleClass="text-xs" />
+                    }
+                </div>
+                }
+            </div>
+            }
+
+            <p-button label="Nueva encuesta" icon="pi pi-refresh" styleClass="w-full justify-content-center"
+                (onClick)="resetSurvey()" />
+        </div>
+        }
+    </div>
+</div>

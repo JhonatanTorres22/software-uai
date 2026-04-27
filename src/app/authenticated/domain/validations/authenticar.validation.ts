@@ -9,4 +9,9 @@ export class AuthenticarValidation {
     minLengthUserName = 8;
     expRegUserName = /^[0-9]+$/
     expRegLockInputUserName = /[^0-9]/
+
+    maxLengthCorreo = 150;
+    minLengthCorreo = 5;
+    expRegCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    expRegLockInputCorreo = /[\s]/
 }

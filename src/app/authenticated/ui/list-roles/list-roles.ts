@@ -12,10 +12,11 @@ import {
   resolveModuleRoute,
 } from '@/authenticated/domain/entities/rolesAsignados.entity';
 import { UiCardNoItems } from "@/shared/components/ui-card-no-items/ui-card-no-items";
+import { DividerModule } from "primeng/divider";
 
 @Component({
   selector: 'app-list-roles',
-  imports: [CommonModule, FieldsetModule, UiButtonComponent, UiLoading, UiCardNoItems],
+  imports: [CommonModule, FieldsetModule, UiButtonComponent, UiLoading, UiCardNoItems, DividerModule],
   templateUrl: './list-roles.html',
   styleUrl: './list-roles.scss',
 })

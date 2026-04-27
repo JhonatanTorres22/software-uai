@@ -17,6 +17,11 @@ const octdaChildren: Routes = [
     loadComponent: () =>
       import('./pages-octda/categoria/ui/page-categoria').then((m) => m.PageCategoria)
   },
+      {
+    path: 'tramites',
+    loadComponent: () =>
+      import('./pages-octda/tramites/ui/page-tramites').then((m) => m.PageTramites)
+  },
   {
     path: '**',
     loadComponent: () =>

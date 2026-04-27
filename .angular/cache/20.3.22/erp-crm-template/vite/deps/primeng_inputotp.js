@@ -1,14 +1,17 @@
 import {
   InputText
-} from "./chunk-KXFHT2W5.js";
+} from "./chunk-XJXJ6JC2.js";
 import {
   BaseEditableHolder
 } from "./chunk-XJQR5STB.js";
 import "./chunk-J3H43IFU.js";
 import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-IERP5MBR.js";
+import "./chunk-N2PXFZAG.js";
+import {
   AutoFocus
 } from "./chunk-GN2G5GJC.js";
-import "./chunk-N2PXFZAG.js";
 import "./chunk-NSMLKHIE.js";
 import {
   PARENT_INSTANCE
@@ -25,9 +28,6 @@ import {
   BindModule
 } from "./chunk-WRVE66AS.js";
 import "./chunk-TIK557PQ.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-IERP5MBR.js";
 import {
   CommonModule,
   NgForOf,

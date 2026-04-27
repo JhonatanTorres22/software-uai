@@ -160,6 +160,10 @@ export class AddEditSubcategoria {
   get modalPrimaryLabel(): string {
     return this.modoEdicion ? 'Guardar Cambios' : 'Crear Subcategoría';
   }
+
+  // get modalPrimaryDisabled(): boolean {
+  //   return !this.form.nombre.trim();
+  // }
  
   ngOnInit(): void {
     if (this.subcategoria) {

@@ -1,0 +1,65 @@
+// ─── Close button ────────────────────────────────────────────────────────────
+.tl-close-btn {
+  width: 28px;
+  height: 28px;
+  background: var(--surface-200, #e5e7eb);
+  color: var(--text-color-secondary);
+  transition: background .15s, color .15s;
+
+  &:hover {
+    background: var(--surface-300, #d1d5db);
+    color: var(--text-color);
+  }
+}
+
+// ─── Node ────────────────────────────────────────────────────────────────────
+.tl-node {
+  width: 24px;
+  height: 24px;
+  min-height: 24px;
+  border: 2px solid;
+  transition: box-shadow .2s;
+
+  &--active {
+    animation: tl-glow 2s ease-in-out infinite;
+  }
+
+  &--pending {
+    border-style: dashed !important;
+    opacity: .6;
+  }
+}
+
+// ─── Connector line ───────────────────────────────────────────────────────────
+.tl-line {
+  width: 2px;
+  flex: 1;
+  min-height: 16px;
+  background: var(--surface-border);
+
+  &--dashed {
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--surface-border) 0,
+      var(--surface-border) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+  }
+}
+
+// ─── Current step dot ────────────────────────────────────────────────────────
+.tl-dot-pulse {
+  animation: dot-pulse 1.5s ease-in-out infinite;
+}
+
+// ─── Animations ──────────────────────────────────────────────────────────────
+@keyframes tl-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, .3); }
+  50%       { box-shadow: 0 0 0 5px rgba(59, 130, 246, .08); }
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .4; transform: scale(.7); }
+}

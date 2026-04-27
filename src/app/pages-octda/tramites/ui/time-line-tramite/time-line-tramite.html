@@ -1,0 +1,214 @@
+<div class="flex flex-column gap-3">
+  <div class="surface-card border-1 surface-border border-round-xl p-3">
+    <div class="flex align-items-center justify-content-between mb-3">
+      <div class="flex align-items-center gap-2">
+        <div class="flex align-items-center justify-content-center border-round-lg">
+          <i class="pi pi-hourglass text-brand text-base"></i>
+        </div>
+        <div>
+          <div class="font-bold text-sm">Línea de Tiempo</div>
+          <div class="text-xs text-color-secondary">Seguimiento del trámite</div>
+        </div>
+      </div>
+      <ui-icon-button icon="pi pi-times" (click)="close.emit()" color="danger"></ui-icon-button>
+    </div>
+
+    <!-- Tramite mini-card -->
+    <div class="surface-ground border-round-lg p-2 border-1 surface-border">
+      <div class="flex align-items-start justify-content-between">
+        <span class="font-bold text-xs text-brand font-mono">{{ tramite.codigo }}</span>
+        <p-tag
+          [value]="getEstadoLabel(tramite.estado)"
+          [severity]="getEstadoSeverity(tramite.estado)"
+          styleClass="text-xs"
+        />
+      </div>
+      <div class="text-sm font-medium line-height-2 mb-2" style="word-break:break-word;">
+        {{ tramite.tipo }}
+      </div>
+      <div class="flex align-items-center gap-3 flex-wrap">
+        <div class="flex align-items-center gap-1">
+          <i class="pi pi-user text-xs text-color-secondary"></i>
+          <span class="text-xs text-color-secondary">{{ tramite.solicitante }}</span>
+        </div>
+        <div class="flex align-items-center gap-1">
+          <i class="pi pi-building text-xs text-color-secondary"></i>
+          <span class="text-xs text-color-secondary">{{ tramite.areaDestino }}</span>
+        </div>
+        <div class="flex align-items-center gap-1">
+          <i class="pi pi-calendar text-xs text-color-secondary"></i>
+          <span class="text-xs text-color-secondary">{{ tramite.fechaTramite | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="surface-card border-1 surface-border border-round-xl px-3 py-2">
+    <div class="text-xs font-semibold text-color-secondary uppercase mb-2" style="letter-spacing:.06em;">
+      Progreso del trámite
+    </div>
+    <div class="flex align-items-center">
+      @for (step of progressSteps; track step.id; let last = $last) {
+        <div class="flex flex-column align-items-center gap-1 flex-shrink-0" style="min-width:52px;">
+          <div
+            class="border-circle flex align-items-center justify-content-center transition-all transition-duration-200"
+            style="width:26px;height:26px;"
+            [style.background]="step.done ? 'var(--primary-color)' : 'var(--surface-200)'"
+            [style.boxShadow]="step.active ? '0 0 0 3px color-mix(in srgb,var(--primary-color) 25%,transparent)' : 'none'"
+          >
+            <i class="pi" [ngClass]="step.icon" style="font-size:9px;"
+               [style.color]="step.done ? '#fff' : 'var(--text-color-secondary)'"></i>
+          </div>
+          <span
+            class="text-center font-medium text-brand"
+            style="font-size:8px;line-height:1.3;white-space:nowrap;"
+            [class.text-brand]="step.active"
+            [class.font-bold]="step.active"
+            [class.text-color-secondary]="!step.active"
+          >{{ step.label }}</span>
+        </div>
+        @if (!last) {
+          <div class="flex-1 border-top-1 surface-border align-self-start mt-3 mx-1"></div>
+        }
+      }
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ TIMELINE EVENTS ═════════════════════ -->
+  <div class="surface-card border-1 surface-border border-round-xl p-3">
+
+    <!-- Section header -->
+    <div class="flex align-items-center gap-2 mb-3">
+      <i class="pi pi-list text-primary" style="font-size:.85rem;"></i>
+      <span class="text-xs font-semibold text-color-secondary uppercase" style="letter-spacing:.06em;">
+        Historial de movimientos
+      </span>
+      <span class="surface-200 text-color-secondary border-round px-2 font-semibold ml-auto"
+            style="font-size:.68rem; padding-top:3px; padding-bottom:3px;">
+        {{ eventos.length }} evento{{ eventos.length !== 1 ? 's' : '' }}
+      </span>
+    </div>
+
+    <!-- Events list -->
+    <div class="overflow-y-auto" style="max-height: calc(100vh - 380px); min-height: 120px;">
+      @for (evento of eventos; track evento.id; let last = $last) {
+        <div class="flex gap-2">
+
+          <!-- ─ Track (node + connector) ─────────────────────────── -->
+          <div class="flex flex-column align-items-center flex-shrink-0" style="width:26px;">
+            <div
+              class="tl-node border-circle flex align-items-center justify-content-center flex-shrink-0"
+              [class.tl-node--active]="evento.esActual && !evento.esPendiente"
+              [class.tl-node--pending]="evento.esPendiente"
+              [style.borderColor]="evento.esPendiente ? 'var(--surface-border)' : getEventoConfig(evento.estado).color"
+              [style.background]="evento.esPendiente ? 'var(--surface-card)' : getEventoConfig(evento.estado).bg"
+            >
+              <i class="pi" [ngClass]="getEventoConfig(evento.estado).icon"
+                 style="font-size:8px;"
+                 [style.color]="evento.esPendiente ? 'var(--text-color-secondary)' : getEventoConfig(evento.estado).color"
+              ></i>
+            </div>
+            @if (!last) {
+              <div class="tl-line" [class.tl-line--dashed]="evento.esPendiente"></div>
+            }
+          </div>
+
+          <!-- ─ Event content ─────────────────────────────────────── -->
+          <div class="flex-1 min-w-0" [class.pb-4]="!last" [class.pb-1]="last">
+
+            <!-- Date / time -->
+            <div class="flex align-items-center gap-1 mb-1">
+              @if (!evento.esPendiente) {
+                <i class="pi pi-clock text-color-secondary" style="font-size:8px;"></i>
+                <span class="text-color-secondary font-medium" style="font-size:.7rem;">{{ evento.fecha }}</span>
+                <span class="text-color-secondary" style="font-size:.7rem;">·</span>
+                <span class="text-color-secondary" style="font-size:.7rem;">{{ evento.hora }}</span>
+              } @else {
+                <i class="pi pi-ellipsis-h text-color-secondary" style="font-size:8px;"></i>
+                <span class="text-color-secondary font-medium" style="font-size:.7rem; font-style:italic;">En espera...</span>
+              }
+            </div>
+
+            <!-- Estado badge + Área -->
+            <div class="flex align-items-center flex-wrap gap-1 mb-2">
+              <span
+                class="inline-flex align-items-center gap-1 border-round font-semibold"
+                style="font-size:.68rem; padding: 2px 7px; border-width:1px; border-style:solid;"
+                [style.background]="getEventoConfig(evento.estado).bg"
+                [style.color]="getEventoConfig(evento.estado).color"
+                [style.borderColor]="getEventoConfig(evento.estado).border"
+              >
+                <i class="pi" [ngClass]="getEventoConfig(evento.estado).icon" style="font-size:8px;"></i>
+                {{ getEventoConfig(evento.estado).label }}
+              </span>
+              <span class="surface-200 text-color-secondary border-round font-medium"
+                    style="font-size:.68rem; padding: 2px 7px;">
+                {{ evento.area }}
+              </span>
+            </div>
+
+            <!-- Acción -->
+            <div
+              class="text-sm font-medium line-height-2 mb-2"
+              [class.text-color-secondary]="evento.esPendiente"
+              [style.fontStyle]="evento.esPendiente ? 'italic' : 'normal'"
+            >
+              {{ evento.accion }}
+            </div>
+
+            <!-- Responsable -->
+            @if (evento.responsable) {
+              <div class="flex align-items-start gap-2 mb-2">
+                <div class="flex align-items-center justify-content-center border-circle surface-200 flex-shrink-0"
+                     style="width:20px;height:20px;min-height:20px;">
+                  <i class="pi pi-user text-color-secondary" style="font-size:8px;"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="text-xs font-semibold line-height-2">{{ evento.responsable }}</div>
+                  @if (evento.cargo) {
+                    <div class="text-color-secondary" style="font-size:.7rem; line-height:1.4;">{{ evento.cargo }}</div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Derivado a -->
+            @if (evento.derivadoA) {
+              <div class="flex align-items-start gap-2 p-2 border-round-lg border-1 mb-2"
+                   style="background:#f5f3ff; border-color:#ddd6fe !important;">
+                <i class="pi pi-arrow-right flex-shrink-0 mt-1" style="color:#7c3aed; font-size:.7rem;"></i>
+                <div>
+                  <div class="font-semibold mb-1" style="color:#7c3aed; font-size:.68rem;">Derivado a:</div>
+                  <div class="text-xs font-medium line-height-2">{{ evento.derivadoA }}</div>
+                </div>
+              </div>
+            }
+
+            <!-- Observación -->
+            @if (evento.observacion) {
+              <div class="flex align-items-start gap-2 p-2 border-round-lg border-1"
+                   style="background:#fffbeb; border-color:#fde68a !important;">
+                <i class="pi pi-exclamation-triangle flex-shrink-0 mt-1" style="color:#d97706; font-size:.7rem;"></i>
+                <div class="line-height-3" style="font-size:.7rem; color:#92400e;">
+                  <span class="font-bold">Observación: </span>{{ evento.observacion }}
+                </div>
+              </div>
+            }
+
+            <!-- Estado actual indicator -->
+            @if (evento.esActual && !evento.esPendiente) {
+              <div class="flex align-items-center gap-1 mt-2">
+                <div class="tl-dot-pulse border-circle"
+                     style="width:6px;height:6px;background:var(--primary-color);flex-shrink:0;"></div>
+                <span class="text-primary font-bold" style="font-size:.68rem;">Estado actual</span>
+              </div>
+            }
+
+          </div>
+        </div>
+      }
+    </div>
+
+  </div>
+
+</div>
+

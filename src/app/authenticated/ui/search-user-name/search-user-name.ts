@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from "primeng/inputnumber";
@@ -14,10 +14,12 @@ import { GetRolesAsignadosUseCase } from '@/authenticated/application/use-cases/
 import { AuthenticarValidation } from '@/authenticated/domain/validations/authenticar.validation';
 import { UiInputComponent } from "@/shared/components/ui-input/ui-input.component";
 import { UiLoading } from "@/shared/components/ui-loading/ui-loading";
+import { CommonModule } from '@angular/common';
+import { NotificationService } from '@/shared/services/notification.service';
 
 @Component({
   selector: 'app-search-user-name',
-  imports: [InputNumberModule, ButtonModule, FormsModule, InputGroupModule, InputGroupAddonModule, ReactiveFormsModule, UiButtonComponent, CardModule, UiInputComponent, Divider, UiLoading],
+  imports: [InputNumberModule, ButtonModule, FormsModule,CommonModule, InputGroupModule, InputGroupAddonModule, ReactiveFormsModule, UiButtonComponent, CardModule, UiInputComponent, Divider, UiLoading],
   templateUrl: './search-user-name.html',
   styleUrl: './search-user-name.scss',
 })
@@ -26,14 +28,15 @@ export class SearchUserName {
   readonly loading = this.authenticatedSignal.loadingRoles;
   readonly listModulos = this.authenticatedSignal.listModulos;
   private readonly getRolUseCase = inject(GetRolesAsignadosUseCase);
-  visibleInputCorreo: boolean = false;
   readonly userNameIngresado = this.authenticatedSignal.userNameIngresado;
   readonly correoIngresado = this.authenticatedSignal.correoIngresado;
   readonly formLogin: FormGroup<{
     userName: FormControl<string | null>;
     correo: FormControl<string | null>;
   }>;
+  visibleMessageError = signal(false);
   readonly siguientePaso = output<void>();
+  private readonly notificationService = inject(NotificationService);
 
   /* VALIDACIONES */
   private readonly authenticarValidation = inject(AuthenticarValidation);
@@ -41,6 +44,10 @@ export class SearchUserName {
   expRegLockInputUserName = this.authenticarValidation.expRegLockInputUserName
   maxLengthUserName = this.authenticarValidation.maxLengthUserName
   minLengthUserName = this.authenticarValidation.minLengthUserName
+  expRegCorreo = this.authenticarValidation.expRegCorreo
+  expRegLockInputCorreo = this.authenticarValidation.expRegLockInputCorreo
+  maxLengthCorreo = this.authenticarValidation.maxLengthCorreo
+  minLengthCorreo = this.authenticarValidation.minLengthCorreo
   constructor() {
     this.formLogin = new FormGroup({
       userName: new FormControl<string | null>(this.userNameIngresado() || null, [
@@ -51,42 +58,54 @@ export class SearchUserName {
       ]),
       correo: new FormControl('', [
         Validators.required,
+        Validators.maxLength(this.maxLengthCorreo),
+        Validators.minLength(this.minLengthCorreo),
+        Validators.pattern(this.expRegCorreo)
       ])
     });
   }
 
   buscarRolesAsignados(): void {
+    if(this.formLogin.invalid){return}
     const userName = `${this.formLogin.controls.userName.value ?? ''}`.trim();
-    if (userName.length < this.minLengthUserName) {
-      return;
-    }
+    const correo = `${this.formLogin.controls.correo.value ?? ''}`.trim();
+
     this.userNameIngresado.set(userName);
     this.loading.set(true);
-
-    this.getRolUseCase.execute(userName).subscribe({
+    console.log(this.loading());
+    
+    this.getRolUseCase.execute(userName, correo).subscribe({
       next: (response) => {
+        console.log(response);
         if (response.isSuccess) {
+          
           this.listModulos.set(response.data.modulos);
-          if (this.listModulos().length > 0) {
-            // this.authenticatedSignal.authErrorMessage.set('El usuario no tiene roles asignados.');
+          console.log(this.listModulos());
+          if (this.listModulos().length === 0) {
+            this.visibleMessageError .set(true);
+            this.notificationService.error('No se encontraron roles para el usuario.');
+            return
           }
-          this.visibleInputCorreo = true;
-          this.loading.set(false);
+          this.notificationService.success('Roles cargados correctamente');
+          this.irAPasoSiguiente()
         }
       },
       error: (error: unknown) => {
+        console.log(error);
         this.loading.set(false);
         this.authenticatedSignal.resetRolesState();
         this.userNameIngresado.set(userName);
+        // this.notificationService.error(`${error.message || 'No se pudieron cargar los roles del usuario.'}`);
         // this.authErrorMessage.set('No se pudieron cargar los roles del usuario.');
       }
     });
-    this.authenticatedSignal.resetRolesState();
   }
 
-  irAPasoSiguiente(): void {
+  irAPasoSiguiente(): void {   
+    if(this.visibleMessageError()){return}
     const correo = `${this.formLogin.controls.correo.value ?? ''}`.trim();
     this.correoIngresado.set(correo);
     this.siguientePaso.emit();
+    this.loading.set(false);
   }
 }

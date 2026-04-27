@@ -69,7 +69,7 @@ export class ModalService {
     return this.dialogService.open(UiModal, {
       ...rest,
 
-      header: ' ',
+      header,
       showHeader: true,
       width,
       dismissableMask,
@@ -83,14 +83,13 @@ export class ModalService {
       },
 
       data: {
-        title: header,
         component,
         payload: data ?? {},
         footer: finalFooter
       },
 
       modal: true,
-      closable: false,
+      closable: true,
       styleClass: 'ui-modal-wrapper'
     })!;
   }

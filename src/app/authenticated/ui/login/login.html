@@ -1,5 +1,4 @@
 <div class="flex flex-column gap-4">
-
     <!-- HEADER -->
     <div class="flex align-items-center gap-3">
         <p-avatar [label]="rolSeleccionado()?.modulo?.charAt(0) || 'M'" size="large"
@@ -47,20 +46,31 @@
 
     </div>
 
+    <div class="flex gap-3 p-2 border-round-xl align-items-start border-1 border-blue-200 bg-blue-100">
+        <div class="flex align-items-center justify-content-center border-circle m-2">
+            <i class="pi pi-info-circle text-blue-600 text-xl"></i>
+        </div>
+        <div class="flex flex-column gap-1">
+            <span class="text-sm text-600 line-height-2">
+                Hemos enviado un código de verificación a tu correo
+                <span class="font-semibold text-blue-700">
+                    {{ correoIngresado() }}
+                </span>.
+                Por favor, revisa tu bandeja de entrada e ingresa el número de acceso para continuar.
+            </span>
+        </div>
+    </div>
     <p-divider />
 
-
-    <!-- TÍTULO -->
     <div class="text-2xl font-semibold text-center">
         INGRESE CÓDIGO DE VERIFICACIÓN
     </div>
     <p-divider></p-divider>
 
-    <!-- FORM -->
     <div class="flex flex-column gap-3 pt-2">
 
         <div class="flex justify-content-center">
-            <p-inputotp [ngModel]="password()" size="large" [length]="8" (ngModelChange)="password.set($event ?? '')" />
+            <p-inputotp [ngModel]="password()" size="large" [length]="10" (ngModelChange)="password.set($event ?? '')" />
         </div>
         <div class="flex justify-content-between pt-3">
             <ui-button label="Volver" icon="pi pi-arrow-left" (onClick)="stepAnterior()">
@@ -70,6 +80,5 @@
                 (onClick)="ingresar()">
             </ui-button>
         </div>
-
     </div>
 </div>

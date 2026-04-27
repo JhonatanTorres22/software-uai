@@ -8,13 +8,12 @@ import {
 } from '@angular/core';
 
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { UiIconButton } from "../ui-icon-button/ui-icon-button";
 import { UiButtonComponent } from '../ui-button/ui-button.component';
 import { ModalFooterConfig } from '@/shared/services/modal.service';
 
 @Component({
   selector: 'app-ui-modal',
-  imports: [UiIconButton, UiButtonComponent],
+  imports: [UiButtonComponent],
   templateUrl: './ui-modal.html',
   styleUrl: './ui-modal.scss',
 })
@@ -35,7 +34,6 @@ export class UiModal implements OnInit, AfterViewInit {
   private ref = inject(DynamicDialogRef);
   private config = inject(DynamicDialogConfig);
 
-  title = '';
   component: any;
   componentRef: any;
 
@@ -43,7 +41,6 @@ export class UiModal implements OnInit, AfterViewInit {
      INIT (IMPORTANTE)
   ───────────────────────────── */
   ngOnInit() {
-    this.title = this.config.data?.['title'] || '';
     this.component = this.config.data?.['component'];
 
     this.footer = {
@@ -88,6 +85,10 @@ export class UiModal implements OnInit, AfterViewInit {
     return this.footer.showPrimary ?? true;
   }
 
+  get showCancel(): boolean {
+    return this.footer.showCancel ?? true;
+  }
+
   get disablePrimary(): boolean {
     return this.resolveBoolean(['modalPrimaryDisabled'], false);
   }
@@ -130,6 +131,16 @@ export class UiModal implements OnInit, AfterViewInit {
 
   private resolveBoolean(keys: string[], fallback: boolean): boolean {
     const value = this.readFirstValue(keys);
+
+    if (typeof value === 'function') {
+      try {
+        const resolved = value();
+        return typeof resolved === 'boolean' ? resolved : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
     return typeof value === 'boolean' ? value : fallback;
   }
 
