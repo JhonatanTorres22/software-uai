@@ -23,25 +23,27 @@ interface ConfirmVisualConfig {
   providedIn: 'root'
 })
 export class ConfirmDialogService {
+  private static readonly destructivePattern = /eliminar|eliminacion|eliminaci[oó]n|borrar|suprimir|delete|remover/i;
+
   private readonly defaults: Record<ConfirmType, ConfirmVisualConfig> = {
     question: {
-      icon: 'pi pi-question-circle',
+      icon: 'pi pi-question-circle ui-confirm-type-question',
       acceptButtonStyleClass: 'p-button-primary'
     },
     success: {
-      icon: 'pi pi-check-circle',
+      icon: 'pi pi-check-circle ui-confirm-type-success',
       acceptButtonStyleClass: 'p-button-success'
     },
     error: {
-      icon: 'pi pi-times-circle',
+      icon: 'pi pi-times-circle ui-confirm-type-error',
       acceptButtonStyleClass: 'p-button-danger'
     },
     info: {
-      icon: 'pi pi-info-circle',
+      icon: 'pi pi-info-circle ui-confirm-type-info',
       acceptButtonStyleClass: 'p-button-info'
     },
     warning: {
-      icon: 'pi pi-exclamation-triangle',
+      icon: 'pi pi-exclamation-triangle ui-confirm-type-warning',
       acceptButtonStyleClass: 'p-button-warning'
     }
   };
@@ -51,6 +53,7 @@ export class ConfirmDialogService {
   open(options: ConfirmOptions): void {
     const type = options.type ?? 'question';
     const visual = this.defaults[type];
+    const isDestructive = this.isDestructiveAction(options);
 
     this.confirmationService.confirm({
       header: options.title ?? 'Confirmar accion',
@@ -58,11 +61,16 @@ export class ConfirmDialogService {
       icon: visual.icon,
       acceptLabel: options.acceptLabel ?? 'Aceptar',
       rejectLabel: options.rejectLabel ?? 'Cancelar',
-      acceptButtonStyleClass: visual.acceptButtonStyleClass,
+      acceptButtonStyleClass: isDestructive ? 'p-button-danger' : visual.acceptButtonStyleClass,
       rejectButtonStyleClass: 'p-button-text p-button-secondary',
       accept: options.onAccept,
       reject: options.onReject
     });
+  }
+
+  private isDestructiveAction(options: ConfirmOptions): boolean {
+    const source = `${options.title ?? ''} ${options.message}`;
+    return ConfirmDialogService.destructivePattern.test(source);
   }
 }
 

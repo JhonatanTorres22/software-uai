@@ -15,9 +15,12 @@ import { ObtenerSubCategoriaPorIdUseCase } from '../../application/use-cases/sub
 import { NotificationService } from '@/shared/services/notification.service';
 import { ListarSubCategoria } from '../../domain/entity/subCategoria.entity';
 import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
+import { UiLoading } from "@/shared/components/ui-loading/ui-loading";
+import { UiCardNoItems } from "@/shared/components/ui-card-no-items/ui-card-no-items";
+import { TagModule } from "primeng/tag";
 @Component({
   selector: 'app-list-subcategoria',
-  imports: [CardModule, BadgeModule, ButtonModule, DataViewModule, CommonModule, UiButtonComponent, UiIconButton],
+  imports: [CardModule, BadgeModule, ButtonModule, DataViewModule, CommonModule, UiLoading, UiIconButton, UiButtonComponent, UiCardNoItems, TagModule],
   templateUrl: './list-subcategoria.html',
   styleUrl: './list-subcategoria.scss',
 })
@@ -35,8 +38,6 @@ export class ListSubcategoria {
   private readonly confirmDialogService = inject(ConfirmDialogService);
 
   subcategoriaActivaId: number | null = null;
-  eliminandoSubCategoria = false;
-
   private readonly obtenerSubCategoriaPorIdUseCase = inject(ObtenerSubCategoriaPorIdUseCase);
   private readonly eliminarSubCategoriaUseCase = inject(EliminarSubCategoriaUseCase);
 
@@ -71,7 +72,6 @@ export class ListSubcategoria {
       },
       error: (err) => {
         console.log(err);
-        
         this.loading.set(false);
         this.notificationService.error('Error al cargar subcategorías');
       }
@@ -104,20 +104,19 @@ export class ListSubcategoria {
 
   eliminarSubCategoria(subcategoria: ListarSubCategoria): void {
     this.confirmDialogService.open({
-      type: 'warning',
+      type: 'question',
       title: 'Eliminar subcategoría',
-      message: `Se eliminará la subcategoría "${subcategoria.nombre}". Esta acción no se puede deshacer.`,
+      message: `Se eliminará la subcategoría "${subcategoria.nombre}". ¿Deseas continuar?`,
       acceptLabel: 'Sí, eliminar',
       rejectLabel: 'Cancelar',
       onAccept: () => {
-        this.eliminandoSubCategoria = true;
+        this.loading.set(true);
 
         this.eliminarSubCategoriaUseCase.execute({
           idSubCategoriaTramite: subcategoria.idSubCategoriaTramite,
         }).subscribe({
           next: (response) => {
-            this.eliminandoSubCategoria = false;
-
+            this.loading.set(false);
             if (this.selectSubCategoria().idSubCategoriaTramite === subcategoria.idSubCategoriaTramite) {
               this.selectSubCategoria.set(this.selectSubCategoriaDefault);
               this.subcategoriaActivaId = null;
@@ -127,12 +126,11 @@ export class ListSubcategoria {
             this.obtenerSubCategoria(this.selectCategoria().idCategoriaTramite);
           },
           error: () => {
-            this.eliminandoSubCategoria = false;
+            this.loading.set(false);
             this.notificationService.error('No se pudo eliminar la subcategoría');
           }
         });
       }
     });
   }
-
 }

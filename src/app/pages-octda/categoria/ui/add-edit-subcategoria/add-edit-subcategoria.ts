@@ -10,6 +10,8 @@ import { CrearSubCategoriaUseCase } from '../../application/use-cases/subCategor
 import { EditarSubCategoriaUseCase } from '../../application/use-cases/subCategorias/editarSubCategoria.use-cases';
 import { CrearSubCategoria, EditarSubCategoria, ListarSubCategoria } from '../../domain/entity/subCategoria.entity';
 import { CategoriaSignal } from '../../domain/signals/categoria.signal';
+import { UiInputComponent } from '@/shared/components/ui-input/ui-input.component';
+import { UiTextAreaComponent } from '@/shared/components/ui-text-area/ui-text-area.component';
 
 @Component({
   selector: 'app-add-edit-subcategoria',
@@ -18,7 +20,9 @@ import { CategoriaSignal } from '../../domain/signals/categoria.signal';
     CommonModule,
     ReactiveFormsModule,
     InputTextModule,
-    TextareaModule
+    TextareaModule,
+    UiInputComponent,
+    UiTextAreaComponent
   ],
   templateUrl: './add-edit-subcategoria.html',
   styleUrls: ['./add-edit-subcategoria.scss'],
@@ -104,6 +108,8 @@ export class AddEditSubcategoria implements OnInit {
         nombre,
         descripcion
       };
+      console.log(payload);
+      
 
       this.editarSubCategoriaUseCase.execute(payload).subscribe({
         next: (response) => {
@@ -111,7 +117,9 @@ export class AddEditSubcategoria implements OnInit {
           this.notificationService.success(`${response.message}, subcategoría actualizada correctamente`);
           this.ref.close({ success: true });
         },
-        error: () => {
+        error: (err) => {
+          console.log(err);
+          
           this.saving = false;
           this.notificationService.error('No se pudo actualizar la subcategoría');
         }
@@ -125,6 +133,9 @@ export class AddEditSubcategoria implements OnInit {
       descripcion
     };
 
+    console.log(payload);
+    
+
     this.crearSubCategoriaUseCase.execute(payload).subscribe({
       next: (response) => {
         this.saving = false;
@@ -137,25 +148,10 @@ export class AddEditSubcategoria implements OnInit {
       }
     });
   }
-
-  getError(controlName: 'nombre' | 'descripcion'): string {
-    const control = this.formSubCategoria.controls[controlName];
-    if (!control || !control.errors || (!control.touched && !this.submitted)) {
-      return '';
-    }
-
-    if (control.errors['required']) {
-      return 'Este campo es obligatorio.';
-    }
-
-    if (control.errors['minlength']) {
-      return `Debe tener al menos ${control.errors['minlength'].requiredLength} caracteres.`;
-    }
-
-    if (control.errors['maxlength']) {
-      return `No debe superar ${control.errors['maxlength'].requiredLength} caracteres.`;
-    }
-
-    return 'Valor inválido.';
+    patchValue() {
+    this.formSubCategoria.patchValue({
+      nombre: this.subcategoria?.nombre,
+      descripcion: this.subcategoria?.descripcion,
+    })
   }
 }

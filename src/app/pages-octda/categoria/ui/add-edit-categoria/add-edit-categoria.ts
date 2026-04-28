@@ -10,10 +10,11 @@ import { ListarCategoria, CrearCategoria, EditarCategoria } from '../../domain/e
 import { CommonModule } from '@angular/common';
 import { CrearCategoriaUseCase } from '../../application/use-cases/categorias/crearCategoria.use-case';
 import { EditarCategoriaUseCase } from '../../application/use-cases/categorias/editarCategoria.use-case';
+import { UiTextAreaComponent } from "@/shared/components/ui-text-area/ui-text-area.component";
 
 @Component({
   selector: 'app-add-edit-categoria',
-  imports: [ReactiveFormsModule, FormsModule, UiInputComponent, CommonModule],
+  imports: [ReactiveFormsModule, FormsModule, UiInputComponent, CommonModule, UiTextAreaComponent],
   templateUrl: './add-edit-categoria.html',
   styleUrl: './add-edit-categoria.scss',
 })

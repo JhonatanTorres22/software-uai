@@ -15,9 +15,10 @@ import { ObtenerCategoriaUseCase } from '../../application/use-cases/categorias/
 import { EliminarCategoriaUseCase } from '../../application/use-cases/categorias/eliminarCategoria.use-case';
 import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
 import { SubCategoriaSignal } from '../../domain/signals/subCategoria.signal';
+import { UiLoading } from "@/shared/components/ui-loading/ui-loading";
 @Component({
   selector: 'app-list-categoria',
-  imports: [ButtonModule, AutoCompleteModule, FormsModule, CommonModule, UiButtonComponent, UiIconButton],
+  imports: [ButtonModule, AutoCompleteModule, FormsModule, CommonModule, UiButtonComponent, UiIconButton, UiLoading],
   templateUrl: './list-categoria.html',
   styleUrl: './list-categoria.scss',
 })
@@ -27,13 +28,13 @@ export class ListCategoria {
 
   categoriaSeleccionada: ListarCategoria | null = null;
   terminoCategoria = '';
-  eliminandoCategoria = false;
 
   categoriaSeleccionadaChange = output<ListarCategoria>();
 
   selectCategoria = this.categoriaSignal.selectCategoria;
   selectCategoriaDefault = this.categoriaSignal.selectCategoriaDefault;
   listCategoria = this.categoriaSignal.listCategoria;
+  loading = this.categoriaSignal.loading;
   sugerencias: ListarCategoria[] = [];
   private readonly modalService = inject(ModalService);
 
@@ -50,13 +51,14 @@ export class ListCategoria {
   }
 
   obtenerCategorias(): void {
+    this.loading.set(true);
     this.obtenerCategoriaUseCase.execute().subscribe({
       next: (data) => {
         this.listCategoria.set(data.data);
 
         const categoriaActual = this.selectCategoria();
         const categoriaExiste = data.data.some((item) => item.idCategoriaTramite === categoriaActual.idCategoriaTramite);
-
+        this.loading.set(false);
         if (!categoriaExiste) {
           this.resetCategoriaSeleccionada();
         } else if (categoriaActual.idCategoriaTramite > 0) {
@@ -66,6 +68,7 @@ export class ListCategoria {
       },
       error: () => {
         this.notificationService.error('No se pudieron cargar las categorías');
+        this.loading.set(false);
       }
     });
   }
@@ -109,7 +112,7 @@ export class ListCategoria {
   }
 
   openCrearCategoria(): void {
-    this.openAddEditCategoria(this.selectCategoriaDefault, this.terminoCategoria.trim());
+    this.openAddEditCategoria(this.selectCategoriaDefault, this.resolveCreatePrefillNombre());
   }
 
   openAddEditCategoria(categoria: ListarCategoria, prefillNombre = ''): void {
@@ -132,13 +135,13 @@ export class ListCategoria {
 
   eliminarCategoria(categoria: ListarCategoria): void {
     this.confirmDialogService.open({
-      type: 'warning',
+      type: 'question',
       title: 'Eliminar categoría',
       message: `Se eliminará la categoría "${categoria.nombre}" y su información relacionada. Esta acción no se puede deshacer.`,
       acceptLabel: 'Sí, eliminar',
       rejectLabel: 'Cancelar',
       onAccept: () => {
-        this.eliminandoCategoria = true;
+        this.loading.set(true);
 
         const payload: EliminarCategoria = {
           idCategoriaTramite: categoria.idCategoriaTramite
@@ -146,7 +149,7 @@ export class ListCategoria {
 
         this.eliminarCategoriaUseCase.execute(payload).subscribe({
           next: (response) => {
-            this.eliminandoCategoria = false;
+            this.loading.set(false);
 
             if (this.selectCategoria().idCategoriaTramite === categoria.idCategoriaTramite) {
               this.resetCategoriaSeleccionada();
@@ -156,11 +159,14 @@ export class ListCategoria {
             this.obtenerCategorias();
           },
           error: () => {
-            this.eliminandoCategoria = false;
+            this.loading.set(false);
             this.notificationService.error('No se pudo eliminar la categoría');
           }
         });
-      }
+      },
+      onReject: () => {
+        this.loading.set(false);
+      },
     });
   }
 
@@ -183,5 +189,18 @@ export class ListCategoria {
     this.subCategoriaSignal.listSubCategoria.set([]);
     this.subCategoriaSignal.selectSubCategoria.set(this.subCategoriaSignal.selectSubCategoriaDefault);
     this.categoriaSeleccionadaChange.emit(this.selectCategoriaDefault);
+  }
+
+  private resolveCreatePrefillNombre(): string {
+    const term = this.terminoCategoria.trim();
+    if (!term) {
+      return '';
+    }
+
+    const exists = this.listCategoria().some((categoria) =>
+      categoria.nombre.trim().toLowerCase() === term.toLowerCase()
+    );
+
+    return exists ? '' : term;
   }
 }
