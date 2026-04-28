@@ -1,12 +1,16 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
+  Injector,
   OnInit,
+  signal,
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-
+import { AbstractControl } from '@angular/forms';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { UiButtonComponent } from '../ui-button/ui-button.component';
 import { ModalFooterConfig } from '@/shared/services/modal.service';
@@ -16,6 +20,7 @@ import { ModalFooterConfig } from '@/shared/services/modal.service';
   imports: [UiButtonComponent],
   templateUrl: './ui-modal.html',
   styleUrl: './ui-modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiModal implements OnInit, AfterViewInit {
 
@@ -33,12 +38,21 @@ export class UiModal implements OnInit, AfterViewInit {
 
   private ref = inject(DynamicDialogRef);
   private config = inject(DynamicDialogConfig);
+  private injector = inject(Injector);
 
   component: any;
   componentRef: any;
 
+  /* ─── Signals del footer (evitan NG0100) ─── */
+  readonly showPrimary  = signal(true);
+  readonly showCancel   = signal(true);
+  readonly primaryLabel = signal('Guardar');
+  readonly cancelLabel  = signal('Cancelar');
+  readonly disablePrimary = signal(false);
+  readonly disableCancel  = signal(false);
+
   /* ─────────────────────────────
-     INIT (IMPORTANTE)
+     INIT
   ───────────────────────────── */
   ngOnInit() {
     this.component = this.config.data?.['component'];
@@ -48,53 +62,79 @@ export class UiModal implements OnInit, AfterViewInit {
       ...(this.config.data?.['footer'] || {})
     };
 
+    /* Valores estáticos: seguros de leer aquí */
+    this.showPrimary.set(this.footer.showPrimary ?? true);
+    this.showCancel.set(this.footer.showCancel  ?? true);
+    this.primaryLabel.set(this.footer.primaryLabel || 'Guardar');
+    this.cancelLabel.set(this.footer.cancelLabel   || 'Cancelar');
+
     this.componentRef = this.container.createComponent(this.component);
 
     const payload = this.config.data?.['payload'];
-
     if (payload) {
       Object.assign(this.componentRef.instance, payload);
     }
   }
 
   /* ─────────────────────────────
-     AFTER VIEW (solo fix layout)
+     AFTER VIEW
+     Aquí el ngOnInit del componente interno ya corrió
+     (patchValue incluido) → valores estables.
   ───────────────────────────── */
   ngAfterViewInit() {
+    /* Labels dinámicos (el componente puede sobreescribirlos) */
+    this.primaryLabel.set(
+      this.resolveString(['modalPrimaryLabel'], this.footer.primaryLabel || 'Guardar')
+    );
+    this.cancelLabel.set(
+      this.resolveString(['modalCancelLabel'], this.footer.cancelLabel || 'Cancelar')
+    );
+
+    /* Disable inicial */
+    this.disablePrimary.set(this.resolveBoolean(['modalPrimaryDisabled'], false));
+    this.disableCancel.set(this.resolveBoolean(['modalCancelDisabled'],  false));
+
+    /* Reactividad: actualizaciones en tiempo real */
+    this.setupReactiveDisable();
+
     requestAnimationFrame(() => {
       window.dispatchEvent(new Event('resize'));
     });
   }
 
+  /**
+   * Detecta si `modalPrimaryDisabled` es un signal/computed (function)
+   * o un getter sobre un ReactiveForm, y suscribe en consecuencia.
+   */
+  private setupReactiveDisable(): void {
+    const instance = this.componentRef?.instance;
+    if (!instance) return;
+
+    const raw = this.readFirstValue(['modalPrimaryDisabled']);
+
+    if (typeof raw === 'function') {
+      /* Es un signal o computed → effect() lo rastrea reactivamente */
+      effect(() => {
+        const v = (instance['modalPrimaryDisabled'] as () => unknown)();
+        this.disablePrimary.set(typeof v === 'boolean' ? v : false);
+      }, { injector: this.injector });
+      return;
+    }
+
+    /* Es un getter sobre ReactiveForm → suscribir statusChanges */
+    for (const key of Object.keys(instance)) {
+      const val = instance[key];
+      if (val instanceof AbstractControl) {
+        val.statusChanges.subscribe(() => {
+          this.disablePrimary.set(this.resolveBoolean(['modalPrimaryDisabled'], false));
+        });
+        return;
+      }
+    }
+  }
+
   close() {
     this.ref.close(null);
-  }
-
-  /* ─────────────────────────────
-     FOOTER LOGIC
-  ───────────────────────────── */
-  get primaryLabel(): string {
-    return this.resolveString(['modalPrimaryLabel'], this.footer.primaryLabel || 'Guardar');
-  }
-
-  get cancelLabel(): string {
-    return this.resolveString(['modalCancelLabel'], this.footer.cancelLabel || 'Cancelar');
-  }
-
-  get showPrimary(): boolean {
-    return this.footer.showPrimary ?? true;
-  }
-
-  get showCancel(): boolean {
-    return this.footer.showCancel ?? true;
-  }
-
-  get disablePrimary(): boolean {
-    return this.resolveBoolean(['modalPrimaryDisabled'], false);
-  }
-
-  get disableCancel(): boolean {
-    return this.resolveBoolean(['modalCancelDisabled'], false);
   }
 
   onCancel(): void {

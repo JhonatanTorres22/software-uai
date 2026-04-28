@@ -6,8 +6,10 @@ import { CategoriaValidations } from '../../domain/validation/categoria.validati
 import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
 import { NotificationService } from '@/shared/services/notification.service';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Categoria, CrearCategoria, EditarCategoria } from '../../domain/categoria.model';
+import { ListarCategoria, CrearCategoria, EditarCategoria } from '../../domain/entity/categoria.model';
 import { CommonModule } from '@angular/common';
+import { CrearCategoriaUseCase } from '../../application/use-cases/categorias/crearCategoria.use-case';
+import { EditarCategoriaUseCase } from '../../application/use-cases/categorias/editarCategoria.use-case';
 
 @Component({
   selector: 'app-add-edit-categoria',
@@ -19,10 +21,11 @@ export class AddEditCategoria implements OnInit {
   private readonly ref = inject(DynamicDialogRef);
   private readonly config = inject(DynamicDialogConfig);
   private readonly categoriaSignal = inject(CategoriaSignal);
-  selectCategoria = this.categoriaSignal.selectCategoria;
+  // selectCategoria = this.categoriaSignal.selectCategoria;
   loading = this.categoriaSignal.loading;
   formCategoria: FormGroup
-  categoria!: Categoria;
+  categoria!: ListarCategoria;
+  prefillNombre = '';
   private notificationService = inject(NotificationService)
   private confirmDialogService = inject(ConfirmDialogService)
   /* VALIDACIONES */
@@ -35,6 +38,8 @@ export class AddEditCategoria implements OnInit {
   expLockInputNombre = this.categoriaValidations.expLockInputNombre;
   expLockInputDescripcion = this.categoriaValidations.expLockInputDescripcion;
 
+  private readonly editarCategoriaUseCase = inject(EditarCategoriaUseCase);
+  private readonly crearCategoriaUseCase = inject(CrearCategoriaUseCase);
 
   constructor() {
     this.formCategoria = new FormGroup({
@@ -43,31 +48,36 @@ export class AddEditCategoria implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.categoria = this.config.data.payload.categoria
+    const payload = this.config?.data?.payload ?? {};
+    this.categoria = (payload.categoria as ListarCategoria | undefined) ?? this.categoriaSignal.selectCategoriaDefault;
+    this.prefillNombre = (payload.prefillNombre as string | undefined)?.trim() ?? '';
 
-    if (this.categoria.id !== 0) {
+    if (this.categoria.idCategoriaTramite !== 0) {
       this.patchValue();
+    } else if (this.prefillNombre) {
+      this.formCategoria.patchValue({ nombre: this.prefillNombre });
     }
   }
 
-  get modalPrimaryLabel(): string {
-    return this.selectCategoria().id !== 0 ? 'Actualizar Categoria' : 'Crear Categoria';
+    get modalPrimaryLabel(): string {
+    return this.categoria.idCategoriaTramite !== 0 ? 'Actualizar Categoria' : 'Crear Categoria';
   }
-
   get modalPrimaryDisabled(): boolean {
     return this.formCategoria.invalid;
   }
 
-  guardarCategoria() {
+  guardar() {
     if (this.formCategoria.invalid) { return }
-    let accion: 'Crear' | 'Editar' = this.categoria.id === 0 ? 'Crear' : 'Editar';
+    let accion: 'Crear' | 'Editar' = this.categoria.idCategoriaTramite === 0 ? 'Crear' : 'Editar';
     this.confirmDialogService.open({
       type: 'question',
       title: `${accion} Categoría`,
       message: `¿Estás seguro que deseas ${accion.toLowerCase()} la categoría?`,
       onAccept: () => {
         this.loading.set(true);
+        console.log(accion);
         if (accion === 'Crear') {
+          
           const createCategoria: CrearCategoria = {
             nombre: this.formCategoria.value.nombre,
             descripcion: this.formCategoria.value.descripcion
@@ -76,7 +86,7 @@ export class AddEditCategoria implements OnInit {
         }
         else {
           const editCategoria: EditarCategoria = {
-            id: this.categoria.id,
+            idCategoriaTramite: this.categoria.idCategoriaTramite,
             nombre: this.formCategoria.value.nombre,
             descripcion: this.formCategoria.value.descripcion
           }
@@ -84,12 +94,35 @@ export class AddEditCategoria implements OnInit {
         }
       }
     })
-
   }
 
-  crearCategoria(crear: CrearCategoria) { }
+  crearCategoria(crear: CrearCategoria) {
+    this.crearCategoriaUseCase.execute(crear).subscribe({
+      next : (res) => {
+        this.notificationService.success(`${res.message}, categoría creada correctamente`);
+        this.loading.set(false);
+        this.ref.close({ success: true });
+      },
+      error : (err) => {
+        this.loading.set(false);
+        this.notificationService.error('No se pudo crear la categoría');
+      }
+    })
+   }
 
-  editarCategoria(editar: EditarCategoria) { }
+  editarCategoria(editar: EditarCategoria) {
+    this.editarCategoriaUseCase.execute(editar).subscribe({
+      next : (res) => {
+        this.notificationService.success(`${res.message}, categoría editada correctamente`);
+        this.loading.set(false);
+        this.ref.close({ success: true });
+      },
+      error : (err) => {
+        this.loading.set(false);
+        this.notificationService.error('No se pudo editar la categoría');
+      }
+    })
+   }
 
   patchValue() {
     this.formCategoria.patchValue({

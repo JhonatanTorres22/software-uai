@@ -8,20 +8,20 @@
   <!-- FOOTER -->
   <div class="ui-modal-footer">
 
-    @if (showCancel) {
+    @if (showCancel()) {
       <ui-button
-        [label]="cancelLabel"
+        [label]="cancelLabel()"
         [color]="'secondary'"
-        [disabled]="disableCancel"
+        [disabled]="disableCancel()"
         (onClick)="onCancel()">
       </ui-button>
     }
 
-    @if (showPrimary) {
+    @if (showPrimary()) {
       <ui-button
-        [label]="primaryLabel"
+        [label]="primaryLabel()"
         [color]="'primary'"
-        [disabled]="disablePrimary"
+        [disabled]="disablePrimary()"
         (onClick)="onPrimary()">
       </ui-button>
     }

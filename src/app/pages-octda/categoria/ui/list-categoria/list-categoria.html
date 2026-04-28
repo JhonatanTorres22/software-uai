@@ -1,16 +1,38 @@
 <div class="flex align-items-center gap-2">
   <span class="p-input-icon-left flex-1">
-    <p-autoComplete [(ngModel)]="selectCategoria().nombre"
-    [dropdown]="true" [suggestions]="sugerencias" optionLabel="nombre"
-      placeholder="Buscar categorías..." (completeMethod)="filtrarCategorias($event)" (onSelect)="seleccionar($event)"
-      (onClear)="limpiar()" [showClear]="true" styleClass="w-full" inputStyleClass="w-full" appendTo="body">
+    <p-autoComplete
+      [(ngModel)]="categoriaSeleccionada"
+      [dropdown]="true"
+      [suggestions]="sugerencias"
+      optionLabel="nombre"
+      placeholder="Buscar categorías..."
+      (completeMethod)="filtrarCategorias($event)"
+      (onSelect)="seleccionar($event)"
+      (onClear)="limpiarCategoria()"
+      (onDropdownClick)="completarConDropdown()"
+      (ngModelChange)="onModelChange($event)"
+      [showClear]="true"
+      styleClass="w-full"
+      inputStyleClass="w-full"
+      appendTo="body">
 
       <ng-template let-cat #item>
         <div class="flex align-items-center justify-content-between w-full gap-2 py-1">
-          <span class="font-medium">{{ cat.nombre }}</span>
+          <div class="min-w-0">
+            <div class="font-medium white-space-nowrap overflow-hidden text-overflow-ellipsis">{{ cat.nombre }}</div>
+            <div class="text-500 text-sm white-space-nowrap overflow-hidden text-overflow-ellipsis">
+              {{ cat.descripcion || 'Sin descripción' }}
+            </div>
+          </div>
           <div class="flex gap-1" (click)="$event.stopPropagation()">
             <ui-icon-button icon="pi pi-pencil" color="info" tooltip="Editar" (onClick)="openAddEditCategoria(cat)"></ui-icon-button>
-            <ui-icon-button icon="pi pi-trash" color="danger" tooltip="Eliminar"></ui-icon-button>
+            <ui-icon-button
+              icon="pi pi-trash"
+              color="danger"
+              tooltip="Eliminar"
+              [disabled]="eliminandoCategoria"
+              (onClick)="eliminarCategoria(cat)">
+            </ui-icon-button>
           </div>
         </div>
       </ng-template>
@@ -18,5 +40,5 @@
   </span>
 
   <!-- Botón Crear Categoría -->
-  <ui-button label="Agregar Categoría" icon="pi pi-plus" (onClick)="openAddEditCategoria(selectCategoriaDefault)"></ui-button>
+  <ui-button label="Agregar Categoría" icon="pi pi-plus" [disabled]="eliminandoCategoria" (onClick)="openCrearCategoria()"></ui-button>
 </div>

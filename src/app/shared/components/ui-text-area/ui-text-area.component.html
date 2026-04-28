@@ -1,0 +1,70 @@
+<div class="ui-text-area w-full" [ngClass]="classInput">
+  @if (useExternalLabel) {
+    <label class="block text-sm font-medium mb-2">{{ label }}</label>
+    <textarea
+      pInputTextarea
+      [id]="label"
+      [readonly]="readonly"
+      [rows]="rows"
+      [formControl]="formControl"
+      [attr.maxlength]="maxlength || null"
+      [attr.minlength]="minlength || null"
+      autocomplete="off"
+      [UpperCase]="upperCase"
+      class="w-full"
+      (input)="onInput($event)"
+    ></textarea>
+  }
+
+  @else {
+  <p-floatLabel class="w-full" variant="on">
+    <textarea
+      pInputTextarea
+      [id]="label"
+      [readonly]="readonly"
+      [rows]="rows"
+      [formControl]="formControl"
+      [attr.maxlength]="maxlength || null"
+      [attr.minlength]="minlength || null"
+      autocomplete="off"
+      [UpperCase]="upperCase"
+      class="w-full"
+      (input)="onInput($event)"
+    ></textarea>
+
+    <label>{{ label }}</label>
+  </p-floatLabel>
+  }
+
+  @if (maxlength) {
+    <small class="block text-right text-500">
+      {{ formControl.value?.length || 0 }} / {{ maxlength }}
+    </small>
+  }
+
+  @if (formControl.touched && formControl.invalid) {
+    @if (formControl.hasError('maxlength')) {
+      <small class="block text-red-500">
+        Este campo debe tener como máximo {{ maxlength }} caracteres
+      </small>
+    }
+
+    @if (formControl.hasError('minlength')) {
+      <small class="block text-red-500">
+        Este campo debe tener como mínimo {{ minlength }} caracteres
+      </small>
+    }
+
+    @if (formControl.hasError('required')) {
+      <small class="block text-red-500">
+        Este campo es obligatorio
+      </small>
+    }
+
+    @if (formControl.hasError('pattern')) {
+      <small class="block text-red-500">
+        {{ patternErrorMessage }}
+      </small>
+    }
+  }
+</div>

@@ -1,6 +1,5 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { Categoria } from '../../domain/categoria.model';
+import { Component, inject, output } from '@angular/core';
+
 import { ButtonModule } from "primeng/button";
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +9,12 @@ import { UiButtonComponent } from "@/shared/components/ui-button/ui-button.compo
 import { UiIconButton } from "@/shared/components/ui-icon-button/ui-icon-button";
 import { ModalService } from '@/shared/services/modal.service';
 import { AddEditCategoria } from '../add-edit-categoria/add-edit-categoria';
+import { EliminarCategoria, ListarCategoria } from '../../domain/entity/categoria.model';
+import { NotificationService } from '@/shared/services/notification.service';
+import { ObtenerCategoriaUseCase } from '../../application/use-cases/categorias/obtenerCategoria.use-case';
+import { EliminarCategoriaUseCase } from '../../application/use-cases/categorias/eliminarCategoria.use-case';
+import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
+import { SubCategoriaSignal } from '../../domain/signals/subCategoria.signal';
 @Component({
   selector: 'app-list-categoria',
   imports: [ButtonModule, AutoCompleteModule, FormsModule, CommonModule, UiButtonComponent, UiIconButton],
@@ -18,123 +23,165 @@ import { AddEditCategoria } from '../add-edit-categoria/add-edit-categoria';
 })
 export class ListCategoria {
   private readonly categoriaSignal = inject(CategoriaSignal);
+  private readonly subCategoriaSignal = inject(SubCategoriaSignal);
+
+  categoriaSeleccionada: ListarCategoria | null = null;
+  terminoCategoria = '';
+  eliminandoCategoria = false;
+
+  categoriaSeleccionadaChange = output<ListarCategoria>();
+
   selectCategoria = this.categoriaSignal.selectCategoria;
   selectCategoriaDefault = this.categoriaSignal.selectCategoriaDefault;
-  categorias: Categoria[] = [];
-  sugerencias: Categoria[] = [];
-  private readonly modalService = inject(ModalService)
+  listCategoria = this.categoriaSignal.listCategoria;
+  sugerencias: ListarCategoria[] = [];
+  private readonly modalService = inject(ModalService);
+
+  private readonly notificationService = inject(NotificationService);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
+  private readonly obtenerCategoriaUseCase = inject(ObtenerCategoriaUseCase);
+  private readonly eliminarCategoriaUseCase = inject(EliminarCategoriaUseCase);
 
 
   constructor() { }
 
   ngOnInit(): void {
-    // Datos mock
-    this.categorias = [
-      {
-        id: 1, nombre: 'ACADÉMICO', descripcion: 'Descripcion de categoría académica',
-        subcategorias: [
-          {
-            id: 1, nombre: 'Emisión de Título', descripcion: 'Trámite para emisión y entrega de título profesional', costo: 450,
-            requiereDocumentos: true,
-            documentos: [
-              { nombre: 'Copia DNI', tipo: 'PDF', requerido: true },
-              { nombre: 'Constancia Egresado', tipo: 'PDF', requerido: true },
-              { nombre: 'Recibo Pago', tipo: 'Image', requerido: true },
-              { nombre: 'Certificado Idiomas', tipo: 'Image', requerido: false },
-              { nombre: 'Tesis', tipo: 'Image', requerido: false },
-            ],
-            areas: [
-              { nombre: 'Secretaría Académica', sla: 2 },
-              { nombre: 'Contabilidad', sla: 1 },
-              { nombre: 'Rectorado', sla: 3 },
-              { nombre: 'Archivo', sla: 1 },
-              { nombre: 'Decanato', sla: 2 },
-              { nombre: 'Registro', sla: 2 },
-            ],
-          },
-          {
-            id: 2, nombre: 'Certificado de Estudios', descripcion: 'Certificado oficial de estudios cursados', costo: 120,
-            requiereDocumentos: false, documentos: [],
-            areas: [
-              { nombre: 'Secretaría Académica', sla: 1 },
-              { nombre: 'Registro', sla: 1 },
-            ],
-          },
-          {
-            id: 3, nombre: 'Convalidación de Cursos', descripcion: 'Proceso de reconocimiento de cursos externos', costo: 80,
-            requiereDocumentos: true,
-            documentos: [
-              { nombre: 'Silabo Original', tipo: 'PDF', requerido: true },
-              { nombre: 'Certificado Notas', tipo: 'PDF', requerido: true },
-            ],
-            areas: [
-              { nombre: 'Decanato', sla: 3 },
-              { nombre: 'Secretaría Académica', sla: 2 },
-            ],
-          },
-          {
-            id: 4, nombre: 'Retiro de Asignatura', descripcion: 'Solicitud de retiro de asignatura matriculada', costo: 30,
-            requiereDocumentos: false, documentos: [],
-            areas: [
-              { nombre: 'Secretaría Académica', sla: 1 },
-            ],
-          },
-        ],
+    this.obtenerCategorias();
+  }
+
+  obtenerCategorias(): void {
+    this.obtenerCategoriaUseCase.execute().subscribe({
+      next: (data) => {
+        this.listCategoria.set(data.data);
+
+        const categoriaActual = this.selectCategoria();
+        const categoriaExiste = data.data.some((item) => item.idCategoriaTramite === categoriaActual.idCategoriaTramite);
+
+        if (!categoriaExiste) {
+          this.resetCategoriaSeleccionada();
+        } else if (categoriaActual.idCategoriaTramite > 0) {
+          const actualizada = data.data.find((item) => item.idCategoriaTramite === categoriaActual.idCategoriaTramite) ?? categoriaActual;
+          this.setCategoriaSeleccionada(actualizada);
+        }
       },
-      {
-        id: 2, nombre: 'ADMINISTRATIVO', descripcion: 'Descripcion de categoría académica',
-        subcategorias: [
-          {
-            id: 5, nombre: 'Constancia de Trabajo', descripcion: 'Documento que acredita relación laboral', costo: 50,
-            requiereDocumentos: false, documentos: [],
-            areas: [{ nombre: 'Recursos Humanos', sla: 2 }, { nombre: 'Gerencia', sla: 1 }],
-          },
-        ],
-      },
-      {
-        id: 3, nombre: 'FINANCIERO', descripcion: 'Descripcion de categoría académica',
-        subcategorias: [
-          {
-            id: 6, nombre: 'Devolución de Pagos', descripcion: 'Solicitud de devolución de pagos realizados', costo: 0,
-            requiereDocumentos: true,
-            documentos: [{ nombre: 'Recibo Original', tipo: 'PDF', requerido: true }],
-            areas: [{ nombre: 'Tesorería', sla: 3 }, { nombre: 'Contabilidad', sla: 2 }],
-          },
-        ],
-      },
-    ];
+      error: () => {
+        this.notificationService.error('No se pudieron cargar las categorías');
+      }
+    });
   }
 
   filtrarCategorias(event: { query: string }): void {
-    const q = event.query.toLowerCase();
-    this.sugerencias = this.categorias.filter(c =>
-      c.nombre.toLowerCase().includes(q)
+    this.terminoCategoria = event.query ?? '';
+    const q = this.terminoCategoria.trim().toLowerCase();
+
+    this.sugerencias = this.listCategoria().filter(c =>
+      c.nombre.toLowerCase().includes(q) ||
+      c.descripcion.toLowerCase().includes(q)
     );
   }
 
-  seleccionar(event: { value: Categoria }): void {
-    this.selectCategoria.set(event.value);
+  seleccionar(event: { value: ListarCategoria }): void {
+    this.setCategoriaSeleccionada(event.value);
   }
 
-  limpiar(): void {
-    this.selectCategoria.set(this.selectCategoriaDefault);
+  onModelChange(value: ListarCategoria | string | null): void {
+    if (typeof value === 'string') {
+      this.terminoCategoria = value;
+
+      if (this.categoriaSeleccionada && value !== this.categoriaSeleccionada.nombre) {
+        this.clearCategoriaSeleccionadaState();
+      }
+
+      return;
+    }
+
+    if (!value) {
+      this.resetCategoriaSeleccionada();
+    }
   }
 
-  openAddEditCategoria(categoria: Categoria) {
-    console.log(categoria);
-    
+  limpiarCategoria(): void {
+    this.resetCategoriaSeleccionada();
+  }
+
+  completarConDropdown(): void {
+    this.sugerencias = [...this.listCategoria()];
+  }
+
+  openCrearCategoria(): void {
+    this.openAddEditCategoria(this.selectCategoriaDefault, this.terminoCategoria.trim());
+  }
+
+  openAddEditCategoria(categoria: ListarCategoria, prefillNombre = ''): void {
     const ref = this.modalService.open(AddEditCategoria, {
-      data: { categoria: categoria },
-      header: categoria.id === 0 ? 'Agregar Categoría' : 'Editar Categoría',
+      data: {
+        categoria,
+        prefillNombre
+      },
+      header: categoria.idCategoriaTramite === 0 ? 'Agregar Categoría' : 'Editar Categoría',
       width: 'min(90vw, 720px)',
       maximizable: false,
     });
 
     ref.onClose.subscribe((result: { success?: boolean } | null) => {
       if (result?.success) {
-        // aquí podrías refrescar lista si quieres
+        this.obtenerCategorias();
       }
     });
   }
 
+  eliminarCategoria(categoria: ListarCategoria): void {
+    this.confirmDialogService.open({
+      type: 'warning',
+      title: 'Eliminar categoría',
+      message: `Se eliminará la categoría "${categoria.nombre}" y su información relacionada. Esta acción no se puede deshacer.`,
+      acceptLabel: 'Sí, eliminar',
+      rejectLabel: 'Cancelar',
+      onAccept: () => {
+        this.eliminandoCategoria = true;
+
+        const payload: EliminarCategoria = {
+          idCategoriaTramite: categoria.idCategoriaTramite
+        };
+
+        this.eliminarCategoriaUseCase.execute(payload).subscribe({
+          next: (response) => {
+            this.eliminandoCategoria = false;
+
+            if (this.selectCategoria().idCategoriaTramite === categoria.idCategoriaTramite) {
+              this.resetCategoriaSeleccionada();
+            }
+
+            this.notificationService.success(`${response.message}, categoría eliminada correctamente`);
+            this.obtenerCategorias();
+          },
+          error: () => {
+            this.eliminandoCategoria = false;
+            this.notificationService.error('No se pudo eliminar la categoría');
+          }
+        });
+      }
+    });
+  }
+
+  private setCategoriaSeleccionada(categoria: ListarCategoria): void {
+    this.categoriaSeleccionada = categoria;
+    this.selectCategoria.set(categoria);
+    this.terminoCategoria = categoria.nombre;
+    this.categoriaSeleccionadaChange.emit(categoria);
+  }
+
+  private resetCategoriaSeleccionada(): void {
+    this.clearCategoriaSeleccionadaState();
+    this.terminoCategoria = '';
+    this.sugerencias = [...this.listCategoria()];
+  }
+
+  private clearCategoriaSeleccionadaState(): void {
+    this.categoriaSeleccionada = null;
+    this.selectCategoria.set(this.selectCategoriaDefault);
+    this.subCategoriaSignal.listSubCategoria.set([]);
+    this.subCategoriaSignal.selectSubCategoria.set(this.subCategoriaSignal.selectSubCategoriaDefault);
+    this.categoriaSeleccionadaChange.emit(this.selectCategoriaDefault);
+  }
 }

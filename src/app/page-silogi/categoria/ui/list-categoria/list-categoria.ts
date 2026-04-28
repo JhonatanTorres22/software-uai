@@ -1,8 +1,8 @@
 import { Component, inject, OnInit, Type } from '@angular/core';
-import { ObtenerCategoriaUseCase } from '../../application/use-cases/obtenerCategoria.use-cases';
+import { ObtenerCategoriaUseCase } from '../../application/use-cases/categoria/obtenerCategoria.use-cases';
 import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
 import { NotificationService } from '@/shared/services/notification.service';
-import { EliminarCategoriaUseCase } from '../../application/use-cases/eliminarCategoria.use-cases';
+import { EliminarCategoriaUseCase } from '../../application/use-cases/categoria/eliminarCategoria.use-cases';
 import { CategoriaSignal } from '../../domain/signals/categoria.signal';
 import { CommonModule } from '@angular/common';
 import { UiLoading } from "@/shared/components/ui-loading/ui-loading";

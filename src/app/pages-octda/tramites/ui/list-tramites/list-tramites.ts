@@ -20,11 +20,14 @@ import { TramiteSignal } from '../../domain/signals/tramite.signal';
 import { ModalService } from '@/shared/services/modal.service';
 import { TimeLineTramite } from '../time-line-tramite/time-line-tramite';
 import { EncuestaSatisfaccion } from '../encuesta-satisfaccion/encuesta-satisfaccion';
+import { GenerarTramite } from '../generar-tramite/generar-tramite';
+import { DrawerModule } from 'primeng/drawer';
 
 @Component({
   selector: 'app-list-tramites',
   imports: [CommonModule, TableModule, TagModule, IconFieldModule, InputIconModule, UiButtonComponent, InputTextModule,
-    UiCardNoItems, UiIconButton, CardModule, SelectModule, FormsModule, UiSelectComponent, TimeLineTramite],
+    UiCardNoItems, UiIconButton, CardModule, SelectModule, FormsModule, UiSelectComponent, TimeLineTramite, DrawerModule,
+    GenerarTramite],
   templateUrl: './list-tramites.html',
   styleUrl: './list-tramites.scss',
 })
@@ -40,6 +43,7 @@ export class ListTramites {
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
   visibleTimeLine = signal(false);
+  visibleGenerarTramiteDrawer = signal(false);
   private readonly modalService = inject(ModalService)
   // Opciones para filtro de estado
   estadoOpciones: UiSelect[] = [
@@ -120,17 +124,30 @@ export class ListTramites {
     this.visibleTimeLine.set(false);
   }
 
+  openGenerarTramiteDrawer(tramite: ListarTramite): void {
+    this.selectTramite.set(tramite);
+    this.visibleGenerarTramiteDrawer.set(true);
+  }
+
+  closeGenerarTramiteDrawer(): void {
+    this.visibleGenerarTramiteDrawer.set(false);
+  }
+
   openAddModalTramite(tramite: ListarTramite): void {
     this.selectTramite.set(tramite);
 
     const ref = this.modalService.open(EncuestaSatisfaccion, {
-      header: tramite.id === 0 ? 'Agregar Trámite' : 'Editar Trámite',
-      width: 'min(90vw, 720px)',
+      header: 'Encuesta de Satisfacción',
+      width: 'min(90vw, 820px)',
       maximizable: true,
+      data: {
+        tramite
+      }
     });
 
     ref?.onClose.subscribe((result: { success?: boolean } | null) => {
       if (result?.success) {
+        // refrescar tabla si deseas
       }
     });
   }

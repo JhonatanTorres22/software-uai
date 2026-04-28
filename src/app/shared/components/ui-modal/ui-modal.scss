@@ -1,13 +1,18 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
 }
 
 /* CONTENEDOR */
 .ui-modal {
   display: flex;
   flex-direction: column;
-
-  max-height: 85vh;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
 }
 
 /* HEADER */
@@ -23,22 +28,24 @@
 /* CONTENT → SCROLL */
 .ui-modal-content {
   flex: 1;
-
+  min-height: 0;
   overflow-y: auto;
-
+  overflow-x: hidden;
   padding: 1rem;
 }
 
 /* FOOTER */
 .ui-modal-footer {
   flex-shrink: 0;
-
+  flex-grow: 0;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 0.5rem;
-
   padding: 0.75rem 1rem;
-
+  min-height: 3rem;
   border-top: 1px solid var(--surface-border);
   background: var(--surface-card);
+  position: relative;
+  z-index: 10;
 }
