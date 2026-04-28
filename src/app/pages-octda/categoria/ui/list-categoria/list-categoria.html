@@ -1,19 +1,13 @@
-<div class="flex align-items-center gap-2">
+@if (loading()) {
+  <app-ui-loading></app-ui-loading>
+}
+@else {
+  <div class="flex align-items-center gap-2">
   <span class="p-input-icon-left flex-1">
-    <p-autoComplete
-      [(ngModel)]="categoriaSeleccionada"
-      [dropdown]="true"
-      [suggestions]="sugerencias"
-      optionLabel="nombre"
-      placeholder="Buscar categorías..."
-      (completeMethod)="filtrarCategorias($event)"
-      (onSelect)="seleccionar($event)"
-      (onClear)="limpiarCategoria()"
-      (onDropdownClick)="completarConDropdown()"
-      (ngModelChange)="onModelChange($event)"
-      [showClear]="true"
-      styleClass="w-full"
-      inputStyleClass="w-full"
+    <p-autoComplete [(ngModel)]="categoriaSeleccionada" [dropdown]="true" [suggestions]="sugerencias"
+      optionLabel="nombre" placeholder="Buscar categorías..." (completeMethod)="filtrarCategorias($event)"
+      (onSelect)="seleccionar($event)" (onClear)="limpiarCategoria()" (onDropdownClick)="completarConDropdown()"
+      (ngModelChange)="onModelChange($event)" [showClear]="true" styleClass="w-full" inputStyleClass="w-full"
       appendTo="body">
 
       <ng-template let-cat #item>
@@ -25,12 +19,9 @@
             </div>
           </div>
           <div class="flex gap-1" (click)="$event.stopPropagation()">
-            <ui-icon-button icon="pi pi-pencil" color="info" tooltip="Editar" (onClick)="openAddEditCategoria(cat)"></ui-icon-button>
-            <ui-icon-button
-              icon="pi pi-trash"
-              color="danger"
-              tooltip="Eliminar"
-              [disabled]="eliminandoCategoria"
+            <ui-icon-button icon="pi pi-pencil" color="info" tooltip="Editar"
+              (onClick)="openAddEditCategoria(cat)"></ui-icon-button>
+            <ui-icon-button icon="pi pi-trash" color="danger" tooltip="Eliminar"
               (onClick)="eliminarCategoria(cat)">
             </ui-icon-button>
           </div>
@@ -40,5 +31,6 @@
   </span>
 
   <!-- Botón Crear Categoría -->
-  <ui-button label="Agregar Categoría" icon="pi pi-plus" [disabled]="eliminandoCategoria" (onClick)="openCrearCategoria()"></ui-button>
+  <ui-button label="Agregar Categoría" icon="pi pi-plus"(onClick)="openCrearCategoria()"></ui-button>
 </div>
+}

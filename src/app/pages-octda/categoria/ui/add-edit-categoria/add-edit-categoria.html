@@ -6,9 +6,9 @@
             [patternErrorMessage]="'No debe incluir espacios al final de la palabra'">
         </ui-input>
 
-        <ui-input label="Descripción" formControlName="descripcion" [maxlength]="maxLengthDescripcion"
+        <ui-text-area label="Descripción" formControlName="descripcion" [maxlength]="maxLengthDescripcion"
         [minlength]="minLengthDescripcion" [expReg]="expLockInputDescripcion"
             [patternErrorMessage]="'No debe incluir espacios al final de la palabra'">
-        </ui-input>
+        </ui-text-area>
     </div>
 </form>
