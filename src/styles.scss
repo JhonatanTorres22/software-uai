@@ -94,6 +94,21 @@ body {
 .p-button.p-button-text.p-button-primary:active {
   background: var(--brand-100) !important;
 }
+.p-button:focus,
+.p-button:focus-visible,
+.p-button.p-focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(46, 111, 173, 0.18) !important;
+  border-color: var(--brand-600) !important;
+}
+
+/* también para botones text/icon */
+.p-button.p-button-text:focus,
+.p-button.p-button-text.p-focus {
+  box-shadow: 0 0 0 2px rgba(46, 111, 173, 0.12) !important;
+  border-color: transparent !important;
+}
+
 
 /* Input */
 .p-inputtext {
@@ -193,9 +208,11 @@ body {
 .ui-modal-wrapper .p-dialog-content {
   display: flex !important;
   flex-direction: column !important;
+  flex: 1 1 auto !important;
 
+  width: 100% !important;
   height: 100% !important;
-  max-height: 100% !important;
+  min-height: 0 !important;
 
   padding: 0 !important;
 
@@ -349,25 +366,6 @@ body {
   font-weight: 600;
 }
 
-/* SELECT */
-.p-select {
-  border-radius: var(--radius-md) !important;
-  font-size: 13px !important;
-  border: 1px solid var(--surface-border) !important;
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
-}
-
-/* focus */
-.p-select.p-focus {
-  border-color: var(--brand-400) !important;
-  box-shadow: 0 0 0 2px rgba(55, 138, 221, 0.15) !important;
-}
-
-/* hover opcional */
-.p-select:hover {
-  border-color: var(--brand-400) !important;
-}
-
 .p-rating .p-rating-icon,
 .p-rating .p-rating-icon.p-rating-icon-active,
 .p-rating .p-rating-icon.p-focus,
@@ -375,6 +373,17 @@ body {
   color: #D4A017 !important; /* amarillo mostaza */
   fill: #D4A017 !important;
 }
+
+/* ---------- RADIOBUTTON (por si también sale verde) ---------- */
+.p-radiobutton .p-radiobutton-box.p-highlight {
+  border-color: var(--brand-600) !important;
+  background: var(--brand-600) !important;
+}
+
+.p-radiobutton .p-radiobutton-box.p-focus {
+  box-shadow: 0 0 0 2px rgba(46, 111, 173, 0.15) !important;
+}
+
 
 /* --- Page transition animation --- */
 @keyframes fadeInUp {
@@ -391,4 +400,74 @@ body {
 
 .page-enter {
   animation: fadeInUp 0.25s ease forwards;
+}
+
+/* ─────────────────────────────
+   STEPPER (Brand Color Override)
+───────────────────────────── */
+/* Active step marker */
+.p-stepper .p-stepper-item.p-highlight > .p-stepper-number {
+  background: var(--brand-600) !important;
+  color: #fff !important;
+}
+
+/* Active step number focus */
+.p-stepper .p-stepper-item.p-highlight > .p-stepper-number:focus {
+  box-shadow: 0 0 0 2px rgba(46, 111, 173, 0.15) !important;
+}
+
+/* Completed step marker (checkmark) */
+.p-stepper .p-stepper-item.p-highlight > .p-stepper-number .pi {
+  color: #fff !important;
+}
+
+/* Hover on stepper item number */
+.p-stepper .p-stepper-item:not(.p-disabled) > .p-stepper-number:hover {
+  background: var(--brand-50) !important;
+  color: var(--brand-600) !important;
+}
+
+/* Stepper separator/connector between steps */
+.p-stepper .p-stepper-item.p-highlight ~ .p-stepper-item > .p-stepper-number {
+  background: #ddd !important;
+  color: var(--text-muted) !important;
+}
+
+/* Step content styling */
+.p-stepper .p-stepper-content {
+  padding: 1rem 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* ─────────────────────────────
+   SELECT (Enhanced Brand Colors)
+───────────────────────────── */
+.p-select {
+  border-radius: var(--radius-md) !important;
+  border-color: var(--surface-border) !important;
+}
+
+.p-select.p-focus,
+.p-select:focus {
+  border-color: var(--brand-400) !important;
+  box-shadow: 0 0 0 2px rgba(46, 111, 173, 0.15) !important;
+}
+
+/* Select button (dropdown trigger) */
+.p-select .p-select-button {
+  background: var(--surface-card) !important;
+  border-color: var(--surface-border) !important;
+  color: var(--text-primary) !important;
+}
+
+.p-select .p-select-button:hover {
+  background: var(--surface-hover) !important;
+  border-color: var(--brand-400) !important;
+}
+
+/* Select panel items highlighting */
+.p-select-panel .p-select-item.p-highlight {
+  background: var(--brand-50) !important;
+  color: var(--brand-600) !important;
 }

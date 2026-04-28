@@ -1,8 +1,8 @@
 <div class="flex gap-3 align-items-start">
-  <div class="flex-1 min-w-0 overflow-x-auto">
-    <div class="space-y-4">
-    <p-table #dt size="small" [value]="tramitesFiltrados()" [paginator]="true" [rows]="10"
-        [rowsPerPageOptions]="[5, 10, 25]" [globalFilterFields]="[
+    <div class="flex-1 min-w-0 overflow-x-auto">
+        <div class="space-y-4">
+            <p-table #dt size="small" [value]="tramitesFiltrados()" [paginator]="true" [rows]="10"
+                [rowsPerPageOptions]="[5, 10, 25]" [globalFilterFields]="[
             'codigo',
             'solicitante',
             'rol',
@@ -10,107 +10,127 @@
             'fechaTramite',
             'estado'
         ]" [sortMode]="'single'" [showCurrentPageReport]="true"
-        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-        styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines shadow-2 border-round-xl overflow-hidden">
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines shadow-2 border-round-xl overflow-hidden">
 
-        <ng-template pTemplate="caption">
-            <div class="flex flex-column md:flex-row gap-3 md:align-items-center md:justify-content-between">
-                <div class="flex align-items-center gap-2 flex-wrap">
-                    <p-tag [value]="listTramite().length + ' trámite(s)'" severity="info" [rounded]="true"
-                        icon="pi pi-list">
-                    </p-tag>
-                    <ui-select [options]="estadoOpciones" placeholder="Filtrar por estado" [ngModel]="selectedEstado()"
-                        (ngModelChange)="onEstadoChange($event)">
-                    </ui-select>
-                </div>
-                <div class="flex align-items-center gap-2 flex-1 md:flex-none">
-                    <p-iconField iconPosition="left" class="w-full">
-                        <p-inputIcon>
-                            <i class="pi pi-search"></i>
-                        </p-inputIcon>
-                        <input pInputText type="text" class="w-full"
-                            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                            placeholder="Buscar trámite..." />
-                    </p-iconField>
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row gap-3 md:align-items-center md:justify-content-between">
 
-                    <ui-button label="Agregar" icon="pi pi-plus"></ui-button>
-                </div>
-            </div>
-        </ng-template>
+                        <div class="flex align-items-center gap-2 flex-wrap">
+                            <p-tag [value]="listTramite().length + ' trámite(s)'" severity="info" [rounded]="true"
+                                icon="pi pi-list">
+                            </p-tag>
+                            <ui-select [options]="estadoOpciones" placeholder="Filtrar por estado"
+                                [ngModel]="selectedEstado()" (ngModelChange)="onEstadoChange($event)">
+                            </ui-select>
+                        </div>
 
-        <ng-template pTemplate="header">
-            <tr>
-                <th pSortableColumn="codigo"> Código <p-sortIcon field="codigo"></p-sortIcon> </th>
-                <th pSortableColumn="solicitante"> Solicitante <p-sortIcon field="solicitante"></p-sortIcon> </th>
-                <th pSortableColumn="rol"> Rol <p-sortIcon field="rol"></p-sortIcon></th>
-                <th pSortableColumn="tipo"> Tipo <p-sortIcon field="tipo"></p-sortIcon> </th>
-                <th pSortableColumn="fechaTramite"> Fecha <p-sortIcon field="fechaTramite"></p-sortIcon></th>
-                <th pSortableColumn="estado"> Estado <p-sortIcon field="estado"></p-sortIcon></th>
-                <th class="text-center"> Acciones </th>
-            </tr>
-        </ng-template>
+                        <div class="flex align-items-center gap-2 flex-shrink-0 flex-nowrap">
+                            <p-iconField iconPosition="left" class="w-full">
+                                <p-inputIcon>
+                                    <i class="pi pi-search"></i>
+                                </p-inputIcon>
 
-        <ng-template pTemplate="body" let-tramite>
-            <tr>
-                <td>
-                    <span class="font-medium text-sm">
-                        {{ tramite.codigo }}
-                    </span>
-                </td>
+                                <input pInputText type="text" class="w-full"
+                                    (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                                    placeholder="Buscar trámite..." />
+                            </p-iconField>
+                            <ui-button label="Nuevo Trámite" icon="pi pi-plus"
+                                styleClass="white-space-nowrap flex-shrink-0" [style]="{ 'white-space': 'nowrap' }"
+                                (onClick)="openGenerarTramiteDrawer(selectTramiteDefault)">
+                            </ui-button>
+                        </div>
 
-                <td>
-                    <div class="flex flex-column">
-                        <span class="font-medium text-sm">
-                            {{ tramite.solicitante }}
-                        </span>
                     </div>
-                </td>
+                </ng-template>
 
-                <td>
-                    <p-tag [value]="getRolConfig(tramite.rol).label" [severity]="getRolConfig(tramite.rol).severity"
-                        [icon]="getRolConfig(tramite.rol).icon">
-                    </p-tag>
-                </td>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="codigo"> Código <p-sortIcon field="codigo"></p-sortIcon> </th>
+                        <th pSortableColumn="solicitante"> Solicitante <p-sortIcon field="solicitante"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="rol"> Rol <p-sortIcon field="rol"></p-sortIcon></th>
+                        <th pSortableColumn="tipo"> Tipo <p-sortIcon field="tipo"></p-sortIcon> </th>
+                        <th pSortableColumn="fechaTramite"> Fecha <p-sortIcon field="fechaTramite"></p-sortIcon></th>
+                        <th pSortableColumn="estado"> Estado <p-sortIcon field="estado"></p-sortIcon></th>
+                        <th class="text-center"> Acciones </th>
+                    </tr>
+                </ng-template>
 
-                <td>
-                    <span class="text-sm"> {{ tramite.tipo }} </span>
-                </td>
+                <ng-template pTemplate="body" let-tramite>
+                    <tr>
+                        <td>
+                            <span class="font-medium text-sm">
+                                {{ tramite.codigo }}
+                            </span>
+                        </td>
 
-                <td>
-                    <span class="text-sm">{{ tramite.fechaTramite | date:'dd/MM/yyyy HH:mm' }}</span>
-                </td>
+                        <td>
+                            <div class="flex flex-column">
+                                <span class="font-medium text-sm">
+                                    {{ tramite.solicitante }}
+                                </span>
+                            </div>
+                        </td>
 
-                <td>
-                    <p-tag [value]="getEstadoConfig(tramite.estado).label"
-                        [severity]="getEstadoConfig(tramite.estado).severity"
-                        [icon]="getEstadoConfig(tramite.estado).icon">
-                    </p-tag>
-                </td>
+                        <td>
+                            <p-tag [value]="getRolConfig(tramite.rol).label"
+                                [severity]="getRolConfig(tramite.rol).severity" [icon]="getRolConfig(tramite.rol).icon">
+                            </p-tag>
+                        </td>
 
-                <td>
-                    <div class="flex justify-content-center gap-2">
-                        <ui-icon-button icon="pi pi-hourglass" tooltip="Ver Línea de Tiempo" color="success" (onClick)="viewTimeLine(tramite)"></ui-icon-button>
-                        <ui-icon-button icon="pi pi-eye" tooltip="Ver detalle" (onClick)="viewTimeLine(tramite)"></ui-icon-button>
-                        <ui-icon-button icon="pi pi-list-check" tooltip="Ver Encuesta" (onClick)="openAddModalTramite(tramite)" color="danger"></ui-icon-button>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
+                        <td>
+                            <span class="text-sm"> {{ tramite.tipo }} </span>
+                        </td>
 
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="7" class="text-center p-5">
-                    <app-ui-card-no-items message="No se encontraron trámites"> </app-ui-card-no-items>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
-    </div><!-- /space-y-4 -->
-  </div><!-- /flex-1 -->
+                        <td>
+                            <span class="text-sm">{{ tramite.fechaTramite | date:'dd/MM/yyyy HH:mm' }}</span>
+                        </td>
 
-  @if (visibleTimeLine()) {
+                        <td>
+                            <p-tag [value]="getEstadoConfig(tramite.estado).label"
+                                [severity]="getEstadoConfig(tramite.estado).severity"
+                                [icon]="getEstadoConfig(tramite.estado).icon">
+                            </p-tag>
+                        </td>
+
+                        <td>
+                            <div class="flex justify-content-center gap-2">
+                                <ui-icon-button icon="pi pi-hourglass" tooltip="Ver Línea de Tiempo" color="success"
+                                    (onClick)="viewTimeLine(tramite)"></ui-icon-button>
+                                <ui-icon-button icon="pi pi-eye" tooltip="Ver detalle"
+                                    (onClick)="viewTimeLine(tramite)"></ui-icon-button>
+                                <ui-icon-button icon="pi pi-list-check" tooltip="Ver Encuesta"
+                                    (onClick)="openAddModalTramite(tramite)" color="danger"></ui-icon-button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7" class="text-center p-5">
+                            <app-ui-card-no-items message="No se encontraron trámites"> </app-ui-card-no-items>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div><!-- /space-y-4 -->
+    </div><!-- /flex-1 -->
+
+    @if (visibleTimeLine()) {
     <div class="flex-shrink-0" style="width: 380px; position: sticky; top: 1rem;">
-      <app-time-line-tramite (close)="closeTimeLine()"></app-time-line-tramite>
+        <app-time-line-tramite (close)="closeTimeLine()"></app-time-line-tramite>
     </div>
-  }
+    }
 </div><!-- /flex split-view -->
+
+<p-drawer
+    [visible]="visibleGenerarTramiteDrawer()"
+    (visibleChange)="visibleGenerarTramiteDrawer.set($event)"
+    [showCloseIcon]="false"
+    position="full"
+    styleClass="tramite-fullscreen-drawer"
+>
+    <app-generar-tramite (closeRequested)="closeGenerarTramiteDrawer()"></app-generar-tramite>
+</p-drawer>

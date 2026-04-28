@@ -1,5 +1,26 @@
 <div class="ui-input w-full m-t-5" [ngClass]="classInput">
 
+  @if (useExternalLabel && type !== 'password') {
+    <label class="block text-sm font-medium mb-2">{{ label }}</label>
+    <input
+      [ngClass]="classInput"
+      pInputText
+      [id]="label"
+      [type]="type"
+      [readonly]="readonly"
+      [formControl]="formControl"
+      [attr.maxlength]="maxlength || null"
+      [attr.minlength]="minlength || null"
+      [attr.min]="min || null"
+      autocomplete="off"
+      [UpperCase]="upperCase"
+      class="w-full"
+      (input)="onInput($event); onInputEvent.emit($event)"
+    />
+  }
+
+  @else {
+
   <p-floatLabel class="w-full" variant="on">
 
     @if (type !== 'password') {
@@ -40,6 +61,8 @@
 
     <label>{{ label }}</label>
   </p-floatLabel>
+
+  }
 
   <!-- CONTADOR -->
   @if (maxlength && type !== 'password') {

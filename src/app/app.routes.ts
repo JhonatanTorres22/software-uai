@@ -12,15 +12,20 @@ const octdaChildren: Routes = [
     loadComponent: () =>
       import('./pages-octda/dashboard/dashboard.component').then((m) => m.DashboardComponent)
   },
-    {
+  {
     path: 'categoria',
     loadComponent: () =>
       import('./pages-octda/categoria/ui/page-categoria').then((m) => m.PageCategoria)
   },
-      {
+  {
     path: 'tramites',
     loadComponent: () =>
       import('./pages-octda/tramites/ui/page-tramites').then((m) => m.PageTramites)
+  },
+  {
+    path: 'configuracion/dias-no-habiles',
+    loadComponent: () =>
+      import('./pages-octda/configuracion/ui/page-dias-no-habiles').then((m) => m.PageDiasNoHabiles)
   },
   {
     path: '**',

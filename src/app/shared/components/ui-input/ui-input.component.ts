@@ -38,6 +38,7 @@ export class UiInputComponent implements ControlValueAccessor, OnInit{
   @Input() patternErrorMessage = '';
   @Input() min!: number;
   @Input() upperCase = true;
+  @Input() useExternalLabel = false;
 
 
   formControl!: FormControl;

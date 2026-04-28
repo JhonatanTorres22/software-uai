@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { CrearCategoriaUseCase } from '../../application/use-cases/crearCategoria.use-cases';
-import { EditarCategoriaUseCase } from '../../application/use-cases/editarCategoria.use-cases';
+import { CrearCategoriaUseCase } from '../../application/use-cases/categoria/crearCategoria.use-cases';
+import { EditarCategoriaUseCase } from '../../application/use-cases/categoria/editarCategoria.use-cases';
 import { NotificationService } from '@/shared/services/notification.service';
 import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
 import { CategoriaSignal } from '../../domain/signals/categoria.signal';

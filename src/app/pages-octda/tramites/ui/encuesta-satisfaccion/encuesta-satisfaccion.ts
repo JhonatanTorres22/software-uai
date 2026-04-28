@@ -7,6 +7,7 @@ import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from "primeng/button";
 import { TagModule } from "primeng/tag";
+import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 export interface SurveyData {
   tramite: string;
   usuario: string;
@@ -44,6 +45,10 @@ interface EmojiOption {
 })
 export class EncuestaSatisfaccion {
   private readonly tramiteSignal = inject(TramiteSignal)
+  private readonly ref = inject(DynamicDialogRef);
+  private readonly config = inject(DynamicDialogConfig);
+  private readonly messageService = inject(MessageService);
+
   selectTramite = this.tramiteSignal.selectTramite;
 
   submitted = false;
@@ -142,8 +147,6 @@ export class EncuestaSatisfaccion {
     quickFeedback: [],
   };
  
-  constructor(private messageService: MessageService) {}
- 
   ngOnInit(): void {
     this.loadTramiteData();
   }
@@ -158,25 +161,18 @@ export class EncuestaSatisfaccion {
     return this.survey.calificacionGeneral !== null;
   }
  
-  get isStep2Valid(): boolean {
-    const a = this.survey.atencion;
-    const p = this.survey.plataforma;
-    return (
-      a.tiempoAtencion > 0 &&
-      a.claridadProceso > 0 &&
-      a.amabilidadPersonal > 0 &&
-      p.facilidadUso > 0 &&
-      p.informacionDisponible > 0
-    );
-  }
  
-  get isStep3Valid(): boolean {
-    const r = this.survey.resultado;
-    return r.cumplioExpectativas > 0 && r.recomendaria > 0;
-  }
 
   get isFormValid(): boolean {
-    return this.isStep1Valid && this.isStep2Valid && this.isStep3Valid;
+    return this.isStep1Valid 
+  }
+
+  get modalPrimaryLabel(): string {
+    return 'Enviar Encuesta';
+  }
+
+  get modalPrimaryDisabled(): boolean {
+    return !this.isFormValid || this.submitted;
   }
  
   selectCalificacion(value: number): void {
@@ -233,6 +229,18 @@ export class EncuestaSatisfaccion {
       detail: 'Tu respuesta fue registrada correctamente.',
       life: 4000,
     });
+
+    // Close modal if running in modal mode
+    if (this.ref) {
+      setTimeout(() => {
+        this.ref.close({ success: true, data: this.survey });
+      }, 2000);
+    }
+  }
+
+  // Alias for modal integration
+  guardar(): void {
+    this.submitSurvey();
   }
  
   resetSurvey(): void {
@@ -241,7 +249,13 @@ export class EncuestaSatisfaccion {
   }
 
   private loadTramiteData(): void {
-    const tramite = this.selectTramite();
+    // Try to read from DynamicDialogConfig (modal mode)
+    let tramite = this.config?.data?.tramite;
+    
+    // Fallback to signal if not in modal mode
+    if (!tramite) {
+      tramite = this.selectTramite();
+    }
 
     this.survey = {
       tramite: tramite?.tipo ?? '',

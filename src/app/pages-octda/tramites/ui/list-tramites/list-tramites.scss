@@ -1,0 +1,17 @@
+:host ::ng-deep .tramite-fullscreen-drawer {
+	width: 100vw !important;
+	max-width: 100vw !important;
+	height: 100vh !important;
+	max-height: 100vh !important;
+	border-radius: 0 !important;
+}
+
+:host ::ng-deep .tramite-fullscreen-drawer .p-drawer-header {
+	display: none;
+}
+
+:host ::ng-deep .tramite-fullscreen-drawer .p-drawer-content {
+	padding: 0;
+	height: 100%;
+	overflow: hidden;
+}
