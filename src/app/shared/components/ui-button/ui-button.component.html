@@ -5,10 +5,11 @@
   [disabled]="disabled"
   [pTooltip]="tooltip"
   tooltipPosition="top"
+  (touchend)="handleTouch($event)"
   (click)="handleClick($event)"
- [ngClass]="computedClass"
+  [ngClass]="computedClass"
   type="button"
-  [severity]="color" 
+  [severity]="color"
 >
   @if (icon) {
     <i class="p-button-icon {{ icon }}"></i>

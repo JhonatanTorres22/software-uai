@@ -7,7 +7,8 @@ export class SubCategoriaMapper {
             idSubCategoriaTramite: subCategoria.codigoSubCategoriaTramite,
             idCategoriaTramite: subCategoria.codigoCategoriaTramite,
             nombre: subCategoria.nombre,
-            descripcion: subCategoria.descripcion
+            descripcion: subCategoria.descripcion,
+            montoTramite: '100'
         }
     }
 
@@ -15,7 +16,8 @@ export class SubCategoriaMapper {
         return{
             codigoCategoriaTramite : subCategoria.idCategoriaTramite,
             nombre : subCategoria.nombre,
-            descripcion : subCategoria.descripcion
+            descripcion : subCategoria.descripcion,
+            monto : subCategoria.montoTramite
         }
     }
 
@@ -24,7 +26,8 @@ export class SubCategoriaMapper {
             codigoSubCategoriaTramite : subCategoria.idSubCategoriaTramite,
             codigoCategoriaTramite : subCategoria.idCategoriaTramite,
             nombre : subCategoria.nombre,
-            descripcion : subCategoria.descripcion
+            descripcion : subCategoria.descripcion,
+            monto : subCategoria.montoTramite
         }
     }
 

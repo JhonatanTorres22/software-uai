@@ -11,6 +11,9 @@ import { CommonModule } from '@angular/common';
 import { CrearCategoriaUseCase } from '../../application/use-cases/categorias/crearCategoria.use-case';
 import { EditarCategoriaUseCase } from '../../application/use-cases/categorias/editarCategoria.use-case';
 import { UiTextAreaComponent } from "@/shared/components/ui-text-area/ui-text-area.component";
+import { ModalService } from '@/shared/services/modal.service';
+import { ListarSubCategoria } from '../../domain/entity/subCategoria.entity';
+import { AddEditConfiguracionSubcategoria } from '../add-edit-configuracion-subcategoria/add-edit-configuracion-subcategoria';
 
 @Component({
   selector: 'app-add-edit-categoria',
@@ -41,7 +44,7 @@ export class AddEditCategoria implements OnInit {
 
   private readonly editarCategoriaUseCase = inject(EditarCategoriaUseCase);
   private readonly crearCategoriaUseCase = inject(CrearCategoriaUseCase);
-
+  private readonly modalService = inject(ModalService);
   constructor() {
     this.formCategoria = new FormGroup({
       nombre: new FormControl('', [Validators.required, Validators.minLength(this.minLengthNombre), Validators.maxLength(this.maxLengthNombre), Validators.pattern(this.expReg)]),
@@ -135,5 +138,23 @@ export class AddEditCategoria implements OnInit {
   cancelar(): void {
     this.ref.close(null);
   }
+
+    openAddEditSubCategoria(subCategoria: ListarSubCategoria): void {
+    const ref = this.modalService.open(AddEditConfiguracionSubcategoria, {
+      data: {
+        subCategoria,
+      },
+      header: subCategoria.idCategoriaTramite === 0 ? 'Agregar Configuración de Subcategoría' : 'Editar Configuración de Subcategoría',
+      width: 'min(90vw, 720px)',
+      maximizable: false,
+    });
+
+    ref.onClose.subscribe((result: { success?: boolean } | null) => {
+      if (result?.success) {
+        // this.obtenerCategorias();
+      }
+    });
+  }
+
 
 }

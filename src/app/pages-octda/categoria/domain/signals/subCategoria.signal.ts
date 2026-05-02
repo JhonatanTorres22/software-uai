@@ -11,6 +11,7 @@ export class SubCategoriaSignal {
         idSubCategoriaTramite: 0,
         idCategoriaTramite: 0,
         nombre: "",
+        montoTramite: "",
         descripcion: ""
     }
 
