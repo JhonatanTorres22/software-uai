@@ -1,10 +1,41 @@
 <form [formGroup]="formSubCategoria">
+    <div class="flex align-items-center gap-4 w-full flex-wrap mb-4">
+
+        <!-- Toggle más grande -->
+        <div class="toggle-large">
+            <p-toggleswitch formControlName="requiereCosto">
+                <ng-template #handle let-checked="checked">
+                    <i [ngClass]="[
+                    '!text-lg',
+                    'pi',
+                    checked ? 'pi-check' : 'pi-times'
+                ]"></i>
+                </ng-template>
+            </p-toggleswitch>
+        </div>
+
+        <!-- Tag -->
+        <p-tag [value]="formSubCategoria.controls.requiereCosto.value ? 'Con costo' : 'Sin costo'"
+            [severity]="formSubCategoria.controls.montoTramite.value > 0 ? 'info' : 'danger'">
+        </p-tag>
+
+        <!-- Input ocupando el resto del ancho -->
+        @if (formSubCategoria.controls.requiereCosto.value) {
+        <div class="flex-1 w-full" style="min-width:250px;">
+            <ui-input label="Monto (S/)" formControlName="montoTramite" type="decimal" [min]="0"
+                [patternErrorMessage]="'Ingresa un monto válido (ej: 10.50)'">
+            </ui-input>
+        </div>
+        }
+
+    </div>
     <div class="flex flex-column gap-4 flex-1 min-h-0 w-full">
-        <ui-input label="Nombre" formControlName="nombre" 
+        <ui-input label="Nombre" formControlName="nombre"
             [patternErrorMessage]="'No debe incluir espacios al final de la palabra'">
         </ui-input>
 
-        <ui-text-area label="Descripción" formControlName="descripcion" [patternErrorMessage]="'No debe incluir espacios al final de la palabra'">
+        <ui-text-area label="Descripción" formControlName="descripcion"
+            [patternErrorMessage]="'No debe incluir espacios al final de la palabra'">
         </ui-text-area>
     </div>
 </form>

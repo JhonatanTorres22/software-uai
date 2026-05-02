@@ -2,35 +2,38 @@
   <app-ui-loading></app-ui-loading>
 }
 @else {
-  <div class="flex align-items-center gap-2">
-  <span class="p-input-icon-left flex-1">
-    <p-autoComplete [(ngModel)]="categoriaSeleccionada" [dropdown]="true" [suggestions]="sugerencias"
-      optionLabel="nombre" placeholder="Buscar categorías..." (completeMethod)="filtrarCategorias($event)"
-      (onSelect)="seleccionar($event)" (onClear)="limpiarCategoria()" (onDropdownClick)="completarConDropdown()"
-      (ngModelChange)="onModelChange($event)" [showClear]="true" styleClass="w-full" inputStyleClass="w-full"
-      appendTo="body">
+  <div class="flex flex-column sm:flex-row align-items-stretch sm:align-items-center gap-2">
+    <span class="p-input-icon-left flex-1">
+      <p-autoComplete [(ngModel)]="categoriaSeleccionada" [dropdown]="true" [suggestions]="sugerencias"
+        optionLabel="nombre" placeholder="Buscar categorías..." (completeMethod)="filtrarCategorias($event)"
+        (onSelect)="seleccionar($event)" (onClear)="limpiarCategoria()" (onDropdownClick)="completarConDropdown()"
+        (ngModelChange)="onModelChange($event)" [showClear]="true" styleClass="w-full" inputStyleClass="w-full"
+        appendTo="body">
 
-      <ng-template let-cat #item>
-        <div class="flex align-items-center justify-content-between w-full gap-2 py-1">
-          <div class="min-w-0">
-            <div class="font-medium white-space-nowrap overflow-hidden text-overflow-ellipsis">{{ cat.nombre }}</div>
-            <div class="text-500 text-sm white-space-nowrap overflow-hidden text-overflow-ellipsis">
-              {{ cat.descripcion || 'Sin descripción' }}
+        <ng-template let-cat #item>
+          <div class="flex flex-column sm:flex-row sm:align-items-center justify-content-between w-full gap-2 py-1">
+            <div class="min-w-0 flex-1">
+              <div class="font-medium white-space-nowrap overflow-hidden text-overflow-ellipsis">{{ cat.nombre }}</div>
+              <div class="text-500 text-sm white-space-nowrap overflow-hidden text-overflow-ellipsis">
+                {{ cat.descripcion || 'Sin descripción' }}
+              </div>
+            </div>
+
+            <div class="flex gap-1 justify-content-end flex-shrink-0" (click)="$event.stopPropagation()">
+              <ui-icon-button icon="pi pi-pencil" color="info" tooltip="Editar"
+                (onClick)="openAddEditCategoria(cat)"></ui-icon-button>
+              <ui-icon-button icon="pi pi-trash" color="danger" tooltip="Eliminar"
+                (onClick)="eliminarCategoria(cat)">
+              </ui-icon-button>
             </div>
           </div>
-          <div class="flex gap-1" (click)="$event.stopPropagation()">
-            <ui-icon-button icon="pi pi-pencil" color="info" tooltip="Editar"
-              (onClick)="openAddEditCategoria(cat)"></ui-icon-button>
-            <ui-icon-button icon="pi pi-trash" color="danger" tooltip="Eliminar"
-              (onClick)="eliminarCategoria(cat)">
-            </ui-icon-button>
-          </div>
-        </div>
-      </ng-template>
-    </p-autoComplete>
-  </span>
+        </ng-template>
+      </p-autoComplete>
+    </span>
 
-  <!-- Botón Crear Categoría -->
-  <ui-button label="Agregar Categoría" icon="pi pi-plus"(onClick)="openCrearCategoria()"></ui-button>
-</div>
+    <div class="w-full sm:w-auto">
+      <ui-button styleClass="w-full sm:w-auto" label="Agregar Categoría" icon="pi pi-plus"
+        (onClick)="openCrearCategoria()"></ui-button>
+    </div>
+  </div>
 }

@@ -16,4 +16,9 @@ export class SubCategoriaValidations {
     expLockInputNombre : RegExp = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]/g;
     expLockInputDescripcion : RegExp = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ,.-]/g;
 
+    maxlengthCosto = 12; // 10 dígitos para la parte entera, 1 para el punto decimal y 2 para los decimales
+    minlengthCosto = 1;
+    expRegCosto: RegExp = /^\d{1,10}(\.\d{1,2})?$/
+    expLockInputCosto : RegExp = /[^0-9./]/g;
+
 }

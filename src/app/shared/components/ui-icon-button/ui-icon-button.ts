@@ -17,10 +17,28 @@ export class UiIconButton {
 
   @Output() onClick = new EventEmitter<Event>();
 
-  handleClick(event: Event) {
-    if (!this.disabled) {
-      this.onClick.emit(event);
+  private lastTouchTimestamp = 0;
+
+  handleTouch(event: TouchEvent) {
+    if (this.disabled) {
+      return;
     }
+
+    this.lastTouchTimestamp = Date.now();
+    event.preventDefault();
+    this.onClick.emit(event);
+  }
+
+  handleClick(event: Event) {
+    if (this.disabled) {
+      return;
+    }
+
+    if (Date.now() - this.lastTouchTimestamp < 450) {
+      return;
+    }
+
+    this.onClick.emit(event);
   }
 
 }

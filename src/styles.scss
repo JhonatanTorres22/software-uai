@@ -620,3 +620,37 @@ body {
   background: var(--brand-50) !important;
   color: var(--brand-600) !important;
 }
+
+/* Toggle apagado */
+.p-toggleswitch .p-toggleswitch-slider {
+    background: #d1d5db !important;
+    border: 1px solid #d1d5db !important;
+}
+
+/* Toggle encendido */
+.p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider {
+    background: var(--brand-600) !important;
+    border: 1px solid var(--brand-600) !important;
+}
+
+/* Círculo (handle) */
+.p-toggleswitch .p-toggleswitch-handle {
+    background: #ffffff !important;
+}
+
+/* Ícono dentro del toggle (check / x) */
+.p-toggleswitch .p-toggleswitch-handle i {
+    color: var(--brand-600) !important;
+    font-weight: 600;
+}
+
+/* Hover activo */
+.p-toggleswitch.p-toggleswitch-checked:hover .p-toggleswitch-slider {
+    background: var(--brand-800) !important;
+    border-color: var(--brand-800) !important;
+}
+
+/* Focus */
+.p-toggleswitch.p-focus .p-toggleswitch-slider {
+    box-shadow: 0 0 0 0.2rem rgba(46, 111, 173, 0.2) !important;
+}

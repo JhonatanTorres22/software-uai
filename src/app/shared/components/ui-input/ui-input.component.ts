@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, Output, Self, EventEmitter, input } from '@angular/core';
+import { Component, Input, OnInit, Output, Self, EventEmitter, input, output } from '@angular/core';
 
 import { ControlValueAccessor, FormControl, FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 
@@ -8,17 +8,18 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { UpperCaseDirective } from '@/shared/directivas/upper-case.directive';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @Component({
   selector: 'ui-input',
   standalone: true,
-  imports: [ CommonModule, FloatLabelModule,UpperCaseDirective, FormsModule, ReactiveFormsModule, PasswordModule, InputTextModule],
+  imports: [ CommonModule, FloatLabelModule,UpperCaseDirective, FormsModule, ReactiveFormsModule, PasswordModule, InputTextModule, InputNumberModule],
   templateUrl: './ui-input.component.html',
   styleUrl: './ui-input.component.scss'
 })
 export class UiInputComponent implements ControlValueAccessor, OnInit{
 
-  constructor(@Self() private ngControl: NgControl) {
+   constructor(@Self() private ngControl: NgControl) {
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
     }
@@ -26,20 +27,21 @@ export class UiInputComponent implements ControlValueAccessor, OnInit{
 
   hide = true;
 
-  @Output() onInputEvent = new EventEmitter<Event>();
+  // OUTPUT SIGNAL
+  onInputEvent = output<Event>();
 
-  @Input() label = '';
-  @Input() type: 'text' | 'password' | 'number' = 'text';
-  @Input() readonly = false;
-  @Input() maxlength = 0;
-  @Input() minlength = 0;
-  @Input() expReg = RegExp('');
-  @Input() classInput = '';
-  @Input() patternErrorMessage = '';
-  @Input() min!: number;
-  @Input() upperCase = true;
-  @Input() useExternalLabel = false;
-
+  // INPUT SIGNALS
+  label = input<string>('');
+  type = input<'text' | 'password' | 'number' | 'decimal'>('text');
+  readonly = input<boolean>(false);
+  maxlength = input<number>(0);
+  minlength = input<number>(0);
+  expReg = input<RegExp | null>(null);
+  classInput = input<string>('');
+  patternErrorMessage = input<string>('');
+  min = input<number | null>(null);
+  upperCase = input<boolean>(true);
+  useExternalLabel = input<boolean>(false);
 
   formControl!: FormControl;
 
@@ -47,15 +49,12 @@ export class UiInputComponent implements ControlValueAccessor, OnInit{
     this.formControl = this.ngControl.control as FormControl;
   }
 
-  // CVA (no necesitas tocar mucho)
-   private onChange = (_: any) => {};
+  private onChange = (_: any) => {};
   private onTouched = () => {};
 
   disabled = false;
 
-  writeValue(value: any): void {
-    // asignar valor
-  }
+  writeValue(value: any): void {}
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
@@ -66,15 +65,17 @@ export class UiInputComponent implements ControlValueAccessor, OnInit{
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled; // ✅ SOLO guardar estado
+    this.disabled = isDisabled;
   }
 
-  // 🔒 RESTRICCIÓN onInput (IGUAL que antes)
   onInput(event: Event) {
-    if (!this.expReg) return;
+    const regex = this.expReg();
 
-    const input = event.target as HTMLInputElement;
-    const value = input.value.replace(new RegExp(this.expReg, 'g'), '');
+    if (!regex) return;
+
+    const inputElement = event.target as HTMLInputElement;
+    const value = inputElement.value.replace(regex, '');
+
     this.formControl.setValue(value, { emitEvent: false });
   }
   

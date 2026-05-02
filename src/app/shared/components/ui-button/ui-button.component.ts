@@ -26,6 +26,7 @@ export class UiButtonComponent implements OnInit {
   @Output() onClick = new EventEmitter<Event>();
 
   computedClass = '';
+  private lastTouchTimestamp = 0;
 
   ngOnInit(): void {
     this.computeClasses();
@@ -55,9 +56,25 @@ export class UiButtonComponent implements OnInit {
     this.computedClass = classes.join(' ');
   }
 
-  handleClick(event: Event) {
-    if (!this.disabled) {
-      this.onClick.emit(event);
+  handleTouch(event: TouchEvent) {
+    if (this.disabled) {
+      return;
     }
+
+    this.lastTouchTimestamp = Date.now();
+    event.preventDefault();
+    this.onClick.emit(event);
+  }
+
+  handleClick(event: Event) {
+    if (this.disabled) {
+      return;
+    }
+
+    if (Date.now() - this.lastTouchTimestamp < 450) {
+      return;
+    }
+
+    this.onClick.emit(event);
   }
 }

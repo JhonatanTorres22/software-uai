@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormControl, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { NotificationService } from '@/shared/services/notification.service';
@@ -12,18 +12,23 @@ import { CrearSubCategoria, EditarSubCategoria, ListarSubCategoria } from '../..
 import { CategoriaSignal } from '../../domain/signals/categoria.signal';
 import { UiInputComponent } from '@/shared/components/ui-input/ui-input.component';
 import { UiTextAreaComponent } from '@/shared/components/ui-text-area/ui-text-area.component';
+import { ToggleSwitchModule } from "primeng/toggleswitch";
+import { TagModule } from "primeng/tag";
 
 @Component({
   selector: 'app-add-edit-subcategoria',
   standalone: true,
   imports: [
+    FormsModule,
     CommonModule,
     ReactiveFormsModule,
     InputTextModule,
     TextareaModule,
     UiInputComponent,
-    UiTextAreaComponent
-  ],
+    UiTextAreaComponent,
+    ToggleSwitchModule,
+    TagModule
+],
   templateUrl: './add-edit-subcategoria.html',
   styleUrls: ['./add-edit-subcategoria.scss'],
 })
@@ -39,12 +44,12 @@ export class AddEditSubcategoria implements OnInit {
 
   subcategoria: ListarSubCategoria | null = null;
   categoriaId = 0;
-  submitted = false;
-  saving = false;
 
   readonly formSubCategoria = new FormGroup({
     nombre: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(3), Validators.maxLength(100)] }),
-    descripcion: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(5), Validators.maxLength(255)] })
+    descripcion: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(5), Validators.maxLength(255)] }),
+    montoTramite: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
+    requiereCosto: new FormControl(false, { nonNullable: true })
   });
 
   get modalPrimaryLabel(): string {
@@ -52,7 +57,7 @@ export class AddEditSubcategoria implements OnInit {
   }
 
   get modalPrimaryDisabled(): boolean {
-    return this.formSubCategoria.invalid || this.saving;
+    return this.formSubCategoria.invalid 
   }
 
   get modoEdicion(): boolean {
@@ -73,7 +78,6 @@ export class AddEditSubcategoria implements OnInit {
   }
 
   guardar(): void {
-    this.submitted = true;
 
     if (this.formSubCategoria.invalid) {
       return;
@@ -98,13 +102,12 @@ export class AddEditSubcategoria implements OnInit {
   private persistirSubCategoria(): void {
     const nombre = this.formSubCategoria.controls.nombre.value.trim();
     const descripcion = this.formSubCategoria.controls.descripcion.value.trim();
-
-    this.saving = true;
-
+    const montoTramite = this.formSubCategoria.controls.requiereCosto.value ? String(this.formSubCategoria.controls.montoTramite.value) : '0';
     if (this.modoEdicion && this.subcategoria) {
       const payload: EditarSubCategoria = {
         idSubCategoriaTramite: this.subcategoria.idSubCategoriaTramite,
         idCategoriaTramite: this.categoriaId,
+        montoTramite,
         nombre,
         descripcion
       };
@@ -113,14 +116,10 @@ export class AddEditSubcategoria implements OnInit {
 
       this.editarSubCategoriaUseCase.execute(payload).subscribe({
         next: (response) => {
-          this.saving = false;
           this.notificationService.success(`${response.message}, subcategoría actualizada correctamente`);
           this.ref.close({ success: true });
         },
         error: (err) => {
-          console.log(err);
-          
-          this.saving = false;
           this.notificationService.error('No se pudo actualizar la subcategoría');
         }
       });
@@ -130,7 +129,8 @@ export class AddEditSubcategoria implements OnInit {
     const payload: CrearSubCategoria = {
       idCategoriaTramite: this.categoriaId,
       nombre,
-      descripcion
+      descripcion,
+      montoTramite
     };
 
     console.log(payload);
@@ -138,12 +138,10 @@ export class AddEditSubcategoria implements OnInit {
 
     this.crearSubCategoriaUseCase.execute(payload).subscribe({
       next: (response) => {
-        this.saving = false;
         this.notificationService.success(`${response.message}, subcategoría creada correctamente`);
         this.ref.close({ success: true });
       },
       error: () => {
-        this.saving = false;
         this.notificationService.error('No se pudo crear la subcategoría');
       }
     });

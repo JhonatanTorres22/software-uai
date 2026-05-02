@@ -2,6 +2,7 @@ export interface ListarSubCategoriaDTO {
     codigoSubCategoriaTramite: number;
     codigoCategoriaTramite: number;
     nombre: string;
+    monto : string
     descripcion: string;
 }
 

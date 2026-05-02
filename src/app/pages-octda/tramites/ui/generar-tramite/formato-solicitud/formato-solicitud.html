@@ -4,60 +4,59 @@
         <div class="grid formgrid">
             <div class="col-12">
                 <ui-input formControlName="destinatario" label="Destinatario" [maxlength]="120" [readonly]="true"
-                    [useExternalLabel]="true"></ui-input>
+                    ></ui-input>
             </div>
 
             <div class="col-12">
                 <ui-input formControlName="datosUsuario" label="Datos del Usuario (Apellido y Nombres)"
                     [maxlength]="120" [minlength]="6" [expReg]="expRegNombre"
-                    [patternErrorMessage]="'Solo se permiten letras y espacios.'" [useExternalLabel]="true"></ui-input>
+                    [patternErrorMessage]="'Solo se permiten letras y espacios.'"></ui-input>
             </div>
 
             <div class="col-12 md:col-4">
                 <ui-input formControlName="carreraProfesional" label="Carrera Profesional" [maxlength]="100"
-                    [minlength]="4" [useExternalLabel]="true"></ui-input>
+                    [minlength]="4"></ui-input>
             </div>
 
             <div class="col-12 md:col-4">
                 <ui-input formControlName="semestreTurno" label="Semestre / Turno" [maxlength]="50" [minlength]="3"
-                    [useExternalLabel]="true"></ui-input>
+                    ></ui-input>
             </div>
 
             <div class="col-12 md:col-4">
                 <ui-input formControlName="numeroContacto" label="N° Contacto" [maxlength]="9" [minlength]="9"
                     [expReg]="expRegDocumento" [patternErrorMessage]="'Solo se permiten números.'" [upperCase]="false"
-                    [useExternalLabel]="true"></ui-input>
+                    ></ui-input>
             </div>
 
             <div class="col-12 md:col-4">
                 <ui-input formControlName="numeroCarnet" label="N° de Carnet" [maxlength]="15" [minlength]="6"
-                    [upperCase]="false" [useExternalLabel]="true"></ui-input>
+                    [upperCase]="false"></ui-input>
             </div>
 
             <div class="col-12 md:col-4">
                 <ui-input formControlName="numeroDocumento" label="N° de Documento" [maxlength]="8" [minlength]="8"
                     [expReg]="expRegDocumento" [patternErrorMessage]="'Solo se permiten números.'" [upperCase]="false"
-                    [useExternalLabel]="true"></ui-input>
+                    ></ui-input>
             </div>
 
             <div class="col-12 md:col-4">
                 <ui-input formControlName="email" label="EMail" [maxlength]="120" [upperCase]="false"
-                    [useExternalLabel]="true"></ui-input>
+                    ></ui-input>
             </div>
 
             <div class="col-12 md:col-12">
                 <ui-input formControlName="domicilioUsuario" label="Domicilio del Usuario" [maxlength]="180"
-                    [minlength]="8" [useExternalLabel]="true"></ui-input>
+                    [minlength]="8"></ui-input>
             </div>
 
             <div class="col-12">
                 <ui-text-area formControlName="fundamento" label="Fundamento (Justificación / Motivo del pedido)"
-                    [rows]="6" [maxlength]="1000" [minlength]="20" [useExternalLabel]="true"></ui-text-area>
+                    [rows]="6" [maxlength]="1000" [minlength]="20"></ui-text-area>
             </div>
 
             <div class="col-12 lg:col-6">
-                <ui-text-area formControlName="anexos" label="Anexos" [rows]="6" [maxlength]="500"
-                    [useExternalLabel]="true"></ui-text-area>
+                <ui-text-area formControlName="anexos" label="Anexos" [rows]="6" [maxlength]="500"></ui-text-area>
             </div>
 
             <div class="col-12 lg:col-6 flex flex-column gap-3">
@@ -96,18 +95,15 @@
 
                 <div class="grid formgrid">
                     <div class="col-12 md:col-6">
-                        <ui-input formControlName="fecha" label="Fecha" [maxlength]="20" [upperCase]="false"
-                            [useExternalLabel]="true"></ui-input>
+                        <ui-input formControlName="fecha" label="Fecha" [maxlength]="20" [upperCase]="false"></ui-input>
                     </div>
 
                     <div class="col-12 md:col-6">
-                        <ui-input formControlName="firma" label="Firma" [maxlength]="120"
-                            [useExternalLabel]="true"></ui-input>
+                        <ui-input formControlName="firma" label="Firma" [maxlength]="120"></ui-input>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
     <div class="flex justify-content-end mt-4">
         <ui-button label="Enviar Solicitud" [disabled]="invalid" (onClick)="generarTramite()"

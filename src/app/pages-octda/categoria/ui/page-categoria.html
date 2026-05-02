@@ -1,25 +1,25 @@
-<div class="font-bold text-lg"> GESTIÓN DE CATEGORÍAS Y SUBCATEGORÍAS </div>
+<div class="font-bold text-lg md:text-xl">GESTION DE CATEGORIAS Y SUBCATEGORIAS</div>
 
-  <p-divider></p-divider>
-  <div class="grid">
-    <div [class]="selectSubCategoria().idSubCategoriaTramite !== 0 ? 'col-12 md:col-6 lg:col-5' : 'col-12'">
+<p-divider></p-divider>
 
-      <app-list-categoria></app-list-categoria>
+<div class="grid align-items-start categoria-layout">
+  <div
+    [class]="selectSubCategoria().idSubCategoriaTramite !== 0
+      ? 'col-12 lg:col-7 order-2 lg:order-1'
+      : 'col-12 order-1'">
 
-      <div class="mt-3">
-        <app-list-subcategoria
-          (subcategoriaVer)="onVerSubcategoria($event)">
-        </app-list-subcategoria>
-      </div>
+    <app-list-categoria></app-list-categoria>
 
+    <div class="mt-3">
+      <app-list-subcategoria (subcategoriaVer)="onVerSubcategoria($event)">
+      </app-list-subcategoria>
     </div>
-
-    @if (selectSubCategoria().idSubCategoriaTramite > 0) {
-      <div class="col-12 md:col-6 lg:col-7">
-        <app-detalle-subcategoria
-          (cerrar)="onCerrarDetalle()">
-        </app-detalle-subcategoria>
-      </div>
-    }
-
   </div>
+
+  @if (selectSubCategoria().idSubCategoriaTramite > 0) {
+    <div class="col-12 lg:col-5 order-1 lg:order-2 mb-3 lg:mb-0">
+      <app-detalle-subcategoria (cerrar)="onCerrarDetalle()">
+      </app-detalle-subcategoria>
+    </div>
+  }
+</div>
