@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DragDropModule, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
@@ -12,7 +11,6 @@ import { UiInputComponent } from '@/shared/components/ui-input/ui-input.componen
 import { UiIconButton } from '@/shared/components/ui-icon-button/ui-icon-button';
 import { NotificationService } from '@/shared/services/notification.service';
 import { ListarSubCategoria, SubCategoriaArchivoRequerido, SubCategoriaDetalle, SubCategoriaEtapaProceso } from '../../domain/entity/subCategoria.entity';
-import { SubCategoriaValidations } from '../../domain/validation/subCategoria.validation';
 
 interface AreaDisponible {
   id: number;
@@ -31,6 +29,7 @@ type EtapaForm = FormGroup<{
   nombreArea: FormControl<string>;
   responsable: FormControl<string>;
   diasEstimados: FormControl<number>;
+  observaciones: FormControl<string>;
 }>;
 
 type DocumentoForm = FormGroup<{
@@ -45,7 +44,6 @@ type DocumentoForm = FormGroup<{
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    DragDropModule,
     AutoCompleteModule,
     DividerModule,
     ToggleSwitchModule,
@@ -61,11 +59,6 @@ export class AddEditConfiguracionSubcategoria implements OnInit {
   private readonly ref = inject(DynamicDialogRef);
   private readonly config = inject(DynamicDialogConfig);
   private readonly notificationService = inject(NotificationService);
-  private readonly validations = inject(SubCategoriaValidations);
-
-  readonly maxLengthCosto = this.validations.maxlengthCosto;
-  readonly expreCosto = this.validations.expRegCosto;
-  readonly expLockInputCosto = this.validations.expLockInputCosto;
 
   subCategoria: ListarSubCategoria | null = null;
   submitted = false;
@@ -74,11 +67,6 @@ export class AddEditConfiguracionSubcategoria implements OnInit {
   selectedDocumentoModel: DocumentoDisponible | null = null;
   areaSuggestions: AreaDisponible[] = [];
   documentoSuggestions: DocumentoDisponible[] = [];
-
-  readonly formConfiguracion: FormGroup<{
-    etapasProceso: FormArray<EtapaForm>;
-    archivosRequeridos: FormArray<DocumentoForm>;
-  }>;
 
   readonly areasDisponibles: AreaDisponible[] = [
     { id: 1, nombre: 'Mesa de Partes', responsable: 'Coordinador de Mesa de Partes' },
@@ -97,12 +85,15 @@ export class AddEditConfiguracionSubcategoria implements OnInit {
     { id: 5, nombre: 'Declaracion jurada', tipos: ['PDF'] },
   ];
 
-  constructor() {
-    this.formConfiguracion = new FormGroup({
-      etapasProceso: new FormArray<EtapaForm>([]),
-      archivosRequeridos: new FormArray<DocumentoForm>([]),
-    });
-  }
+  readonly formConfiguracion = new FormGroup({
+    requiereCosto: new FormControl(false, { nonNullable: true }),
+    costo: new FormControl(0, {
+      nonNullable: true,
+      validators: [Validators.required, Validators.min(1), Validators.pattern(/^\d+(\.\d{1,2})?$/)]
+    }),
+    etapasProceso: new FormArray<EtapaForm>([]),
+    archivosRequeridos: new FormArray<DocumentoForm>([]),
+  });
 
   get modalPrimaryLabel(): string {
     return 'Guardar Configuracion';
@@ -124,7 +115,29 @@ export class AddEditConfiguracionSubcategoria implements OnInit {
     const payload = this.config?.data?.payload ?? {};
     this.subCategoria = (payload.subCategoria as ListarSubCategoria | undefined) ?? null;
 
-    const costoInicial = this.subCategoria?.detalle?.costo ?? null;
+    const requiereCostoInicial = (this.subCategoria?.detalle?.costo ?? null) !== null && (this.subCategoria?.detalle?.costo ?? 0) > 0;
+    this.formConfiguracion.controls.requiereCosto.setValue(requiereCostoInicial);
+
+    if (requiereCostoInicial) {
+      this.formConfiguracion.controls.costo.enable({ emitEvent: false });
+      this.formConfiguracion.controls.costo.setValue(this.subCategoria?.detalle?.costo ?? 0);
+    } else {
+      this.formConfiguracion.controls.costo.setValue(0, { emitEvent: false });
+      this.formConfiguracion.controls.costo.disable({ emitEvent: false });
+    }
+
+    this.formConfiguracion.controls.requiereCosto.valueChanges.subscribe((requiereCosto) => {
+      if (requiereCosto) {
+        this.formConfiguracion.controls.costo.enable();
+        if (this.formConfiguracion.controls.costo.value <= 0) {
+          this.formConfiguracion.controls.costo.setValue(1);
+        }
+        return;
+      }
+
+      this.formConfiguracion.controls.costo.setValue(0);
+      this.formConfiguracion.controls.costo.disable();
+    });
 
     this.precargarDetalle(this.subCategoria?.detalle);
   }
@@ -142,16 +155,15 @@ export class AddEditConfiguracionSubcategoria implements OnInit {
     }
 
     const detalle: SubCategoriaDetalle = {
-
-      tiempoEstimadoTotalDias: this.etapasProceso.controls.reduce(
-        (acc, etapa) => acc + Number(etapa.controls.diasEstimados.value), 0
-      ),
+      costo: this.formConfiguracion.controls.requiereCosto.value ? Number(this.formConfiguracion.controls.costo.value) : null,
+      tiempoEstimadoTotalDias: this.etapasProceso.controls.reduce((acc, etapa) => acc + Number(etapa.controls.diasEstimados.value), 0),
       etapasProceso: this.etapasProceso.controls.map((etapa, index) => ({
         orden: index + 1,
         nombreArea: etapa.controls.nombreArea.value,
         responsable: etapa.controls.responsable.value,
         diasEstimados: Number(etapa.controls.diasEstimados.value),
         estado: 'pendiente',
+        observaciones: etapa.controls.observaciones.value,
       } as SubCategoriaEtapaProceso)),
       archivosRequeridos: this.archivosRequeridos.controls.map((documento) => ({
         nombreDocumento: documento.controls.nombreDocumento.value,
@@ -165,24 +177,18 @@ export class AddEditConfiguracionSubcategoria implements OnInit {
     this.ref.close({ success: true, detalle });
   }
 
+  onCostoInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const raw = input.value ?? '';
+    const sanitized = raw.replace(/[^\d.]/g, '');
+    const parts = sanitized.split('.');
+    const normalized = parts.length > 2 ? `${parts[0]}.${parts.slice(1).join('')}` : sanitized;
+    const formatted = normalized.includes('.')
+      ? `${normalized.split('.')[0]}.${normalized.split('.')[1].slice(0, 2)}`
+      : normalized;
 
-  getColorByAreaId(areaId: number): string {
-    const colors = ['blue', 'teal', 'purple', 'orange', 'pink', 'cyan', 'indigo', 'amber'];
-    return colors[areaId % colors.length];
-  }
-
-  onDropEtapas(event: any): void {
-    const { previousIndex, currentIndex } = event;
-    if (previousIndex !== currentIndex) {
-      // Obtener el control que se está moviendo
-      const movedControl = this.etapasProceso.at(previousIndex);
-
-      // Remover del índice anterior
-      this.etapasProceso.removeAt(previousIndex);
-
-      // Insertar en el nuevo índice
-      this.etapasProceso.insert(currentIndex, movedControl);
-    }
+    const value = Number(formatted || 0);
+    this.formConfiguracion.controls.costo.setValue(value, { emitEvent: false });
   }
 
   completarAreas(event: { query: string }): void {
@@ -197,39 +203,67 @@ export class AddEditConfiguracionSubcategoria implements OnInit {
   }
 
   agregarArea(area: AreaDisponible): void {
-    if (this.etapasProceso.controls.some((item) => item.controls.areaId.value === area.id)) return;
-    this.etapasProceso.push(this.crearEtapaForm(area));
+    const existe = this.etapasProceso.controls.some((item) => item.controls.areaId.value === area.id);
+    if (existe) {
+      return;
+    }
+
+    this.etapasProceso.push(this.createEtapaForm(area));
     this.selectedAreaModel = null;
+    this.actualizarOrdenEtapas();
   }
 
   eliminarArea(index: number): void {
     this.etapasProceso.removeAt(index);
+    this.actualizarOrdenEtapas();
   }
 
-  moverArea(index: number, direccion: -1 | 1): void {
-    const destino = index + direccion;
-    if (destino < 0 || destino >= this.etapasProceso.length) return;
+  subirArea(index: number): void {
+    if (index <= 0) {
+      return;
+    }
+
     const current = this.etapasProceso.at(index);
-    const target = this.etapasProceso.at(destino);
-    this.etapasProceso.setControl(destino, current);
-    this.etapasProceso.setControl(index, target);
+    const previous = this.etapasProceso.at(index - 1);
+
+    this.etapasProceso.setControl(index - 1, current);
+    this.etapasProceso.setControl(index, previous);
+    this.actualizarOrdenEtapas();
+  }
+
+  bajarArea(index: number): void {
+    if (index >= this.etapasProceso.length - 1) {
+      return;
+    }
+
+    const current = this.etapasProceso.at(index);
+    const next = this.etapasProceso.at(index + 1);
+
+    this.etapasProceso.setControl(index + 1, current);
+    this.etapasProceso.setControl(index, next);
+    this.actualizarOrdenEtapas();
   }
 
   completarDocumentos(event: { query: string }): void {
     const q = (event.query ?? '').trim().toLowerCase();
     this.documentoSuggestions = this.documentosDisponibles
-      .filter((doc) => !this.archivosRequeridos.controls.some((item) => item.controls.documentoId.value === doc.id))
-      .filter((doc) => doc.nombre.toLowerCase().includes(q));
+      .filter((documento) => !this.archivosRequeridos.controls.some((item) => item.controls.documentoId.value === documento.id))
+      .filter((documento) => documento.nombre.toLowerCase().includes(q));
   }
 
   agregarDocumentoDesdeEvento(event: { value: DocumentoDisponible }): void {
     const documento = event.value;
-    if (this.archivosRequeridos.controls.some((item) => item.controls.documentoId.value === documento.id)) return;
+    const existe = this.archivosRequeridos.controls.some((item) => item.controls.documentoId.value === documento.id);
+    if (existe) {
+      return;
+    }
+
     this.archivosRequeridos.push(new FormGroup({
       documentoId: new FormControl(documento.id, { nonNullable: true }),
       nombreDocumento: new FormControl(documento.nombre, { nonNullable: true }),
       tipos: new FormControl(documento.tipos.join(' / '), { nonNullable: true }),
-    }) as DocumentoForm);
+    }));
+
     this.selectedDocumentoModel = null;
   }
 
@@ -237,31 +271,33 @@ export class AddEditConfiguracionSubcategoria implements OnInit {
     this.archivosRequeridos.removeAt(index);
   }
 
-  private crearEtapaForm(area: AreaDisponible): EtapaForm {
+  private createEtapaForm(area: AreaDisponible): EtapaForm {
     return new FormGroup({
       areaId: new FormControl(area.id, { nonNullable: true }),
       nombreArea: new FormControl(area.nombre, { nonNullable: true }),
       responsable: new FormControl(area.responsable, { nonNullable: true }),
-      diasEstimados: new FormControl(1, {
-        nonNullable: true,
-        validators: [Validators.required, Validators.min(1), Validators.max(365)],
-      }),
-    }) as EtapaForm;
+      diasEstimados: new FormControl(1, { nonNullable: true, validators: [Validators.required, Validators.min(1), Validators.max(365)] }),
+      observaciones: new FormControl('Accion principal del area en esta etapa.', { nonNullable: true, validators: [Validators.required, Validators.minLength(5), Validators.maxLength(180)] }),
+    });
+  }
+
+  private actualizarOrdenEtapas(): void {
+    this.etapasProceso.updateValueAndValidity({ emitEvent: false });
   }
 
   private precargarDetalle(detalle?: SubCategoriaDetalle): void {
-    if (!detalle) return;
+    if (!detalle) {
+      return;
+    }
 
     (detalle.etapasProceso ?? []).forEach((etapa) => {
       this.etapasProceso.push(new FormGroup({
         areaId: new FormControl(etapa.orden, { nonNullable: true }),
         nombreArea: new FormControl(etapa.nombreArea, { nonNullable: true }),
         responsable: new FormControl(etapa.responsable ?? etapa.nombreArea, { nonNullable: true }),
-        diasEstimados: new FormControl(etapa.diasEstimados, {
-          nonNullable: true,
-          validators: [Validators.required, Validators.min(1), Validators.max(365)],
-        }),
-      }) as EtapaForm);
+        diasEstimados: new FormControl(etapa.diasEstimados, { nonNullable: true, validators: [Validators.required, Validators.min(1), Validators.max(365)] }),
+        observaciones: new FormControl(etapa.observaciones ?? 'Accion principal del area en esta etapa.', { nonNullable: true, validators: [Validators.required, Validators.minLength(5), Validators.maxLength(180)] }),
+      }));
     });
 
     (detalle.archivosRequeridos ?? []).forEach((archivo, index) => {
@@ -269,7 +305,8 @@ export class AddEditConfiguracionSubcategoria implements OnInit {
         documentoId: new FormControl(index + 1, { nonNullable: true }),
         nombreDocumento: new FormControl(archivo.nombreDocumento, { nonNullable: true }),
         tipos: new FormControl(archivo.formatosPermitidos.join(' / '), { nonNullable: true }),
-      }) as DocumentoForm);
+      }));
     });
   }
+
 }

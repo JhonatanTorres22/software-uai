@@ -1,1 +1,114 @@
-<p>datos-tramite works!</p>
+<form [formGroup]="formGenerarTramite" class="flex flex-column gap-4">
+    <section class="border-1 surface-border border-round p-3 md:p-4 surface-card">
+        <h3 class="m-0 mb-3 text-900 text-base font-semibold">Datos del usuario</h3>
+
+        <div class="grid">
+            <div class="col-12 md:col-6">
+                <ui-select [options]="listTipoDocumento" label="Tipo de documento"
+                    formControlName="tipoDoc"></ui-select>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <ui-input formControlName="numeroDoc" label="Numero de documento" [maxlength]="numeroDocMaxLength"
+                    [minlength]="8" [upperCase]="false" [patternErrorMessage]="'Solo numeros'"
+                    (onInputEvent)="onOnlyNumbersInput('numeroDoc', $event)">
+                </ui-input>
+            </div>
+
+            <!-- <div class="col-12 md:col-4">
+                <ui-select [options]="listTipoSolicitante" label="Tipo de solicitante"
+                    formControlName="tipoSolicitante"></ui-select>
+            </div> -->
+
+            <div class="col-12 md:col-4">
+                <ui-input formControlName="nombreSolicitante" label="Nombres" [maxlength]="80" [minlength]="2"
+                    [patternErrorMessage]="'Solo letras y espacios'">
+                </ui-input>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <ui-input formControlName="apePaternoSolicitante" label="Apellido paterno" [maxlength]="60"
+                    [minlength]="2" [patternErrorMessage]="'Solo letras y espacios'">
+                </ui-input>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <ui-input formControlName="apeMaternoSolicitante" label="Apellido materno" [maxlength]="60"
+                    [minlength]="2" [patternErrorMessage]="'Solo letras y espacios'">
+                </ui-input>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <ui-input formControlName="celularSolicitante" label="Celular" [maxlength]="9" [minlength]="9"
+                    [patternErrorMessage]="'Solo numeros'"
+                    (onInputEvent)="onOnlyNumbersInput('celularSolicitante', $event)">
+                </ui-input>
+            </div>
+
+            <div class="col-12 md:col-8">
+                <ui-input formControlName="correoSolicitante" label="Correo" [maxlength]="120"
+                    [patternErrorMessage]="'Correo invalido'">
+                </ui-input>
+            </div>
+        </div>
+    </section>
+
+    <section class="border-1 surface-border border-round p-3 md:p-4 surface-card">
+        <h3 class="m-0 mb-3 text-900 text-base font-semibold">Datos del tramite</h3>
+
+        <div class="grid">
+            <div class="col-12 md:col-6">
+                <ui-select [options]="listCategorias" label="Categoria"
+                    formControlName="idCategoriaTramite"></ui-select>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <ui-select [options]="listSubCategorias" label="Subcategoria" formControlName="idSubCategoriaTramite"
+                    [readonly]="!formGenerarTramite.controls['idCategoriaTramite'].value">
+                </ui-select>
+
+                @if (formGenerarTramite.controls['idSubCategoriaTramite'].invalid) {
+                <small class="text-red-500 block mt-1">Selecciona una subcategoria.</small>
+                }
+            </div>
+
+            <div class="col-12">
+                <ui-text-area formControlName="asunto" label="Asunto" [maxlength]="250" [minlength]="10"></ui-text-area>
+            </div>
+
+            <div class="col-12 md:col-7">
+                <label class="block text-sm font-medium mb-2">Anexo</label>
+                <input type="file" class="w-full" (change)="onArchivoSeleccionado($event)" />
+                @if (formGenerarTramite.controls['archivoAnexo'].value) {
+                <small class="text-500 block mt-1">Archivo: {{ formGenerarTramite.controls['archivoAnexo'].value
+                    }}</small>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="border-1 surface-border border-round p-3 md:p-4 surface-card" [formGroup]="formPagoRealizado">
+        <h3 class="m-0 mb-3 text-900 text-base font-semibold">Pago realizado</h3>
+        <p class="m-0 text-500 text-sm mb-3">Seccion preparada para futura integracion (sin logica por ahora).</p>
+
+        <div class="grid">
+            <div class="col-12 md:col-3">
+                <ui-input formControlName="numeroVoucher" label="Voucher" [upperCase]="false"></ui-input>
+            </div>
+            <div class="col-12 md:col-3">
+                <ui-input formControlName="fechaPago" label="Fecha pago" [upperCase]="false"></ui-input>
+            </div>
+            <div class="col-12 md:col-2">
+                <ui-input formControlName="horaPago" label="Hora pago" [upperCase]="false"></ui-input>
+            </div>
+            <div class="col-12 md:col-4">
+                <ui-input formControlName="montoPago" label="Monto" [upperCase]="false"></ui-input>
+            </div>
+        </div>
+    </section>
+
+    <div class="flex justify-content-end">
+        <ui-button label="Registrar tramite" icon="pi pi-check"  (onClick)="guardarTramite()">
+        </ui-button>
+    </div>
+</form>

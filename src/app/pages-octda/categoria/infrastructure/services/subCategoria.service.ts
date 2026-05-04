@@ -15,7 +15,7 @@ export class SubCategoriaService {
 
     private apiUrl: string = environment.EndPoint
     private urlObtenerSubCategoria: string = '/api/SubCategoriaTramite/Listar';
-    private urlObtenerSubCategoriaPorCategoria: string = '/api/SubCategoriaTramite/ListarPorCategoria/';
+    private urlObtenerSubCategoriaPorCategoria: string = '/api/SubCategoriaTramite/ListarPorCategoriaTramite/';
     private urlCrearSubCategoria: string = '/api/SubCategoriaTramite/Insertar'
     private urlEditarSubCategoria: string = '/api/SubCategoriaTramite/Actualizar'
     private urlEliminarSubCategoria: string = '/api/SubCategoriaTramite/Eliminar'

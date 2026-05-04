@@ -11,7 +11,7 @@ import { ModalService } from '@/shared/services/modal.service';
 import { AddEditSubcategoria } from '../add-edit-subcategoria/add-edit-subcategoria';
 import { SubCategoriaSignal } from '../../domain/signals/subCategoria.signal';
 import { EliminarSubCategoriaUseCase } from '../../application/use-cases/subCategorias/eliminarSubCategoria.use-cases';
-import { ObtenerSubCategoriaPorIdUseCase } from '../../application/use-cases/subCategorias/obtenerSubCategoriaPorId.use-case';
+import { ObtenerSubCategoriaPorCategoriaUseCase } from '../../application/use-cases/subCategorias/obtenerSubCategoriaPorCategoria.use-case';
 import { NotificationService } from '@/shared/services/notification.service';
 import { ListarSubCategoria } from '../../domain/entity/subCategoria.entity';
 import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
@@ -38,7 +38,7 @@ export class ListSubcategoria {
   private readonly confirmDialogService = inject(ConfirmDialogService);
 
   subcategoriaActivaId: number | null = null;
-  private readonly obtenerSubCategoriaPorIdUseCase = inject(ObtenerSubCategoriaPorIdUseCase);
+  private readonly obtenerSubCategoriaPorCategoriaUseCase = inject(ObtenerSubCategoriaPorCategoriaUseCase);
   private readonly eliminarSubCategoriaUseCase = inject(EliminarSubCategoriaUseCase);
 
   constructor() {
@@ -64,7 +64,7 @@ export class ListSubcategoria {
 
   obtenerSubCategoria(idCategoria: number): void {
     this.loading.set(true);
-    this.obtenerSubCategoriaPorIdUseCase.execute(idCategoria).subscribe({
+    this.obtenerSubCategoriaPorCategoriaUseCase.execute(idCategoria).subscribe({
       next: (response) => {
         this.subCategoriaSignal.listSubCategoria.set(response.data);
         this.subcategoriaActivaId = null;
