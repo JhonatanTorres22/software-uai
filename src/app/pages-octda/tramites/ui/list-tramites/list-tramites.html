@@ -1,13 +1,16 @@
 <div class="flex gap-3 align-items-start">
     <div class="flex-1 min-w-0 overflow-x-auto">
         <div class="space-y-4">
+            <!-- <pre> {{tramitesFiltrados() | json}} </pre> -->
             <p-table #dt size="small" [value]="tramitesFiltrados()" [paginator]="true" [rows]="10"
                 [rowsPerPageOptions]="[5, 10, 25]" [globalFilterFields]="[
-            'codigo',
-            'solicitante',
-            'rol',
-            'tipo',
-            'fechaTramite',
+            'codigoExpediente',
+            'nombreSolicitante',
+            'apePaternoSolicitante',
+            'apeMaternoSolicitante',
+            'tipoSolicitante',
+            'nombreSubcategoriaTramite',
+            'fechaTramiteCreacion',
             'estado'
         ]" [sortMode]="'single'" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
@@ -23,6 +26,9 @@
                             <ui-select [options]="estadoOpciones" placeholder="Filtrar por estado"
                                 [ngModel]="selectedEstado()" (ngModelChange)="onEstadoChange($event)">
                             </ui-select>
+                            <ui-select [options]="subCategoriaOpciones()" placeholder="Filtrar por cod. subcategoria"
+                                [ngModel]="selectedCodigoSubCategoria()" (ngModelChange)="onSubCategoriaChange($event)">
+                            </ui-select>
                         </div>
 
                         <div class="flex align-items-center gap-2 flex-shrink-0 flex-nowrap">
@@ -35,6 +41,10 @@
                                     (input)="dt.filterGlobal($any($event.target).value, 'contains')"
                                     placeholder="Buscar trámite..." />
                             </p-iconField>
+                            <ui-button label="Exportar Excel" icon="pi pi-file-excel" color="success"
+                                styleClass="white-space-nowrap flex-shrink-0" [style]="{ 'white-space': 'nowrap' }"
+                                (onClick)="exportarExcel()">
+                            </ui-button>
                             <ui-button label="Nuevo Trámite" icon="pi pi-plus"
                                 styleClass="white-space-nowrap flex-shrink-0" [style]="{ 'white-space': 'nowrap' }"
                                 (onClick)="openGenerarTramiteDrawer(selectTramiteDefault)">
@@ -46,12 +56,17 @@
 
                 <ng-template pTemplate="header">
                     <tr>
-                        <th pSortableColumn="codigo"> Código <p-sortIcon field="codigo"></p-sortIcon> </th>
-                        <th pSortableColumn="solicitante"> Solicitante <p-sortIcon field="solicitante"></p-sortIcon>
+                        <th pSortableColumn="codigoExpediente" > N° Expediente <p-sortIcon
+                                field="codigoExpediente"></p-sortIcon> </th>
+                        <th pSortableColumn="nombreSolicitante"> Solicitante <p-sortIcon
+                                field="nombreSolicitante"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="rol"> Rol <p-sortIcon field="rol"></p-sortIcon></th>
-                        <th pSortableColumn="tipo"> Tipo <p-sortIcon field="tipo"></p-sortIcon> </th>
-                        <th pSortableColumn="fechaTramite"> Fecha <p-sortIcon field="fechaTramite"></p-sortIcon></th>
+                        <th pSortableColumn="tipoSolicitante"> Rol <p-sortIcon field="tipoSolicitante"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nombreSubcategoriaTramite"> Tipo SubCategoria <p-sortIcon
+                                field="nombreSubcategoriaTramite"></p-sortIcon> </th>
+                        <th pSortableColumn="fechaTramiteCreacion"> Fecha <p-sortIcon
+                                field="fechaTramiteCreacion"></p-sortIcon></th>
                         <th pSortableColumn="estado"> Estado <p-sortIcon field="estado"></p-sortIcon></th>
                         <th class="text-center"> Acciones </th>
                     </tr>
@@ -61,30 +76,31 @@
                     <tr>
                         <td>
                             <span class="font-medium text-sm">
-                                {{ tramite.codigo }}
+                                {{ tramite.codigoExpediente }}
                             </span>
                         </td>
 
                         <td>
                             <div class="flex flex-column">
                                 <span class="font-medium text-sm">
-                                    {{ tramite.solicitante }}
+                                    {{ getSolicitanteNombreCompleto(tramite) }}
                                 </span>
                             </div>
                         </td>
 
                         <td>
-                            <p-tag [value]="getRolConfig(tramite.rol).label"
-                                [severity]="getRolConfig(tramite.rol).severity" [icon]="getRolConfig(tramite.rol).icon">
+                            <p-tag [value]="getRolConfig(tramite.tipoSolicitante).label"
+                                [severity]="getRolConfig(tramite.tipoSolicitante).severity"
+                                [icon]="getRolConfig(tramite.tipoSolicitante).icon">
                             </p-tag>
                         </td>
 
                         <td>
-                            <span class="text-sm"> {{ tramite.tipo }} </span>
+                            <span class="text-sm"> {{ tramite.nombreSubcategoriaTramite }} </span>
                         </td>
 
                         <td>
-                            <span class="text-sm">{{ tramite.fechaTramite | date:'dd/MM/yyyy HH:mm' }}</span>
+                            <span class="text-sm">{{ tramite.fechaTramiteCreacion | date:'dd/MM/yyyy HH:mm' }}</span>
                         </td>
 
                         <td>
@@ -100,8 +116,12 @@
                                     (onClick)="viewTimeLine(tramite)"></ui-icon-button>
                                 <ui-icon-button icon="pi pi-eye" tooltip="Ver detalle"
                                     (onClick)="viewTimeLine(tramite)"></ui-icon-button>
+                                @if (tramite.estado === 'INGRESADO') {
+                                <ui-icon-button icon="pi pi-ban" tooltip="Anular trámite" color="danger"
+                                    (onClick)="anularTramite(tramite)"></ui-icon-button>
+                                }
                                 <ui-icon-button icon="pi pi-list-check" tooltip="Ver Encuesta"
-                                    (onClick)="openAddModalTramite(tramite)" color="danger"></ui-icon-button>
+                                    (onClick)="openAddModalTramite(tramite)" color="contrast"></ui-icon-button>
                             </div>
                         </td>
                     </tr>
@@ -125,12 +145,7 @@
     }
 </div><!-- /flex split-view -->
 
-<p-drawer
-    [visible]="visibleGenerarTramiteDrawer()"
-    (visibleChange)="visibleGenerarTramiteDrawer.set($event)"
-    [showCloseIcon]="false"
-    position="full"
-    styleClass="tramite-fullscreen-drawer"
->
+<p-drawer [visible]="visibleGenerarTramiteDrawer()" (visibleChange)="visibleGenerarTramiteDrawer.set($event)"
+    [showCloseIcon]="false" position="full" styleClass="tramite-fullscreen-drawer">
     <app-generar-tramite (closeRequested)="closeGenerarTramiteDrawer()"></app-generar-tramite>
 </p-drawer>

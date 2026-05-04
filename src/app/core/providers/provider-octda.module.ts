@@ -5,6 +5,8 @@ import { CategoriaRepository } from "@/pages-octda/categoria/application/ports/c
 import { CategoriaRepositoryImpl } from "@/pages-octda/categoria/infrastructure/repository/categoria.repository.impl";
 import { SubCategoriaRepositoryImpl } from "@/pages-octda/categoria/infrastructure/repository/subCategoria.repository.impl";
 import { SubCategoriaRepository } from "@/pages-octda/categoria/application/ports/subCategoria.repository";
+import { TramiteRepository } from "@/pages-octda/tramites/application/ports/tramite.repository";
+import { TramiteRepositoryImpl } from "@/pages-octda/tramites/infrastructure/repository/tramite.repository.impl";
 
 @NgModule({
     exports: [],
@@ -12,7 +14,8 @@ import { SubCategoriaRepository } from "@/pages-octda/categoria/application/port
     providers: [
         { provide: AuthenticatedRepository, useExisting: AuthenticatedRepositoryImpl },
         {provide : CategoriaRepository, useExisting : CategoriaRepositoryImpl},
-        {provide : SubCategoriaRepository, useExisting : SubCategoriaRepositoryImpl}
+        {provide : SubCategoriaRepository, useExisting : SubCategoriaRepositoryImpl},
+        {provide : TramiteRepository, useExisting : TramiteRepositoryImpl}
     ]
 })
 export class ProviderOctdaModule { }

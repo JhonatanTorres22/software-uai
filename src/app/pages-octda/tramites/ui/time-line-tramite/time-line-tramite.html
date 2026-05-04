@@ -16,7 +16,7 @@
     <!-- Tramite mini-card -->
     <div class="surface-ground border-round-lg p-2 border-1 surface-border">
       <div class="flex align-items-start justify-content-between">
-        <span class="font-bold text-xs text-brand font-mono">{{ tramite.codigo }}</span>
+        <span class="font-bold text-xs text-brand font-mono">{{ tramite.codigoExpediente }}</span>
         <p-tag
           [value]="getEstadoLabel(tramite.estado)"
           [severity]="getEstadoSeverity(tramite.estado)"
@@ -24,20 +24,20 @@
         />
       </div>
       <div class="text-sm font-medium line-height-2 mb-2" style="word-break:break-word;">
-        {{ tramite.tipo }}
+        {{ tramite.nombreSubcategoriaTramite }}
       </div>
       <div class="flex align-items-center gap-3 flex-wrap">
         <div class="flex align-items-center gap-1">
           <i class="pi pi-user text-xs text-color-secondary"></i>
-          <span class="text-xs text-color-secondary">{{ tramite.solicitante }}</span>
+          <span class="text-xs text-color-secondary">{{ getSolicitanteNombreCompleto() }}</span>
         </div>
         <div class="flex align-items-center gap-1">
           <i class="pi pi-building text-xs text-color-secondary"></i>
-          <span class="text-xs text-color-secondary">{{ tramite.areaDestino }}</span>
+          <span class="text-xs text-color-secondary">{{ tramite.tipoDoc }} - {{ tramite.numeroDoc }}</span>
         </div>
         <div class="flex align-items-center gap-1">
           <i class="pi pi-calendar text-xs text-color-secondary"></i>
-          <span class="text-xs text-color-secondary">{{ tramite.fechaTramite | date:'dd/MM/yyyy' }}</span>
+          <span class="text-xs text-color-secondary">{{ tramite.fechaTramiteCreacion | date:'dd/MM/yyyy' }}</span>
         </div>
       </div>
     </div>

@@ -1,102 +1,179 @@
 <form [formGroup]="formConfiguracion" class="flex flex-column gap-4">
 
 	<section class="surface-card border-1 surface-border border-round p-3 md:p-4">
-		<div class="flex align-items-center justify-content-between gap-2 mb-3">
-			<div class="flex align-items-center gap-2">
-				<span class="section-badge">1</span>
-				<h3 class="m-0 text-900 text-base font-semibold">Flujo de areas del tramite</h3>
-			</div>
-			<p-tag [value]="etapasProceso.length + ' etapa(s)'" severity="info"></p-tag>
+		<div class="flex flex-column gap-2">
+			<h3 class="m-0 text-900 text-base md:text-lg font-semibold">Configuracion de costo del tramite</h3>
+			<p class="m-0 text-600 text-sm">Define si el tramite requiere pago para su atencion.</p>
 		</div>
 
-		<p-autoComplete [(ngModel)]="selectedAreaModel" [ngModelOptions]="{ standalone: true }"
-			[suggestions]="areaSuggestions" optionLabel="nombre" [dropdown]="true" [forceSelection]="true"
-			[showClear]="true" placeholder="Buscar y agregar area" styleClass="w-full" inputStyleClass="w-full"
-			[emptyMessage]="'Sin resultados'" appendTo="body" (completeMethod)="completarAreas($event)"
-			(onSelect)="agregarAreaDesdeEvento($event)">
-			<ng-template let-area #item>
-				<div class="flex flex-column">
-					<span class="font-medium">{{ area.nombre }}</span>
-					<small class="text-500">{{ area.responsable }}</small>
-				</div>
-			</ng-template>
-		</p-autoComplete>
+		<div class="mt-3 flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-3">
+			<div class="flex align-items-center gap-2">
+				<p-toggleswitch formControlName="requiereCosto"></p-toggleswitch>
+				<span class="text-900 font-medium">Este tramite requiere costo</span>
+			</div>
 
-		@if (etapasProceso.length === 0) {
-		<small class="text-red-500 block mt-2">Debes agregar al menos un area al flujo.</small>
+			<p-tag
+				[value]="formConfiguracion.controls.requiereCosto.value ? 'Con costo' : 'Sin costo'"
+				[severity]="formConfiguracion.controls.requiereCosto.value ? 'success' : 'info'">
+			</p-tag>
+		</div>
+
+		@if (formConfiguracion.controls.requiereCosto.value) {
+			<div class="mt-3 max-w-20rem">
+				<ui-input
+					label="Costo"
+					type="number"
+					formControlName="costo"
+					[min]="1"
+					[useExternalLabel]="true"
+					[upperCase]="false"
+					[patternErrorMessage]="'Ingresa un valor numerico valido (hasta 2 decimales).'"
+					(onInputEvent)="onCostoInput($event)">
+				</ui-input>
+			</div>
+		} @else {
+			<small class="text-500 mt-2 block">Costo configurado en 0.00 automaticamente.</small>
+		}
+	</section>
+
+	<section class="surface-card border-1 surface-border border-round p-3 md:p-4">
+		<div class="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-2">
+			<div>
+				<h3 class="m-0 text-900 text-base md:text-lg font-semibold">Flujo de areas del tramite</h3>
+				<p class="m-0 text-600 text-sm mt-1">Selecciona areas y organiza el orden del proceso institucional.</p>
+			</div>
+
+			<p-tag [value]="etapasProceso.length + ' area(s)'" severity="info"></p-tag>
+		</div>
+
+		<div class="mt-3 max-w-full md:max-w-30rem">
+			<p-autoComplete
+				[(ngModel)]="selectedAreaModel"
+				[ngModelOptions]="{ standalone: true }"
+				[suggestions]="areaSuggestions"
+				optionLabel="nombre"
+				[dropdown]="true"
+				[forceSelection]="true"
+				[showClear]="true"
+				placeholder="Buscar y agregar area"
+				styleClass="w-full"
+				inputStyleClass="w-full"
+				appendTo="body"
+				(completeMethod)="completarAreas($event)"
+				(onSelect)="agregarAreaDesdeEvento($event)">
+
+				<ng-template let-area #item>
+					<div class="flex flex-column">
+						<span class="font-medium">{{ area.nombre }}</span>
+						<small class="text-500">Responsable: {{ area.responsable }}</small>
+					</div>
+				</ng-template>
+			</p-autoComplete>
+		</div>
+
+		@if (etapasProceso.length === 0 && submitted) {
+			<small class="text-red-500 block mt-2">Debes agregar al menos un area al flujo.</small>
 		}
 
-		<!-- Timeline horizontal -->
-		<div class="flow-timeline flex align-items-start flex-wrap gap-1 mt-3" cdkDropList
-			(cdkDropListDropped)="onDropEtapas($event)" formArrayName="etapasProceso">
-			@for (etapa of etapasProceso.controls; track etapa.controls.areaId.value; let i = $index) {
-			@if (i > 0) {
-			<div class="flow-connector flex align-items-center">
-				<i class="pi pi-arrow-right text-300"></i>
-			</div>
-			}
-			<article class="etapa-card border-round border-1 p-2"
-				[ngClass]="'etapa-' + getColorByAreaId(etapa.controls.areaId.value)" cdkDrag cdkDragLockAxis="x"
-				[formGroupName]="i">
-				<div class="flex align-items-center justify-content-between gap-1 mb-1 etapa-header">
-					<span class="etapa-numero">{{ i + 1 }}</span>
-					<i class="pi pi-bars text-400 text-xs cursor-move" cdkDragHandle></i>
-					<ui-icon-button icon="pi pi-times" color="danger" tooltip="Eliminar area"
-						(onClick)="eliminarArea(i)">
-					</ui-icon-button>
-				</div>
-				<p class="m-0 etapa-nombre mb-2">{{ etapa.controls.nombreArea.value }}</p>
-				<div class="flex align-items-center gap-1">
-					<ui-input type="number" formControlName="diasEstimados"></ui-input>
-					<!-- <label class="text-xs text-500 white-space-nowrap">Días:</label>
-					<input pInputText type="number" formControlName="diasEstimados" class="dias-input" min="1" max="365"
-						step="1" (input)="onDiasInput($event)"> -->
-				</div>
-			</article>
+		<div class="mt-3 flex flex-column gap-3" formArrayName="etapasProceso">
+			@for (etapa of etapasProceso.controls; track etapa.controls.nombreArea.value; let i = $index) {
+				<article class="border-1 surface-border border-round p-3" [formGroupName]="i">
+					<div class="flex align-items-start justify-content-between gap-2 flex-wrap">
+						<div class="flex align-items-center gap-2 min-w-0">
+							<span class="inline-flex align-items-center justify-content-center w-2rem h-2rem border-circle bg-primary-50 text-primary-700 font-bold">{{ i + 1 }}</span>
+							<div class="min-w-0">
+								<p class="m-0 text-900 font-semibold white-space-nowrap overflow-hidden text-overflow-ellipsis">{{ etapa.controls.nombreArea.value }}</p>
+								<small class="text-600">Responsable: {{ etapa.controls.responsable.value }}</small>
+							</div>
+						</div>
+
+						<div class="flex align-items-center gap-1">
+							<ui-icon-button icon="pi pi-arrow-up" color="secondary" tooltip="Subir" [disabled]="i === 0" (onClick)="subirArea(i)"></ui-icon-button>
+							<ui-icon-button icon="pi pi-arrow-down" color="secondary" tooltip="Bajar" [disabled]="i === etapasProceso.length - 1" (onClick)="bajarArea(i)"></ui-icon-button>
+							<ui-icon-button icon="pi pi-trash" color="danger" tooltip="Eliminar" (onClick)="eliminarArea(i)"></ui-icon-button>
+						</div>
+					</div>
+
+					<div class="grid mt-2">
+						<div class="col-12 md:col-3">
+							<ui-input
+								label="Dias"
+								type="number"
+								formControlName="diasEstimados"
+								[min]="1"
+								[useExternalLabel]="true"
+								[upperCase]="false"
+								[patternErrorMessage]="'Ingresa solo numeros.'">
+							</ui-input>
+						</div>
+
+						<div class="col-12 md:col-9">
+							<label class="block text-sm font-medium mb-2">Accion del area</label>
+							<input
+								pInputText
+								type="text"
+								formControlName="observaciones"
+								class="w-full"
+								maxlength="180"
+								placeholder="Describe brevemente que hara esta area en esta etapa" />
+							<small class="text-500">{{ etapa.controls.observaciones.value.length || 0 }} / 180</small>
+						</div>
+					</div>
+				</article>
 			}
 		</div>
 	</section>
 
-	<!-- ③ Documentos requeridos -->
 	<section class="surface-card border-1 surface-border border-round p-3 md:p-4">
-		<div class="flex align-items-center justify-content-between gap-2 mb-3">
-			<div class="flex align-items-center gap-2">
-				<span class="section-badge">2</span>
-				<h3 class="m-0 text-900 text-base font-semibold">Documentos requeridos</h3>
+		<div class="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-2">
+			<div>
+				<h3 class="m-0 text-900 text-base md:text-lg font-semibold">Documentos requeridos</h3>
+				<p class="m-0 text-600 text-sm mt-1">Agrega los documentos necesarios para iniciar el tramite.</p>
 			</div>
-			<p-tag [value]="archivosRequeridos.length + ' doc(s)'" severity="contrast"></p-tag>
+			<p-tag [value]="archivosRequeridos.length + ' documento(s)'" severity="contrast"></p-tag>
 		</div>
 
-		<p-autoComplete [(ngModel)]="selectedDocumentoModel" [ngModelOptions]="{ standalone: true }"
-			[suggestions]="documentoSuggestions" optionLabel="nombre" [dropdown]="true" [forceSelection]="true"
-			[showClear]="true" placeholder="Buscar y agregar documento" styleClass="w-full" inputStyleClass="w-full"
-			[emptyMessage]="'Sin resultados'" appendTo="body" (completeMethod)="completarDocumentos($event)"
-			(onSelect)="agregarDocumentoDesdeEvento($event)">
-			<ng-template let-documento #item>
-				<div class="flex flex-column">
-					<span class="font-medium">{{ documento.nombre }}</span>
-					<small class="text-500">{{ documento.tipos.join(' / ') }}</small>
-				</div>
-			</ng-template>
-		</p-autoComplete>
+		<div class="mt-3 max-w-full md:max-w-30rem">
+			<p-autoComplete
+				[(ngModel)]="selectedDocumentoModel"
+				[ngModelOptions]="{ standalone: true }"
+				[suggestions]="documentoSuggestions"
+				optionLabel="nombre"
+				[dropdown]="true"
+				[forceSelection]="true"
+				[showClear]="true"
+				placeholder="Buscar y agregar documento"
+				styleClass="w-full"
+				inputStyleClass="w-full"
+				appendTo="body"
+				(completeMethod)="completarDocumentos($event)"
+				(onSelect)="agregarDocumentoDesdeEvento($event)">
+
+				<ng-template let-documento #item>
+					<div class="flex flex-column">
+						<span class="font-medium">{{ documento.nombre }}</span>
+						<small class="text-500">{{ documento.tipos.join(' / ') }}</small>
+					</div>
+				</ng-template>
+			</p-autoComplete>
+		</div>
 
 		@if (archivosRequeridos.length === 0 && submitted) {
-		<small class="text-red-500 block mt-2">Debes agregar al menos un documento.</small>
+			<small class="text-red-500 block mt-2">Debes agregar al menos un documento.</small>
 		}
 
-		<!-- Chips de documentos -->
-		<div class="flex flex-wrap gap-2 mt-3" formArrayName="archivosRequeridos">
-			@for (doc of archivosRequeridos.controls; track doc.controls.documentoId.value; let i = $index) {
-			<div class="doc-chip flex align-items-center gap-2 border-1 border-round-3xl px-3 py-2" [formGroupName]="i">
-				<i class="pi pi-file-pdf text-primary-500 text-sm flex-shrink-0"></i>
-				<span class="text-sm font-semibold text-900 white-space-nowrap">{{ doc.controls.nombreDocumento.value
-					}}</span>
-				<span class="text-xs text-400">·</span>
-				<span class="text-xs text-500 white-space-nowrap">{{ doc.controls.tipos.value }}</span>
-				<ui-icon-button icon="pi pi-times" color="danger" tooltip="Quitar documento"
-					(onClick)="eliminarDocumento(i)">
-				</ui-icon-button>
-			</div>
+		<div class="grid mt-2" formArrayName="archivosRequeridos">
+			@for (documento of archivosRequeridos.controls; track documento.controls.nombreDocumento.value; let i = $index) {
+				<div class="col-12 md:col-6" [formGroupName]="i">
+					<article class="border-1 surface-border border-round p-3 h-full flex align-items-start justify-content-between gap-2">
+						<div class="min-w-0">
+							<p class="m-0 text-900 font-semibold white-space-nowrap overflow-hidden text-overflow-ellipsis">{{ documento.controls.nombreDocumento.value }}</p>
+							<small class="text-600">Tipo: {{ documento.controls.tipos.value }}</small>
+						</div>
+
+						<ui-icon-button icon="pi pi-trash" color="danger" tooltip="Eliminar documento" (onClick)="eliminarDocumento(i)"></ui-icon-button>
+					</article>
+				</div>
 			}
 		</div>
 	</section>

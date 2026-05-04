@@ -45,6 +45,15 @@ interface ProgressStep {
   active: boolean;
 }
 
+const ESTADO_ORDEN: Record<EstadoTramite, number> = {
+  INGRESADO: 1,
+  PENDIENTE: 2,
+  OBSERVADO: 3,
+  APROBADO: 4,
+  IMPROCEDENTE: 5,
+  ANULADO: 6,
+};
+
 @Component({
   selector: 'app-time-line-tramite',
   imports: [CommonModule, TagModule, UiIconButton],
@@ -65,20 +74,15 @@ export class TimeLineTramite {
   }
 
   get progressSteps(): ProgressStep[] {
-    const nivel: Record<EstadoTramite, number> = {
-      ingresado: 1,
-      pendiente: 2,
-      observado: 3,
-      aprobado: 5,
-      improcedente: 5,
-    };
-    const current = nivel[this.tramite.estado] ?? 1;
+    const current = ESTADO_ORDEN[this.tramite.estado] ?? ESTADO_ORDEN.INGRESADO;
+
     return [
-      { id: 1, label: 'Ingresado',  icon: 'pi-file-import',   done: current >= 1, active: current === 1 },
-      { id: 2, label: 'En OCTDA',   icon: 'pi-building',      done: current >= 2, active: current === 2 },
-      { id: 3, label: 'Revisión',   icon: 'pi-search',        done: current >= 3, active: current === 3 },
-      { id: 4, label: 'Respuesta',  icon: 'pi-reply',         done: current >= 4, active: current === 4 },
-      { id: 5, label: 'Finalizado', icon: 'pi-check-circle',  done: current >= 5, active: current === 5 },
+      { id: 1, label: 'Ingresado', icon: 'pi-file-import', done: current >= 1, active: current === 1 },
+      { id: 2, label: 'En OCTDA', icon: 'pi-building', done: current >= 2, active: current === 2 },
+      { id: 3, label: 'Revision', icon: 'pi-search', done: current >= 3, active: current === 3 },
+      { id: 4, label: 'Respuesta', icon: 'pi-reply', done: current >= 4, active: current === 4 },
+      { id: 5, label: 'Finalizado', icon: 'pi-check-circle', done: current >= 5, active: current === 5 },
+      { id: 6, label: 'Anulado', icon: 'pi-ban', done: current >= 6, active: current === 6 },
     ];
   }
 
@@ -98,28 +102,37 @@ export class TimeLineTramite {
 
   getEstadoSeverity(estado: EstadoTramite): 'success' | 'info' | 'warn' | 'danger' | 'contrast' | 'secondary' {
     const map: Record<EstadoTramite, 'success' | 'info' | 'warn' | 'danger' | 'contrast' | 'secondary'> = {
-      ingresado:    'info',
-      pendiente:    'warn',
-      aprobado:     'success',
-      improcedente: 'danger',
-      observado:    'contrast',
+      INGRESADO:    'info',
+      PENDIENTE:    'warn',
+      APROBADO:     'success',
+      IMPROCEDENTE: 'danger',
+      OBSERVADO:    'contrast',
+      ANULADO:      'danger',
     };
     return map[estado] ?? 'secondary';
   }
 
   getEstadoLabel(estado: EstadoTramite): string {
     const map: Record<EstadoTramite, string> = {
-      ingresado:    'Ingresado',
-      pendiente:    'Pendiente',
-      aprobado:     'Aprobado',
-      improcedente: 'Improcedente',
-      observado:    'Observado',
+      INGRESADO:    'INGRESADO',
+      PENDIENTE:    'PENDIENTE',
+      APROBADO:     'APROBADO',
+      IMPROCEDENTE: 'IMPROCEDENTE',
+      OBSERVADO:    'OBSERVADO',
+      ANULADO:      'ANULADO',
     };
     return map[estado] ?? estado;
   }
 
+  getSolicitanteNombreCompleto(): string {
+    return [this.tramite.nombreSolicitante, this.tramite.apePaternoSolicitante, this.tramite.apeMaternoSolicitante]
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+  }
+
   private generarEventos(tramite: ListarTramite): EventoTimeline[] {
-    const base = tramite.fechaTramite ? new Date(tramite.fechaTramite) : new Date();
+    const base = tramite.fechaTramiteCreacion ? new Date(tramite.fechaTramiteCreacion) : new Date();
     const addH = (h: number) => new Date(base.getTime() + h * 3_600_000);
     const addD = (d: number) => new Date(base.getTime() + d * 86_400_000);
     const fD = (dt: Date) => dt.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -137,10 +150,10 @@ export class TimeLineTramite {
       accion: 'Trámite recibido y registrado en el sistema institucional',
       responsable: 'Lic. Rosa Mendoza Quispe',
       cargo: 'Técnico Administrativo — Mesa de Partes',
-      esActual: estado === 'ingresado',
+      esActual: estado === 'INGRESADO',
     });
 
-    if (estado === 'ingresado') {
+    if (estado === 'INGRESADO') {
       ev.push({
         id: 2, fecha: '—', hora: '—',
         estado: 'pendiente', area: 'OCTDA',
@@ -172,10 +185,10 @@ export class TimeLineTramite {
       accion: 'Trámite recibido en OCTDA y asignado para revisión',
       responsable: 'Sec. Marleny Quispe Ramos',
       cargo: 'Secretaria de OCTDA',
-      esActual: estado === 'pendiente',
+      esActual: estado === 'PENDIENTE',
     });
 
-    if (estado === 'pendiente') {
+    if (estado === 'PENDIENTE') {
       ev.push({
         id: 4, fecha: '—', hora: '—',
         estado: 'pendiente', area: 'OCTDA',
@@ -198,7 +211,7 @@ export class TimeLineTramite {
     });
 
     // ── 5. Observado ──────────────────────────────────────────────────────
-    if (estado === 'observado') {
+    if (estado === 'OBSERVADO') {
       ev.push({
         id: 5,
         fecha: fD(addD(1.5)), hora: fT(addD(1.5)),
@@ -207,8 +220,6 @@ export class TimeLineTramite {
         accion: 'Expediente observado — Requiere subsanación de documentos',
         responsable: 'Dra. Carmen Huanca Ticona',
         cargo: 'Jefa del Área de OCTDA',
-        observacion: tramite.observacion ??
-          'El expediente presenta observaciones en la documentación adjunta. Se solicita al solicitante subsanar los documentos indicados en un plazo de 5 días hábiles.',
         esActual: true,
       });
       return ev;
@@ -228,7 +239,7 @@ export class TimeLineTramite {
     });
 
     // ── 6. Respuesta Secretaría ───────────────────────────────────────────
-    const esAprobado = estado === 'aprobado';
+    const esAprobado = estado === 'APROBADO';
     ev.push({
       id: 6,
       fecha: fD(addD(3)), hora: fT(addD(3)),

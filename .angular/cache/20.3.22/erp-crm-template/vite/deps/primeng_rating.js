@@ -1,4 +1,8 @@
 import {
+  BaseEditableHolder
+} from "./chunk-42LCFZRW.js";
+import "./chunk-RYW2AAZP.js";
+import {
   AutoFocus
 } from "./chunk-SDOY2KJX.js";
 import "./chunk-D6ZMXBQT.js";
@@ -6,10 +10,6 @@ import {
   StarFillIcon,
   StarIcon
 } from "./chunk-VGUMJRUP.js";
-import {
-  BaseEditableHolder
-} from "./chunk-42LCFZRW.js";
-import "./chunk-RYW2AAZP.js";
 import "./chunk-XOJNRJZL.js";
 import {
   PARENT_INSTANCE

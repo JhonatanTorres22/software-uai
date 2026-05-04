@@ -9,19 +9,26 @@ export class TramiteSignal {
     listTramite = signal<ListarTramite[]>([]);
 
     selectTramiteDefault : ListarTramite = {
-        id: 0,
-        codigo: "",
-        solicitante: "",
-        rol: "alumno",
-        tipo: "",
-        fechaTramite: "",
-        plazo: "",
-        areaDestino: "",
-        prioridad: "alta",
-        estado: "ingresado"
+        idTramite: 0,
+        idSubCategoriaTramite: 0,
+        codigoExpediente: "",
+        nombreSubcategoriaTramite: "",
+        tipoDoc: "",
+        numeroDoc: "",
+        tipoSolicitante: "alumno",
+        nombreSolicitante: "",
+        apePaternoSolicitante: "",
+        apeMaternoSolicitante: "",
+        celularSolicitante: "",
+        correoSolicitante: "",
+        asunto: "",
+        archivoAnexo: "",
+        fechaTramiteCreacion: "",
+        estado: "INGRESADO"
     }
 
     selectTramite = signal<ListarTramite>(this.selectTramiteDefault);
     loading = signal<boolean>(true);
     selectedEstado = signal<EstadoTramite | null>(null);
+    selectedCodigoSubCategoria = signal<string>('');
 }

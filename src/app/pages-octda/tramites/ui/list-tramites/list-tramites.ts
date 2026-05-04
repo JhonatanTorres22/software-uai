@@ -1,7 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { EstadoTramite, ListarTramite, PrioridadTramite, RolSolicitante } from '../../domain/entity/tramite.entity';
-import { MessageService, ConfirmationService } from 'primeng/api';
-import { TramitesService } from '../../infrastructure/services/tramite.service';
+import { EliminarTramite, EstadoTramite, ListarTramite, RolSolicitante } from '../../domain/entity/tramite.entity';
+import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { TableModule } from "primeng/table";
 import { TagModule } from "primeng/tag";
@@ -22,6 +21,18 @@ import { TimeLineTramite } from '../time-line-tramite/time-line-tramite';
 import { EncuestaSatisfaccion } from '../encuesta-satisfaccion/encuesta-satisfaccion';
 import { GenerarTramite } from '../generar-tramite/generar-tramite';
 import { DrawerModule } from 'primeng/drawer';
+import { ObtenerTramitesUseCase } from '../../application/use-cases/tramites/obtenerTramites.use-case';
+import { ObtenerTramitesPorSubCategoriaUseCase } from '../../application/use-cases/tramites/obtenerTramitesPorSubCategoria.use-case';
+import * as XLSX from 'xlsx';
+import { EliminarTramiteUseCase } from '../../application/use-cases/tramites/eliminarTramite.use-case';
+import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
+import { NotificationService } from '@/shared/services/notification.service';
+
+interface TagConfig {
+  label: string;
+  severity: 'success' | 'info' | 'warn' | 'danger' | 'contrast' | 'secondary';
+  icon: string;
+}
 
 @Component({
   selector: 'app-list-tramites',
@@ -32,19 +43,24 @@ import { DrawerModule } from 'primeng/drawer';
   styleUrl: './list-tramites.scss',
 })
 export class ListTramites {
-  private readonly tramiteSignal = inject(TramiteSignal)
+  private readonly tramiteSignal = inject(TramiteSignal);
+  private readonly obtenerTramitesUseCase = inject(ObtenerTramitesUseCase);
+  private readonly eliminarTramiteUseCase = inject(EliminarTramiteUseCase);
+  private readonly obtenerTramitesPorSubCategoriaUseCase = inject(ObtenerTramitesPorSubCategoriaUseCase);
+  private readonly notificationService = inject(NotificationService);
+  private readonly modalService = inject(ModalService);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
+
   listTramite = this.tramiteSignal.listTramite;
   selectTramiteDefault = this.tramiteSignal.selectTramiteDefault;
   selectTramite = this.tramiteSignal.selectTramite;
   selectedEstado = this.tramiteSignal.selectedEstado;
+  selectedCodigoSubCategoria = this.tramiteSignal.selectedCodigoSubCategoria;
   loading = this.tramiteSignal.loading;
 
-  private readonly tramitesService = inject(TramitesService);
-  private readonly messageService = inject(MessageService);
-  private readonly confirmationService = inject(ConfirmationService);
   visibleTimeLine = signal(false);
   visibleGenerarTramiteDrawer = signal(false);
-  private readonly modalService = inject(ModalService)
+
   // Opciones para filtro de estado
   estadoOpciones: UiSelect[] = [
     { text: 'Todos los estados', value: '' },
@@ -54,6 +70,27 @@ export class ListTramites {
     { text: 'Improcedente', value: 'improcedente' },
     { text: 'Observado', value: 'observado' },
   ];
+
+  subCategoriaOpciones = computed<UiSelect[]>(() => {
+    const unique = new Map<number, string>();
+
+    for (const tramite of this.listTramite()) {
+      if (tramite.idSubCategoriaTramite <= 0 || unique.has(tramite.idSubCategoriaTramite)) {
+        continue;
+      }
+
+      unique.set(tramite.idSubCategoriaTramite, tramite.nombreSubcategoriaTramite);
+    }
+
+    const mapped: UiSelect[] = Array.from(unique.entries())
+      .sort((a, b) => a[0] - b[0])
+      .map(([codigo, nombre]) => ({
+        value: String(codigo),
+        text: `${codigo} - ${nombre}`,
+      }));
+
+    return [{ text: 'Todas las subcategorias', value: '' }, ...mapped];
+  });
 
   ngOnInit(): void {
     this.cargarTramites();
@@ -72,47 +109,126 @@ export class ListTramites {
     this.selectedEstado.set(value);
   }
 
+  onSubCategoriaChange(value: string | null): void {
+    const codigo = value ?? '';
+    this.selectedCodigoSubCategoria.set(codigo);
+
+    if (!codigo) {
+      this.cargarTramites();
+      return;
+    }
+
+    this.cargarTramitesPorSubCategoria(Number(codigo));
+  }
+
+  exportarExcel(): void {
+    const rows = this.tramitesFiltrados().map((tramite) => ({
+      'Codigo Expediente': tramite.codigoExpediente,
+      'Codigo Subcategoria': tramite.idSubCategoriaTramite,
+      'Subcategoria': tramite.nombreSubcategoriaTramite,
+      'Tipo Documento': tramite.tipoDoc,
+      'Nro Documento': tramite.numeroDoc,
+      'Solicitante': this.getSolicitanteNombreCompleto(tramite),
+      'Rol Solicitante': this.getRolConfig(tramite.tipoSolicitante).label,
+      Estado: this.getEstadoConfig(tramite.estado).label,
+      Asunto: tramite.asunto,
+      Celular: tramite.celularSolicitante,
+      Correo: tramite.correoSolicitante,
+      'Fecha Tramite': this.formatearFecha(tramite.fechaTramiteCreacion),
+    }));
+
+    if (!rows.length) {
+      this.notificationService.warn('Sin datos. No hay trámites para exportar con los filtros actuales.');
+      return;
+    }
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Tramites');
+
+    XLSX.writeFile(workbook, `tramites-${new Date().toISOString().slice(0, 10)}.xlsx`);
+  }
 
   cargarTramites(): void {
     this.loading.set(true);
-    this.tramitesService.getTramites().subscribe({
-      next: (data) => {
-        this.listTramite.set(data);
+    this.obtenerTramitesUseCase.execute().subscribe({
+      next: (response) => {
+        this.listTramite.set(response.data ?? []);
         this.loading.set(false);
-
       },
-      error: () => {
+      error: (err) => {
+        console.log(err);
+        
         this.loading.set(false);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se pudo cargar la lista de trámites.',
-        });
+        this.notificationService.error('Error, No se pudo cargar la lista de trámites.');
       },
     });
   }
 
+  cargarTramitesPorSubCategoria(codigoSubCategoriaTramite: number): void {
+    this.loading.set(true);
+    this.obtenerTramitesPorSubCategoriaUseCase.execute(codigoSubCategoriaTramite).subscribe({
+      next: (response) => {
+        this.listTramite.set(response.data ?? []);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.notificationService.error('Error, No se pudo cargar la lista de tramites filtrada por subcategoria.');
+      },
+    });
+  }
+
+
+
   // ── Configuraciones de badge por tipo ─────────────────────────────
 
-  getEstadoConfig(estado: EstadoTramite): any {
-    const configs: Record<EstadoTramite, any> = {
-      ingresado: { label: 'Ingresado', severity: 'info', icon: 'pi pi-file' },
-      pendiente: { label: 'Pendiente', severity: 'warn', icon: 'pi pi-clock' },
-      aprobado: { label: 'Aprobado', severity: 'success', icon: 'pi pi-check-circle' },
-      improcedente: { label: 'Improcedente', severity: 'danger', icon: 'pi pi-times-circle' },
-      observado: { label: 'Observado', severity: 'contrast', icon: 'pi pi-exclamation-triangle' },
+  getEstadoConfig(estado: EstadoTramite): TagConfig {
+    const configs: Record<EstadoTramite, TagConfig> = {
+      INGRESADO: { label: 'INGRESADO', severity: 'info', icon: 'pi pi-file' },
+      PENDIENTE: { label: 'PENDIENTE', severity: 'warn', icon: 'pi pi-clock' },
+      APROBADO: { label: 'APROBADO', severity: 'success', icon: 'pi pi-check-circle' },
+      IMPROCEDENTE: { label: 'IMPROCEDENTE', severity: 'danger', icon: 'pi pi-times-circle' },
+      OBSERVADO: { label: 'OBSERVADO', severity: 'contrast', icon: 'pi pi-exclamation-triangle' },
+      ANULADO: { label: 'ANULADO', severity: 'danger', icon: 'pi pi-ban' },
     };
     return configs[estado];
   }
 
-  getRolConfig(rol: RolSolicitante): any {
-    const configs: Record<RolSolicitante, any> = {
-      alumno: { label: 'Alumno', severity: 'info', icon: 'pi pi-user' },
-      docente: { label: 'Docente', severity: 'success', icon: 'pi pi-book' },
-      administrativo: { label: 'Administrativo', severity: 'warn', icon: 'pi pi-briefcase' },
-      externo: { label: 'Externo', severity: 'danger', icon: 'pi pi-globe' },
+  getRolConfig(rol: RolSolicitante): TagConfig {
+    const configs: Record<RolSolicitante, TagConfig> = {
+      alumno: { label: 'ALUMNO', severity: 'info', icon: 'pi pi-user' },
+      docente: { label: 'DOCENTE', severity: 'success', icon: 'pi pi-book' },
+      administrativo: { label: 'ADMINISTRATIVO', severity: 'warn', icon: 'pi pi-briefcase' },
+      externo: { label: 'EXTERNO', severity: 'danger', icon: 'pi pi-globe' },
     };
     return configs[rol];
+  }
+
+  getSolicitanteNombreCompleto(tramite: ListarTramite): string {
+    return [tramite.nombreSolicitante, tramite.apePaternoSolicitante, tramite.apeMaternoSolicitante]
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+  }
+
+  formatearFecha(fecha: string): string {
+    if (!fecha) {
+      return '';
+    }
+
+    const parsed = new Date(fecha);
+    if (Number.isNaN(parsed.getTime())) {
+      return fecha;
+    }
+
+    return parsed.toLocaleString('es-PE', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 
   viewTimeLine(tramite: ListarTramite): void {
@@ -150,5 +266,41 @@ export class ListTramites {
         // refrescar tabla si deseas
       }
     });
+  }
+
+  anularTramite(tramite: ListarTramite): void {
+    console.log('tramite completo:', tramite);
+console.log('idTramite:', tramite.idTramite);
+    
+    this.confirmDialogService.open({
+      type: 'question',
+      title: 'Anular trámite',
+      message: `¿Estás seguro de que deseas anular el trámite, ${tramite.codigoExpediente}? Esta acción no se puede deshacer.`,
+      acceptLabel: 'Sí, anular',
+      rejectLabel: 'Cancelar',
+      onAccept: () => {
+        this.loading.set(true);
+        const payload : EliminarTramite = {
+          idTramite: tramite.idTramite,
+        }
+
+        console.log(payload);
+
+        this.eliminarTramiteUseCase.execute(payload).subscribe({
+          next : (res) => {
+            this.loading.set(false);
+            this.notificationService.success(`${res.message}, trámite anulado correctamente`);
+            this.cargarTramites();
+          },
+          error: (err) => {
+            console.log(err);
+            
+            this.loading.set(false);
+            this.notificationService.error('Error, No se pudo anular el trámite.');
+          }
+        })
+
+      }
+    })
   }
 }

@@ -1,143 +1,58 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { ListarTramite } from '../../domain/entity/tramite.entity';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { ApiResponse } from '@/shared/models/api-response.model';
+import { CrearFormatoSolicitudDTO, CrearTramiteDTO, EditarTramiteDTO, EliminarTramiteDTO, ListarFormatoSolicitudDTO, ListarTramiteDTO } from '../dto/tramite.dto';
+import { inject } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class TramitesService {
-  private tramites: ListarTramite[] = [
-    {
-      id: 1,
-      codigo: 'TRM-0241',
-      solicitante: 'Lucía Fernández Torres',
-      rol: 'alumno',
-      tipo: 'Constancia de estudios',
-      fechaTramite: '2026-04-23',
-      plazo: '3 días',
-      areaDestino: 'Reg. Académico',
-      prioridad: 'alta',
-      estado: 'ingresado',
-      descripcion: 'Solicitud de constancia para trámite bancario.',
-    },
-    {
-      id: 2,
-      codigo: 'TRM-0240',
-      solicitante: 'Carlos Medina Salas',
-      rol: 'alumno',
-      tipo: 'Solicitud de beca',
-      fechaTramite: '2026-04-22',
-      plazo: '15 días',
-      areaDestino: 'Bienestar Univ.',
-      prioridad: 'alta',
-      estado: 'pendiente',
-      descripcion: 'Solicitud de beca por rendimiento académico 2026-I.',
-    },
-    {
-      id: 3,
-      codigo: 'TRM-0239',
-      solicitante: 'Dra. Patricia Quispe',
-      rol: 'docente',
-      tipo: 'Licencia por salud',
-      fechaTramite: '2026-04-21',
-      plazo: '5 días',
-      areaDestino: 'RRHH',
-      prioridad: 'media',
-      estado: 'aprobado',
-      descripcion: 'Licencia médica por 10 días hábiles.',
-    },
-    {
-      id: 4,
-      codigo: 'TRM-0238',
-      solicitante: 'Jorge Huamán Díaz',
-      rol: 'administrativo',
-      tipo: 'Reembolso de gastos',
-      fechaTramite: '2026-04-20',
-      plazo: '10 días',
-      areaDestino: 'Tesorería',
-      prioridad: 'baja',
-      estado: 'observado',
-      observacion: 'Falta adjuntar comprobantes originales.',
-    },
-    {
-      id: 5,
-      codigo: 'TRM-0237',
-      solicitante: 'Ana Rivas Campos',
-      rol: 'alumno',
-      tipo: 'Convalidación de cursos',
-      fechaTramite:'2026-04-19',
-      plazo: '20 días',
-      areaDestino: 'Facultad Ing.',
-      prioridad: 'alta',
-      estado: 'ingresado',
-      descripcion: 'Convalidación de 3 cursos provenientes de intercambio.',
-    },
-    {
-      id: 6,
-      codigo: 'TRM-0236',
-      solicitante: 'Emp. Soluciones SAC',
-      rol: 'externo',
-      tipo: 'Convenio institucional',
-      fechaTramite: '2026-04-18',
-      plazo: '30 días',
-      areaDestino: 'Rectorado',
-      prioridad: 'media',
-      estado: 'pendiente',
-      descripcion: 'Propuesta de convenio marco para prácticas preprofesionales.',
-    },
-    {
-      id: 7,
-      codigo: 'TRM-0235',
-      solicitante: 'Mg. Roberto Solís',
-      rol: 'docente',
-      tipo: 'Permiso de investigación',
-      fechaTramite: '2026-04-17',
-      plazo: '7 días',
-      areaDestino: 'Investigación',
-      prioridad: 'media',
-      estado: 'aprobado',
-      descripcion: 'Permiso para participar en congreso internacional.',
-    },
-    {
-      id: 8,
-      codigo: 'TRM-0234',
-      solicitante: 'María Ccopa Ruiz',
-      rol: 'alumno',
-      tipo: 'Retiro de matrícula',
-      fechaTramite: '2026-04-16',
-      plazo: '5 días',
-      areaDestino: 'Reg. Académico',
-      prioridad: 'urgente',
-      estado: 'improcedente',
-      observacion: 'Fuera del plazo reglamentario establecido en el MOCE.',
-    },
-    {
-      id: 9,
-      codigo: 'TRM-0233',
-      solicitante: 'Lic. Sandra Torres',
-      rol: 'administrativo',
-      tipo: 'Cambio de horario',
-      fechaTramite: '2026-04-15',
-      plazo: '3 días',
-      areaDestino: 'Dir. Académica',
-      prioridad: 'baja',
-      estado: 'observado',
-      observacion: 'Debe ser visado por el jefe inmediato.',
-    },
-    {
-      id: 10,
-      codigo: 'TRM-0232',
-      solicitante: 'Pedro Alonzo Vera',
-      rol: 'alumno',
-      tipo: 'Emisión de diploma',
-      fechaTramite: '2026-04-14',
-      plazo: '45 días',
-      areaDestino: 'Secretaría Gral.',
-      prioridad: 'alta',
-      estado: 'ingresado',
-      descripcion: 'Solicitud de diploma de bachiller — egresado 2025.',
-    },
-  ];
+  private readonly http = inject(HttpClient);
+  private readonly urlApi = environment.EndPoint
+  private readonly urlListarTramites = `${this.urlApi}/api/Tramite/Listar`;
+  private readonly urlListarTramitePorCodigo = `${this.urlApi}/api/Tramite/ListarPorCodigo/`;
+  private readonly urlListarTramitePorSubcategoria = `${this.urlApi}/api/Tramite/ListarPorSubCategoriaTramite/`;
+  private readonly urlActualizarTramite = `${this.urlApi}/api/Tramite/Actualizar`;
+  private readonly urlCrearTramite = `${this.urlApi}/api/Tramite/Insertar`;
+  private readonly urlEliminarTramite = `${this.urlApi}/api/Tramite/Eliminar`;
+  private readonly urlObtenerFormatoSolicitud = `${this.urlApi}/api/FormatoSolicitud/Listar`;
+  private readonly urlCrearFormatoSolicitud = `${this.urlApi}/api/FormatoSolicitud/Insertar`;
 
-  getTramites(): Observable<ListarTramite[]> {
-    return of(this.tramites);
+
+  obtenerTramites(): Observable<ApiResponse<ListarTramiteDTO[] | ListarTramiteDTO>> {
+    return this.http.get<ApiResponse<ListarTramiteDTO[] | ListarTramiteDTO>>(this.urlListarTramites);
   }
+
+  obtenerTramitesPorSubCategoria(codigoSubCategoriaTramite: number): Observable<ApiResponse<ListarTramiteDTO[] | ListarTramiteDTO>> {
+    return this.http.get<ApiResponse<ListarTramiteDTO[] | ListarTramiteDTO>>(`${this.urlListarTramitePorSubcategoria}${codigoSubCategoriaTramite}`);
+  }
+
+  obtenerTramitesPorCodigo(codigo: string): Observable<ApiResponse<ListarTramiteDTO[] | ListarTramiteDTO>> {
+    return this.http.get<ApiResponse<ListarTramiteDTO[] | ListarTramiteDTO>>(`${this.urlListarTramitePorCodigo}${codigo}`);
+  }
+
+  crearTramite(crear: CrearTramiteDTO): Observable<ApiResponse<unknown>> {
+    return this.http.post<ApiResponse<unknown>>(this.urlCrearTramite, crear);
+  }
+
+  actualizarTramite(tramite: EditarTramiteDTO): Observable<ApiResponse<unknown>> {
+    return this.http.put<ApiResponse<unknown>>(this.urlActualizarTramite, tramite);
+  }
+
+  eliminarTramite(tramite: EliminarTramiteDTO): Observable<ApiResponse<unknown>> {
+    return this.http.delete<ApiResponse<unknown>>(this.urlEliminarTramite, { body: tramite });
+  }
+
+  /* FORMATO DE SOLICITUD */
+
+  obtenerFormatoSolicitud(): Observable<ApiResponse<ListarFormatoSolicitudDTO[]>> {
+    return this.http.get<ApiResponse<ListarFormatoSolicitudDTO[]>>(this.urlObtenerFormatoSolicitud);
+  }
+
+  crearFormatoSolicitud(crear: CrearFormatoSolicitudDTO): Observable<ApiResponse<unknown>> {
+    return this.http.post<ApiResponse<unknown>>(this.urlCrearFormatoSolicitud, crear);
+  }
+
+
 }
