@@ -56,7 +56,7 @@
 
                 <ng-template pTemplate="header">
                     <tr>
-                        <th pSortableColumn="codigoExpediente" > N° Expediente <p-sortIcon
+                        <th pSortableColumn="codigoExpediente"> N° Expediente <p-sortIcon
                                 field="codigoExpediente"></p-sortIcon> </th>
                         <th pSortableColumn="nombreSolicitante"> Solicitante <p-sortIcon
                                 field="nombreSolicitante"></p-sortIcon>
@@ -100,7 +100,7 @@
                         </td>
 
                         <td>
-                            <span class="text-sm">{{ tramite.fechaTramiteCreacion | date:'dd/MM/yyyy HH:mm' }}</span>
+                            <span class="text-sm">{{ tramite.fechaTramiteCreacion | date:'dd/MM/yyyy HH:mm:ss' }}</span>
                         </td>
 
                         <td>
@@ -111,17 +111,19 @@
                         </td>
 
                         <td>
-                            <div class="flex justify-content-center gap-2">
+                            <div class="flex justify-content-start">
                                 <ui-icon-button icon="pi pi-hourglass" tooltip="Ver Línea de Tiempo" color="success"
                                     (onClick)="viewTimeLine(tramite)"></ui-icon-button>
                                 <ui-icon-button icon="pi pi-eye" tooltip="Ver detalle"
-                                    (onClick)="viewTimeLine(tramite)"></ui-icon-button>
+                                    (onClick)="openModal(tramite, 'detalle')"></ui-icon-button>
+                                <ui-icon-button icon="pi pi-list-check" tooltip="Ver Encuesta"
+                                    (onClick)="openModal(tramite, 'encuesta')" color="contrast"></ui-icon-button>
                                 @if (tramite.estado === 'INGRESADO') {
                                 <ui-icon-button icon="pi pi-ban" tooltip="Anular trámite" color="danger"
                                     (onClick)="anularTramite(tramite)"></ui-icon-button>
+                                <ui-icon-button icon="pi pi-pencil" tooltip="Editar trámite" color="info"
+                                    (onClick)="openGenerarTramiteDrawer(tramite)"></ui-icon-button>
                                 }
-                                <ui-icon-button icon="pi pi-list-check" tooltip="Ver Encuesta"
-                                    (onClick)="openAddModalTramite(tramite)" color="contrast"></ui-icon-button>
                             </div>
                         </td>
                     </tr>
@@ -147,5 +149,7 @@
 
 <p-drawer [visible]="visibleGenerarTramiteDrawer()" (visibleChange)="visibleGenerarTramiteDrawer.set($event)"
     [showCloseIcon]="false" position="full" styleClass="tramite-fullscreen-drawer">
-    <app-generar-tramite (closeRequested)="closeGenerarTramiteDrawer()"></app-generar-tramite>
+    @if (visibleGenerarTramiteDrawer()) {
+    <app-generar-tramite [idTramite]="selectTramite().idTramite" (closeRequested)="closeGenerarTramiteDrawer()"></app-generar-tramite>
+    }
 </p-drawer>

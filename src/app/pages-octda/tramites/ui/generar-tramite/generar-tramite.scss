@@ -6,3 +6,61 @@
 :host ::ng-deep .p-stepper {
 	background: transparent;
 }
+
+/* Números del step - colores del brand */
+:host ::ng-deep .p-stepper .p-step-header .p-step-number {
+	border-color: var(--brand-300);
+	color: var(--brand-600);
+}
+
+/* Step activo - colores del brand */
+:host ::ng-deep .p-stepper .p-step-header.p-step-active .p-step-number {
+	background: var(--brand-500);
+	border-color: var(--brand-500);
+	color: #fff;
+}
+
+:host ::ng-deep .p-stepper .p-step-header.p-step-active .p-step-title {
+	color: var(--brand-600);
+}
+
+/* Step completado - colores del brand */
+:host ::ng-deep .p-stepper .p-step-header.p-step-complete .p-step-number {
+	background: var(--brand-500);
+	border-color: var(--brand-500);
+	color: #fff;
+}
+
+:host ::ng-deep .p-stepper .p-step-header.p-step-complete .p-step-title {
+	color: var(--brand-600);
+}
+
+/* Separador - color del brand */
+:host ::ng-deep .p-stepper .p-step-separator {
+	background: var(--brand-200);
+}
+
+/* Checkbox - colores del brand */
+:host ::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+	background: var(--brand-500);
+	border-color: var(--brand-500);
+}
+
+:host ::ng-deep .p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
+	border-color: var(--brand-400);
+}
+
+:host ::ng-deep .p-checkbox .p-checkbox-box.p-highlight:hover {
+	background: var(--brand-600);
+	border-color: var(--brand-600);
+}
+
+/* Checkbox brand color */
+:host ::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+    background: var(--brand-500);
+    border-color: var(--brand-500);
+}
+
+:host ::ng-deep .p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
+    border-color: var(--brand-400);
+}

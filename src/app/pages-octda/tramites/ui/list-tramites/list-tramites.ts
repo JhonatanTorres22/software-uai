@@ -1,6 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { EliminarTramite, EstadoTramite, ListarTramite, RolSolicitante } from '../../domain/entity/tramite.entity';
-import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { TableModule } from "primeng/table";
 import { TagModule } from "primeng/tag";
@@ -27,6 +26,7 @@ import * as XLSX from 'xlsx';
 import { EliminarTramiteUseCase } from '../../application/use-cases/tramites/eliminarTramite.use-case';
 import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
 import { NotificationService } from '@/shared/services/notification.service';
+import { DetailsTramite } from '../details-tramite/details-tramite';
 
 interface TagConfig {
   label: string;
@@ -64,11 +64,11 @@ export class ListTramites {
   // Opciones para filtro de estado
   estadoOpciones: UiSelect[] = [
     { text: 'Todos los estados', value: '' },
-    { text: 'Ingresado', value: 'ingresado' },
-    { text: 'Pendiente', value: 'pendiente' },
-    { text: 'Aprobado', value: 'aprobado' },
-    { text: 'Improcedente', value: 'improcedente' },
-    { text: 'Observado', value: 'observado' },
+    { text: 'INGRESADO', value: 'INGRESADO' },
+    { text: 'PENDIENTE', value: 'PENDIENTE' },
+    { text: 'APROBADO', value: 'APROBADO' },
+    { text: 'IMPROCEDENTE', value: 'IMPROCEDENTE' },
+    { text: 'OBSERVADO', value: 'OBSERVADO' },
   ];
 
   subCategoriaOpciones = computed<UiSelect[]>(() => {
@@ -124,7 +124,6 @@ export class ListTramites {
   exportarExcel(): void {
     const rows = this.tramitesFiltrados().map((tramite) => ({
       'Codigo Expediente': tramite.codigoExpediente,
-      'Codigo Subcategoria': tramite.idSubCategoriaTramite,
       'Subcategoria': tramite.nombreSubcategoriaTramite,
       'Tipo Documento': tramite.tipoDoc,
       'Nro Documento': tramite.numeroDoc,
@@ -249,24 +248,33 @@ export class ListTramites {
     this.visibleGenerarTramiteDrawer.set(false);
   }
 
-  openAddModalTramite(tramite: ListarTramite): void {
-    this.selectTramite.set(tramite);
+openModal(tramite: ListarTramite, tipo: 'detalle' | 'encuesta'): void {
+  this.selectTramite.set(tramite);
 
-    const ref = this.modalService.open(EncuestaSatisfaccion, {
-      header: 'Encuesta de Satisfacción',
-      width: 'min(90vw, 820px)',
-      maximizable: true,
-      data: {
-        tramite
-      }
-    });
+  let component: any;
+  let header = '';
 
-    ref?.onClose.subscribe((result: { success?: boolean } | null) => {
-      if (result?.success) {
-        // refrescar tabla si deseas
-      }
-    });
+  if (tipo === 'detalle') {
+    component = DetailsTramite;
+    header = 'Detalle del trámite';
+  } else {
+    component = EncuestaSatisfaccion;
+    header = 'Encuesta de Satisfacción';
   }
+
+  const ref = this.modalService.open(component, {
+    header,
+    width: 'min(90vw, 820px)',
+    maximizable: true,
+    data: { tramite }
+  });
+
+  ref?.onClose.subscribe((result: { success?: boolean } | null) => {
+    if (result?.success) {
+      // refrescar si quieres
+    }
+  });
+}
 
   anularTramite(tramite: ListarTramite): void {
     console.log('tramite completo:', tramite);

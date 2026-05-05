@@ -65,4 +65,7 @@ export interface ListarTramite {
     fechaCreacion: string;
  }
 
+
+ export type EditarFormatoSolicitud = Omit<ListarFormatoSolicitud, 'fechaCreacion'>
  export type CrearFormatoSolicitud = Omit<ListarFormatoSolicitud, 'idFormatoSolicitud' | 'fechaCreacion'>;
+ export type EliminarFormatoSolicitud = Pick<ListarFormatoSolicitud, 'idFormatoSolicitud'>;

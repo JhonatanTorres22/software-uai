@@ -1,50 +1,52 @@
 import {
+  Chip
+} from "./chunk-SP4RELSI.js";
+import {
   Overlay
-} from "./chunk-3ZSKQKYB.js";
+} from "./chunk-APZCUUC3.js";
 import {
   Scroller
-} from "./chunk-YB5BQ6P2.js";
+} from "./chunk-4ICULTUY.js";
 import {
   BaseInput
-} from "./chunk-XAKEJWTL.js";
+} from "./chunk-CGATFDF2.js";
 import {
   InputText
-} from "./chunk-F24FWVYG.js";
-import "./chunk-42LCFZRW.js";
-import "./chunk-RYW2AAZP.js";
-import "./chunk-WHVAWM3T.js";
+} from "./chunk-V3QF3653.js";
+import "./chunk-C7WSBSMZ.js";
 import {
   Ripple
-} from "./chunk-WQCEO3I3.js";
-import "./chunk-K5LR7NVN.js";
+} from "./chunk-4JQ2NQNL.js";
+import "./chunk-Y2AZHAXB.js";
 import {
   AutoFocus
-} from "./chunk-SDOY2KJX.js";
-import "./chunk-D6ZMXBQT.js";
+} from "./chunk-BSHQ3KWR.js";
+import "./chunk-LDMVDPSI.js";
 import {
   ChevronDownIcon,
   SpinnerIcon,
   TimesCircleIcon,
   TimesIcon
-} from "./chunk-VGUMJRUP.js";
-import "./chunk-XOJNRJZL.js";
+} from "./chunk-T2JVYUH3.js";
+import "./chunk-EBLIEMP5.js";
+import "./chunk-55SR5P5J.js";
+import "./chunk-3CVZMLBL.js";
 import {
-  BaseComponent,
   PARENT_INSTANCE
-} from "./chunk-YOUFDIEG.js";
+} from "./chunk-KKIAOJ6R.js";
 import {
   BaseStyle
-} from "./chunk-GCS42ZZ5.js";
+} from "./chunk-IXTTFP3M.js";
 import {
   OverlayService,
   PrimeTemplate,
   SharedModule,
   TranslationKeys
-} from "./chunk-IARIKJPR.js";
+} from "./chunk-RC5NSD6W.js";
 import {
   Bind,
   BindModule
-} from "./chunk-D7V4T7K5.js";
+} from "./chunk-UBENEQNF.js";
 import {
   M,
   bt,
@@ -55,11 +57,11 @@ import {
   s3 as s2,
   z
 } from "./chunk-SURNEC3S.js";
-import "./chunk-W55U7KTJ.js";
-import "./chunk-WHLNCGQE.js";
+import "./chunk-QBWC7QOT.js";
 import {
   NG_VALUE_ACCESSOR
-} from "./chunk-IERP5MBR.js";
+} from "./chunk-EYG6JFHN.js";
+import "./chunk-WHLNCGQE.js";
 import {
   CommonModule,
   NgClass,
@@ -67,7 +69,7 @@ import {
   NgIf,
   NgStyle,
   NgTemplateOutlet
-} from "./chunk-SJYUZVEH.js";
+} from "./chunk-GVQGPKFB.js";
 import "./chunk-6UNWJBON.js";
 import {
   ChangeDetectionStrategy,
@@ -116,8 +118,6 @@ import {
   ɵɵloadQuery,
   ɵɵnamespaceSVG,
   ɵɵnextContext,
-  ɵɵprojection,
-  ɵɵprojectionDef,
   ɵɵproperty,
   ɵɵpureFunction0,
   ɵɵpureFunction1,
@@ -127,7 +127,6 @@ import {
   ɵɵreference,
   ɵɵresetView,
   ɵɵrestoreView,
-  ɵɵsanitizeUrl,
   ɵɵstyleMap,
   ɵɵstyleProp,
   ɵɵtemplate,
@@ -139,572 +138,16 @@ import {
   ɵɵtwoWayListener,
   ɵɵtwoWayProperty,
   ɵɵviewQuery
-} from "./chunk-E44JF3YN.js";
+} from "./chunk-UVAQJZ2N.js";
 import "./chunk-RSS3ODKE.js";
-import "./chunk-WDMUDEB6.js";
-
-// node_modules/@primeuix/styles/dist/chip/index.mjs
-var style = "\n    .p-chip {\n        display: inline-flex;\n        align-items: center;\n        background: dt('chip.background');\n        color: dt('chip.color');\n        border-radius: dt('chip.border.radius');\n        padding-block: dt('chip.padding.y');\n        padding-inline: dt('chip.padding.x');\n        gap: dt('chip.gap');\n    }\n\n    .p-chip-icon {\n        color: dt('chip.icon.color');\n        font-size: dt('chip.icon.font.size');\n        width: dt('chip.icon.size');\n        height: dt('chip.icon.size');\n    }\n\n    .p-chip-image {\n        border-radius: 50%;\n        width: dt('chip.image.width');\n        height: dt('chip.image.height');\n        margin-inline-start: calc(-1 * dt('chip.padding.y'));\n    }\n\n    .p-chip:has(.p-chip-remove-icon) {\n        padding-inline-end: dt('chip.padding.y');\n    }\n\n    .p-chip:has(.p-chip-image) {\n        padding-block-start: calc(dt('chip.padding.y') / 2);\n        padding-block-end: calc(dt('chip.padding.y') / 2);\n    }\n\n    .p-chip-remove-icon {\n        cursor: pointer;\n        font-size: dt('chip.remove.icon.size');\n        width: dt('chip.remove.icon.size');\n        height: dt('chip.remove.icon.size');\n        color: dt('chip.remove.icon.color');\n        border-radius: 50%;\n        transition:\n            outline-color dt('chip.transition.duration'),\n            box-shadow dt('chip.transition.duration');\n        outline-color: transparent;\n    }\n\n    .p-chip-remove-icon:focus-visible {\n        box-shadow: dt('chip.remove.icon.focus.ring.shadow');\n        outline: dt('chip.remove.icon.focus.ring.width') dt('chip.remove.icon.focus.ring.style') dt('chip.remove.icon.focus.ring.color');\n        outline-offset: dt('chip.remove.icon.focus.ring.offset');\n    }\n";
-
-// node_modules/primeng/fesm2022/primeng-chip.mjs
-var _c0 = ["removeicon"];
-var _c1 = ["*"];
-function Chip_img_1_Template(rf, ctx) {
-  if (rf & 1) {
-    const _r1 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "img", 4);
-    ɵɵlistener("error", function Chip_img_1_Template_img_error_0_listener($event) {
-      ɵɵrestoreView(_r1);
-      const ctx_r1 = ɵɵnextContext();
-      return ɵɵresetView(ctx_r1.imageError($event));
-    });
-    ɵɵelementEnd();
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext();
-    ɵɵclassMap(ctx_r1.cx("image"));
-    ɵɵproperty("pBind", ctx_r1.ptm("image"))("src", ctx_r1.image, ɵɵsanitizeUrl)("alt", ctx_r1.alt);
-  }
-}
-function Chip_ng_template_2_span_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵelement(0, "span", 6);
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.icon);
-    ɵɵproperty("pBind", ctx_r1.ptm("icon"))("ngClass", ctx_r1.cx("icon"));
-  }
-}
-function Chip_ng_template_2_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, Chip_ng_template_2_span_0_Template, 1, 4, "span", 5);
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext();
-    ɵɵproperty("ngIf", ctx_r1.icon);
-  }
-}
-function Chip_div_4_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵelementStart(0, "div", 7);
-    ɵɵtext(1);
-    ɵɵelementEnd();
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext();
-    ɵɵclassMap(ctx_r1.cx("label"));
-    ɵɵproperty("pBind", ctx_r1.ptm("label"));
-    ɵɵadvance();
-    ɵɵtextInterpolate(ctx_r1.label);
-  }
-}
-function Chip_ng_container_5_ng_container_1_span_1_Template(rf, ctx) {
-  if (rf & 1) {
-    const _r3 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "span", 11);
-    ɵɵlistener("click", function Chip_ng_container_5_ng_container_1_span_1_Template_span_click_0_listener($event) {
-      ɵɵrestoreView(_r3);
-      const ctx_r1 = ɵɵnextContext(3);
-      return ɵɵresetView(ctx_r1.close($event));
-    })("keydown", function Chip_ng_container_5_ng_container_1_span_1_Template_span_keydown_0_listener($event) {
-      ɵɵrestoreView(_r3);
-      const ctx_r1 = ɵɵnextContext(3);
-      return ɵɵresetView(ctx_r1.onKeydown($event));
-    });
-    ɵɵelementEnd();
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(3);
-    ɵɵclassMap(ctx_r1.removeIcon);
-    ɵɵproperty("pBind", ctx_r1.ptm("removeIcon"))("ngClass", ctx_r1.cx("removeIcon"));
-    ɵɵattribute("tabindex", ctx_r1.disabled ? -1 : 0)("aria-label", ctx_r1.removeAriaLabel);
-  }
-}
-function Chip_ng_container_5_ng_container_1__svg_svg_2_Template(rf, ctx) {
-  if (rf & 1) {
-    const _r4 = ɵɵgetCurrentView();
-    ɵɵnamespaceSVG();
-    ɵɵelementStart(0, "svg", 12);
-    ɵɵlistener("click", function Chip_ng_container_5_ng_container_1__svg_svg_2_Template_svg_click_0_listener($event) {
-      ɵɵrestoreView(_r4);
-      const ctx_r1 = ɵɵnextContext(3);
-      return ɵɵresetView(ctx_r1.close($event));
-    })("keydown", function Chip_ng_container_5_ng_container_1__svg_svg_2_Template_svg_keydown_0_listener($event) {
-      ɵɵrestoreView(_r4);
-      const ctx_r1 = ɵɵnextContext(3);
-      return ɵɵresetView(ctx_r1.onKeydown($event));
-    });
-    ɵɵelementEnd();
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(3);
-    ɵɵclassMap(ctx_r1.cx("removeIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("removeIcon"));
-    ɵɵattribute("tabindex", ctx_r1.disabled ? -1 : 0)("aria-label", ctx_r1.removeAriaLabel);
-  }
-}
-function Chip_ng_container_5_ng_container_1_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Chip_ng_container_5_ng_container_1_span_1_Template, 1, 6, "span", 9)(2, Chip_ng_container_5_ng_container_1__svg_svg_2_Template, 1, 5, "svg", 10);
-    ɵɵelementContainerEnd();
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.removeIcon);
-    ɵɵadvance();
-    ɵɵproperty("ngIf", !ctx_r1.removeIcon);
-  }
-}
-function Chip_ng_container_5_span_2_1_ng_template_0_Template(rf, ctx) {
-}
-function Chip_ng_container_5_span_2_1_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, Chip_ng_container_5_span_2_1_ng_template_0_Template, 0, 0, "ng-template");
-  }
-}
-function Chip_ng_container_5_span_2_Template(rf, ctx) {
-  if (rf & 1) {
-    const _r5 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "span", 13);
-    ɵɵlistener("click", function Chip_ng_container_5_span_2_Template_span_click_0_listener($event) {
-      ɵɵrestoreView(_r5);
-      const ctx_r1 = ɵɵnextContext(2);
-      return ɵɵresetView(ctx_r1.close($event));
-    })("keydown", function Chip_ng_container_5_span_2_Template_span_keydown_0_listener($event) {
-      ɵɵrestoreView(_r5);
-      const ctx_r1 = ɵɵnextContext(2);
-      return ɵɵresetView(ctx_r1.onKeydown($event));
-    });
-    ɵɵtemplate(1, Chip_ng_container_5_span_2_1_Template, 1, 0, null, 14);
-    ɵɵelementEnd();
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cx("removeIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("removeIcon"));
-    ɵɵattribute("tabindex", ctx_r1.disabled ? -1 : 0)("aria-label", ctx_r1.removeAriaLabel);
-    ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.removeIconTemplate || ctx_r1._removeIconTemplate);
-  }
-}
-function Chip_ng_container_5_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Chip_ng_container_5_ng_container_1_Template, 3, 2, "ng-container", 3)(2, Chip_ng_container_5_span_2_Template, 2, 6, "span", 8);
-    ɵɵelementContainerEnd();
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext();
-    ɵɵadvance();
-    ɵɵproperty("ngIf", !ctx_r1.removeIconTemplate && !ctx_r1._removeIconTemplate);
-    ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.removeIconTemplate || ctx_r1._removeIconTemplate);
-  }
-}
-var classes = {
-  root: ({
-    instance
-  }) => ["p-chip p-component", {
-    "p-disabled": instance.disabled
-  }],
-  image: "p-chip-image",
-  icon: "p-chip-icon",
-  label: "p-chip-label",
-  removeIcon: "p-chip-remove-icon"
-};
-var ChipStyle = class _ChipStyle extends BaseStyle {
-  name = "chip";
-  style = style;
-  classes = classes;
-  static ɵfac = /* @__PURE__ */ (() => {
-    let ɵChipStyle_BaseFactory;
-    return function ChipStyle_Factory(__ngFactoryType__) {
-      return (ɵChipStyle_BaseFactory || (ɵChipStyle_BaseFactory = ɵɵgetInheritedFactory(_ChipStyle)))(__ngFactoryType__ || _ChipStyle);
-    };
-  })();
-  static ɵprov = ɵɵdefineInjectable({
-    token: _ChipStyle,
-    factory: _ChipStyle.ɵfac
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ChipStyle, [{
-    type: Injectable
-  }], null, null);
-})();
-var ChipClasses;
-(function(ChipClasses2) {
-  ChipClasses2["root"] = "p-chip";
-  ChipClasses2["image"] = "p-chip-image";
-  ChipClasses2["icon"] = "p-chip-icon";
-  ChipClasses2["label"] = "p-chip-label";
-  ChipClasses2["removeIcon"] = "p-chip-remove-icon";
-})(ChipClasses || (ChipClasses = {}));
-var CHIP_INSTANCE = new InjectionToken("CHIP_INSTANCE");
-var Chip = class _Chip extends BaseComponent {
-  $pcChip = inject(CHIP_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
-  /**
-   * Defines the text to display.
-   * @group Props
-   */
-  label;
-  /**
-   * Defines the icon to display.
-   * @group Props
-   */
-  icon;
-  /**
-   * Defines the image to display.
-   * @group Props
-   */
-  image;
-  /**
-   * Alt attribute of the image.
-   * @group Props
-   */
-  alt;
-  /**
-   * Class of the element.
-   * @deprecated since v20.0.0, use `class` instead.
-   * @group Props
-   */
-  styleClass;
-  /**
-   * When present, it specifies that the element should be disabled.
-   * @group Props
-   */
-  disabled = false;
-  /**
-   * Whether to display a remove icon.
-   * @group Props
-   */
-  removable = false;
-  /**
-   * Icon of the remove element.
-   * @group Props
-   */
-  removeIcon;
-  /**
-   * Callback to invoke when a chip is removed.
-   * @param {MouseEvent} event - Mouse event.
-   * @group Emits
-   */
-  onRemove = new EventEmitter();
-  /**
-   * This event is triggered if an error occurs while loading an image file.
-   * @param {Event} event - Browser event.
-   * @group Emits
-   */
-  onImageError = new EventEmitter();
-  visible = true;
-  get removeAriaLabel() {
-    return this.config.getTranslation(TranslationKeys.ARIA)["removeLabel"];
-  }
-  /**
-   * Used to pass all properties of the chipProps to the Chip component.
-   * @group Props
-   */
-  get chipProps() {
-    return this._chipProps;
-  }
-  set chipProps(val) {
-    this._chipProps = val;
-    if (val && typeof val === "object") {
-      Object.entries(val).forEach(([k2, v]) => this[`_${k2}`] !== v && (this[`_${k2}`] = v));
-    }
-  }
-  _chipProps;
-  _componentStyle = inject(ChipStyle);
-  removeIconTemplate;
-  templates;
-  _removeIconTemplate;
-  onAfterContentInit() {
-    this.templates.forEach((item) => {
-      switch (item.getType()) {
-        case "removeicon":
-          this._removeIconTemplate = item.template;
-          break;
-        default:
-          this._removeIconTemplate = item.template;
-          break;
-      }
-    });
-  }
-  onChanges(simpleChanges) {
-    if (simpleChanges.chipProps && simpleChanges.chipProps.currentValue) {
-      const {
-        currentValue
-      } = simpleChanges.chipProps;
-      if (currentValue.label !== void 0) {
-        this.label = currentValue.label;
-      }
-      if (currentValue.icon !== void 0) {
-        this.icon = currentValue.icon;
-      }
-      if (currentValue.image !== void 0) {
-        this.image = currentValue.image;
-      }
-      if (currentValue.alt !== void 0) {
-        this.alt = currentValue.alt;
-      }
-      if (currentValue.styleClass !== void 0) {
-        this.styleClass = currentValue.styleClass;
-      }
-      if (currentValue.removable !== void 0) {
-        this.removable = currentValue.removable;
-      }
-      if (currentValue.removeIcon !== void 0) {
-        this.removeIcon = currentValue.removeIcon;
-      }
-    }
-  }
-  close(event) {
-    this.visible = false;
-    this.onRemove.emit(event);
-  }
-  onKeydown(event) {
-    if (event.key === "Enter" || event.key === "Backspace") {
-      this.close(event);
-    }
-  }
-  imageError(event) {
-    this.onImageError.emit(event);
-  }
-  static ɵfac = /* @__PURE__ */ (() => {
-    let ɵChip_BaseFactory;
-    return function Chip_Factory(__ngFactoryType__) {
-      return (ɵChip_BaseFactory || (ɵChip_BaseFactory = ɵɵgetInheritedFactory(_Chip)))(__ngFactoryType__ || _Chip);
-    };
-  })();
-  static ɵcmp = ɵɵdefineComponent({
-    type: _Chip,
-    selectors: [["p-chip"]],
-    contentQueries: function Chip_ContentQueries(rf, ctx, dirIndex) {
-      if (rf & 1) {
-        ɵɵcontentQuery(dirIndex, _c0, 4);
-        ɵɵcontentQuery(dirIndex, PrimeTemplate, 4);
-      }
-      if (rf & 2) {
-        let _t;
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.removeIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
-      }
-    },
-    hostVars: 5,
-    hostBindings: function Chip_HostBindings(rf, ctx) {
-      if (rf & 2) {
-        ɵɵattribute("aria-label", ctx.label);
-        ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
-        ɵɵstyleProp("display", !ctx.visible && "none");
-      }
-    },
-    inputs: {
-      label: "label",
-      icon: "icon",
-      image: "image",
-      alt: "alt",
-      styleClass: "styleClass",
-      disabled: [2, "disabled", "disabled", booleanAttribute],
-      removable: [2, "removable", "removable", booleanAttribute],
-      removeIcon: "removeIcon",
-      chipProps: "chipProps"
-    },
-    outputs: {
-      onRemove: "onRemove",
-      onImageError: "onImageError"
-    },
-    features: [ɵɵProvidersFeature([ChipStyle, {
-      provide: CHIP_INSTANCE,
-      useExisting: _Chip
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _Chip
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
-    ngContentSelectors: _c1,
-    decls: 6,
-    vars: 4,
-    consts: [["iconTemplate", ""], [3, "pBind", "class", "src", "alt", "error", 4, "ngIf", "ngIfElse"], [3, "pBind", "class", 4, "ngIf"], [4, "ngIf"], [3, "error", "pBind", "src", "alt"], [3, "pBind", "class", "ngClass", 4, "ngIf"], [3, "pBind", "ngClass"], [3, "pBind"], ["role", "button", 3, "pBind", "class", "click", "keydown", 4, "ngIf"], ["role", "button", 3, "pBind", "class", "ngClass", "click", "keydown", 4, "ngIf"], ["data-p-icon", "times-circle", "role", "button", 3, "pBind", "class", "click", "keydown", 4, "ngIf"], ["role", "button", 3, "click", "keydown", "pBind", "ngClass"], ["data-p-icon", "times-circle", "role", "button", 3, "click", "keydown", "pBind"], ["role", "button", 3, "click", "keydown", "pBind"], [4, "ngTemplateOutlet"]],
-    template: function Chip_Template(rf, ctx) {
-      if (rf & 1) {
-        ɵɵprojectionDef();
-        ɵɵprojection(0);
-        ɵɵtemplate(1, Chip_img_1_Template, 1, 5, "img", 1)(2, Chip_ng_template_2_Template, 1, 1, "ng-template", null, 0, ɵɵtemplateRefExtractor)(4, Chip_div_4_Template, 2, 4, "div", 2)(5, Chip_ng_container_5_Template, 3, 2, "ng-container", 3);
-      }
-      if (rf & 2) {
-        const iconTemplate_r6 = ɵɵreference(3);
-        ɵɵadvance();
-        ɵɵproperty("ngIf", ctx.image)("ngIfElse", iconTemplate_r6);
-        ɵɵadvance(3);
-        ɵɵproperty("ngIf", ctx.label);
-        ɵɵadvance();
-        ɵɵproperty("ngIf", ctx.removable);
-      }
-    },
-    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, TimesCircleIcon, SharedModule, Bind],
-    encapsulation: 2,
-    changeDetection: 0
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Chip, [{
-    type: Component,
-    args: [{
-      selector: "p-chip",
-      standalone: true,
-      imports: [CommonModule, TimesCircleIcon, SharedModule, Bind],
-      template: `
-        <ng-content></ng-content>
-        <img [pBind]="ptm('image')" [class]="cx('image')" [src]="image" *ngIf="image; else iconTemplate" (error)="imageError($event)" [alt]="alt" />
-        <ng-template #iconTemplate><span [pBind]="ptm('icon')" *ngIf="icon" [class]="icon" [ngClass]="cx('icon')"></span></ng-template>
-        <div [pBind]="ptm('label')" [class]="cx('label')" *ngIf="label">{{ label }}</div>
-        <ng-container *ngIf="removable">
-            <ng-container *ngIf="!removeIconTemplate && !_removeIconTemplate">
-                <span
-                    [pBind]="ptm('removeIcon')"
-                    *ngIf="removeIcon"
-                    [class]="removeIcon"
-                    [ngClass]="cx('removeIcon')"
-                    (click)="close($event)"
-                    (keydown)="onKeydown($event)"
-                    [attr.tabindex]="disabled ? -1 : 0"
-                    [attr.aria-label]="removeAriaLabel"
-                    role="button"
-                ></span>
-                <svg
-                    [pBind]="ptm('removeIcon')"
-                    data-p-icon="times-circle"
-                    *ngIf="!removeIcon"
-                    [class]="cx('removeIcon')"
-                    (click)="close($event)"
-                    (keydown)="onKeydown($event)"
-                    [attr.tabindex]="disabled ? -1 : 0"
-                    [attr.aria-label]="removeAriaLabel"
-                    role="button"
-                />
-            </ng-container>
-            <span
-                [pBind]="ptm('removeIcon')"
-                *ngIf="removeIconTemplate || _removeIconTemplate"
-                [attr.tabindex]="disabled ? -1 : 0"
-                [class]="cx('removeIcon')"
-                (click)="close($event)"
-                (keydown)="onKeydown($event)"
-                [attr.aria-label]="removeAriaLabel"
-                role="button"
-            >
-                <ng-template *ngTemplateOutlet="removeIconTemplate || _removeIconTemplate"></ng-template>
-            </span>
-        </ng-container>
-    `,
-      changeDetection: ChangeDetectionStrategy.OnPush,
-      encapsulation: ViewEncapsulation.None,
-      providers: [ChipStyle, {
-        provide: CHIP_INSTANCE,
-        useExisting: Chip
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: Chip
-      }],
-      host: {
-        "[class]": "cn(cx('root'), styleClass)",
-        "[style.display]": '!visible && "none"',
-        "[attr.aria-label]": "label"
-      },
-      hostDirectives: [Bind]
-    }]
-  }], null, {
-    label: [{
-      type: Input
-    }],
-    icon: [{
-      type: Input
-    }],
-    image: [{
-      type: Input
-    }],
-    alt: [{
-      type: Input
-    }],
-    styleClass: [{
-      type: Input
-    }],
-    disabled: [{
-      type: Input,
-      args: [{
-        transform: booleanAttribute
-      }]
-    }],
-    removable: [{
-      type: Input,
-      args: [{
-        transform: booleanAttribute
-      }]
-    }],
-    removeIcon: [{
-      type: Input
-    }],
-    onRemove: [{
-      type: Output
-    }],
-    onImageError: [{
-      type: Output
-    }],
-    chipProps: [{
-      type: Input
-    }],
-    removeIconTemplate: [{
-      type: ContentChild,
-      args: ["removeicon", {
-        descendants: false
-      }]
-    }],
-    templates: [{
-      type: ContentChildren,
-      args: [PrimeTemplate]
-    }]
-  });
-})();
-var ChipModule = class _ChipModule {
-  static ɵfac = function ChipModule_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _ChipModule)();
-  };
-  static ɵmod = ɵɵdefineNgModule({
-    type: _ChipModule,
-    imports: [Chip, SharedModule],
-    exports: [Chip, SharedModule]
-  });
-  static ɵinj = ɵɵdefineInjector({
-    imports: [Chip, SharedModule, SharedModule]
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ChipModule, [{
-    type: NgModule,
-    args: [{
-      imports: [Chip, SharedModule],
-      exports: [Chip, SharedModule]
-    }]
-  }], null, null);
-})();
+import "./chunk-3OV72XIM.js";
 
 // node_modules/@primeuix/styles/dist/autocomplete/index.mjs
-var style2 = "\n    .p-autocomplete {\n        display: inline-flex;\n    }\n\n    .p-autocomplete-loader {\n        position: absolute;\n        top: 50%;\n        margin-top: -0.5rem;\n        inset-inline-end: dt('autocomplete.padding.x');\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-loader {\n        inset-inline-end: calc(dt('autocomplete.dropdown.width') + dt('autocomplete.padding.x'));\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-input {\n        flex: 1 1 auto;\n        width: 1%;\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-input,\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-input-multiple {\n        border-start-end-radius: 0;\n        border-end-end-radius: 0;\n    }\n\n    .p-autocomplete-dropdown {\n        cursor: pointer;\n        display: inline-flex;\n        user-select: none;\n        align-items: center;\n        justify-content: center;\n        overflow: hidden;\n        position: relative;\n        width: dt('autocomplete.dropdown.width');\n        border-start-end-radius: dt('autocomplete.dropdown.border.radius');\n        border-end-end-radius: dt('autocomplete.dropdown.border.radius');\n        background: dt('autocomplete.dropdown.background');\n        border: 1px solid dt('autocomplete.dropdown.border.color');\n        border-inline-start: 0 none;\n        color: dt('autocomplete.dropdown.color');\n        transition:\n            background dt('autocomplete.transition.duration'),\n            color dt('autocomplete.transition.duration'),\n            border-color dt('autocomplete.transition.duration'),\n            outline-color dt('autocomplete.transition.duration'),\n            box-shadow dt('autocomplete.transition.duration');\n        outline-color: transparent;\n    }\n\n    .p-autocomplete-dropdown:not(:disabled):hover {\n        background: dt('autocomplete.dropdown.hover.background');\n        border-color: dt('autocomplete.dropdown.hover.border.color');\n        color: dt('autocomplete.dropdown.hover.color');\n    }\n\n    .p-autocomplete-dropdown:not(:disabled):active {\n        background: dt('autocomplete.dropdown.active.background');\n        border-color: dt('autocomplete.dropdown.active.border.color');\n        color: dt('autocomplete.dropdown.active.color');\n    }\n\n    .p-autocomplete-dropdown:focus-visible {\n        box-shadow: dt('autocomplete.dropdown.focus.ring.shadow');\n        outline: dt('autocomplete.dropdown.focus.ring.width') dt('autocomplete.dropdown.focus.ring.style') dt('autocomplete.dropdown.focus.ring.color');\n        outline-offset: dt('autocomplete.dropdown.focus.ring.offset');\n    }\n\n    .p-autocomplete-overlay {\n        position: absolute;\n        top: 0;\n        left: 0;\n        background: dt('autocomplete.overlay.background');\n        color: dt('autocomplete.overlay.color');\n        border: 1px solid dt('autocomplete.overlay.border.color');\n        border-radius: dt('autocomplete.overlay.border.radius');\n        box-shadow: dt('autocomplete.overlay.shadow');\n        min-width: 100%;\n    }\n\n    .p-autocomplete-list-container {\n        overflow: auto;\n    }\n\n    .p-autocomplete-list {\n        margin: 0;\n        list-style-type: none;\n        display: flex;\n        flex-direction: column;\n        gap: dt('autocomplete.list.gap');\n        padding: dt('autocomplete.list.padding');\n    }\n\n    .p-autocomplete-option {\n        cursor: pointer;\n        white-space: nowrap;\n        position: relative;\n        overflow: hidden;\n        display: flex;\n        align-items: center;\n        padding: dt('autocomplete.option.padding');\n        border: 0 none;\n        color: dt('autocomplete.option.color');\n        background: transparent;\n        transition:\n            background dt('autocomplete.transition.duration'),\n            color dt('autocomplete.transition.duration'),\n            border-color dt('autocomplete.transition.duration');\n        border-radius: dt('autocomplete.option.border.radius');\n    }\n\n    .p-autocomplete-option:not(.p-autocomplete-option-selected):not(.p-disabled).p-focus {\n        background: dt('autocomplete.option.focus.background');\n        color: dt('autocomplete.option.focus.color');\n    }\n\n    .p-autocomplete-option-selected {\n        background: dt('autocomplete.option.selected.background');\n        color: dt('autocomplete.option.selected.color');\n    }\n\n    .p-autocomplete-option-selected.p-focus {\n        background: dt('autocomplete.option.selected.focus.background');\n        color: dt('autocomplete.option.selected.focus.color');\n    }\n\n    .p-autocomplete-option-group {\n        margin: 0;\n        padding: dt('autocomplete.option.group.padding');\n        color: dt('autocomplete.option.group.color');\n        background: dt('autocomplete.option.group.background');\n        font-weight: dt('autocomplete.option.group.font.weight');\n    }\n\n    .p-autocomplete-input-multiple {\n        margin: 0;\n        list-style-type: none;\n        cursor: text;\n        overflow: hidden;\n        display: flex;\n        align-items: center;\n        flex-wrap: wrap;\n        padding: calc(dt('autocomplete.padding.y') / 2) dt('autocomplete.padding.x');\n        gap: calc(dt('autocomplete.padding.y') / 2);\n        color: dt('autocomplete.color');\n        background: dt('autocomplete.background');\n        border: 1px solid dt('autocomplete.border.color');\n        border-radius: dt('autocomplete.border.radius');\n        width: 100%;\n        transition:\n            background dt('autocomplete.transition.duration'),\n            color dt('autocomplete.transition.duration'),\n            border-color dt('autocomplete.transition.duration'),\n            outline-color dt('autocomplete.transition.duration'),\n            box-shadow dt('autocomplete.transition.duration');\n        outline-color: transparent;\n        box-shadow: dt('autocomplete.shadow');\n    }\n\n    .p-autocomplete-input-multiple.p-disabled {\n        opacity: 1;\n        background: dt('inputtext.disabled.background');\n        color: dt('inputtext.disabled.color');\n    }\n\n    .p-autocomplete-input-multiple:not(.p-disabled):hover {\n        border-color: dt('autocomplete.hover.border.color');\n    }\n\n    .p-autocomplete.p-focus .p-autocomplete-input-multiple:not(.p-disabled) {\n        border-color: dt('autocomplete.focus.border.color');\n        box-shadow: dt('autocomplete.focus.ring.shadow');\n        outline: dt('autocomplete.focus.ring.width') dt('autocomplete.focus.ring.style') dt('autocomplete.focus.ring.color');\n        outline-offset: dt('autocomplete.focus.ring.offset');\n    }\n\n    .p-autocomplete.p-invalid .p-autocomplete-input-multiple {\n        border-color: dt('autocomplete.invalid.border.color');\n    }\n\n    .p-variant-filled.p-autocomplete-input-multiple {\n        background: dt('autocomplete.filled.background');\n    }\n\n    .p-autocomplete-input-multiple.p-variant-filled:not(.p-disabled):hover {\n        background: dt('autocomplete.filled.hover.background');\n    }\n\n    .p-autocomplete.p-focus .p-autocomplete-input-multiple.p-variant-filled:not(.p-disabled) {\n        background: dt('autocomplete.filled.focus.background');\n    }\n\n    .p-autocomplete-chip.p-chip {\n        padding-block-start: calc(dt('autocomplete.padding.y') / 2);\n        padding-block-end: calc(dt('autocomplete.padding.y') / 2);\n        border-radius: dt('autocomplete.chip.border.radius');\n    }\n\n    .p-autocomplete-input-multiple:has(.p-autocomplete-chip) {\n        padding-inline-start: calc(dt('autocomplete.padding.y') / 2);\n        padding-inline-end: calc(dt('autocomplete.padding.y') / 2);\n    }\n\n    .p-autocomplete-chip-item.p-focus .p-autocomplete-chip {\n        background: dt('autocomplete.chip.focus.background');\n        color: dt('autocomplete.chip.focus.color');\n    }\n\n    .p-autocomplete-input-chip {\n        flex: 1 1 auto;\n        display: inline-flex;\n        padding-block-start: calc(dt('autocomplete.padding.y') / 2);\n        padding-block-end: calc(dt('autocomplete.padding.y') / 2);\n    }\n\n    .p-autocomplete-input-chip input {\n        border: 0 none;\n        outline: 0 none;\n        background: transparent;\n        margin: 0;\n        padding: 0;\n        box-shadow: none;\n        border-radius: 0;\n        width: 100%;\n        font-family: inherit;\n        font-feature-settings: inherit;\n        font-size: 1rem;\n        color: inherit;\n    }\n\n    .p-autocomplete-input-chip input::placeholder {\n        color: dt('autocomplete.placeholder.color');\n    }\n\n    .p-autocomplete.p-invalid .p-autocomplete-input-chip input::placeholder {\n        color: dt('autocomplete.invalid.placeholder.color');\n    }\n\n    .p-autocomplete-empty-message {\n        padding: dt('autocomplete.empty.message.padding');\n    }\n\n    .p-autocomplete-fluid {\n        display: flex;\n    }\n\n    .p-autocomplete-fluid:has(.p-autocomplete-dropdown) .p-autocomplete-input {\n        width: 1%;\n    }\n\n    .p-autocomplete:has(.p-inputtext-sm) .p-autocomplete-dropdown {\n        width: dt('autocomplete.dropdown.sm.width');\n    }\n\n    .p-autocomplete:has(.p-inputtext-sm) .p-autocomplete-dropdown .p-icon {\n        font-size: dt('form.field.sm.font.size');\n        width: dt('form.field.sm.font.size');\n        height: dt('form.field.sm.font.size');\n    }\n\n    .p-autocomplete:has(.p-inputtext-lg) .p-autocomplete-dropdown {\n        width: dt('autocomplete.dropdown.lg.width');\n    }\n\n    .p-autocomplete:has(.p-inputtext-lg) .p-autocomplete-dropdown .p-icon {\n        font-size: dt('form.field.lg.font.size');\n        width: dt('form.field.lg.font.size');\n        height: dt('form.field.lg.font.size');\n    }\n\n    .p-autocomplete-clear-icon {\n        position: absolute;\n        top: 50%;\n        margin-top: -0.5rem;\n        cursor: pointer;\n        color: dt('form.field.icon.color');\n        inset-inline-end: dt('autocomplete.padding.x');\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-clear-icon {\n        inset-inline-end: calc(dt('autocomplete.padding.x') + dt('autocomplete.dropdown.width'));\n    }\n\n    .p-autocomplete:has(.p-autocomplete-clear-icon) .p-autocomplete-input {\n        padding-inline-end: calc((dt('form.field.padding.x') * 2) + dt('icon.size'));\n    }\n\n    .p-inputgroup .p-autocomplete-dropdown {\n        border-radius: 0;\n    }\n\n    .p-inputgroup > .p-autocomplete:last-child:has(.p-autocomplete-dropdown) > .p-autocomplete-input {\n        border-start-end-radius: 0;\n        border-end-end-radius: 0;\n    }\n\n    .p-inputgroup > .p-autocomplete:last-child .p-autocomplete-dropdown {\n        border-start-end-radius: dt('autocomplete.dropdown.border.radius');\n        border-end-end-radius: dt('autocomplete.dropdown.border.radius');\n    }\n";
+var style = "\n    .p-autocomplete {\n        display: inline-flex;\n    }\n\n    .p-autocomplete-loader {\n        position: absolute;\n        top: 50%;\n        margin-top: -0.5rem;\n        inset-inline-end: dt('autocomplete.padding.x');\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-loader {\n        inset-inline-end: calc(dt('autocomplete.dropdown.width') + dt('autocomplete.padding.x'));\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-input {\n        flex: 1 1 auto;\n        width: 1%;\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-input,\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-input-multiple {\n        border-start-end-radius: 0;\n        border-end-end-radius: 0;\n    }\n\n    .p-autocomplete-dropdown {\n        cursor: pointer;\n        display: inline-flex;\n        user-select: none;\n        align-items: center;\n        justify-content: center;\n        overflow: hidden;\n        position: relative;\n        width: dt('autocomplete.dropdown.width');\n        border-start-end-radius: dt('autocomplete.dropdown.border.radius');\n        border-end-end-radius: dt('autocomplete.dropdown.border.radius');\n        background: dt('autocomplete.dropdown.background');\n        border: 1px solid dt('autocomplete.dropdown.border.color');\n        border-inline-start: 0 none;\n        color: dt('autocomplete.dropdown.color');\n        transition:\n            background dt('autocomplete.transition.duration'),\n            color dt('autocomplete.transition.duration'),\n            border-color dt('autocomplete.transition.duration'),\n            outline-color dt('autocomplete.transition.duration'),\n            box-shadow dt('autocomplete.transition.duration');\n        outline-color: transparent;\n    }\n\n    .p-autocomplete-dropdown:not(:disabled):hover {\n        background: dt('autocomplete.dropdown.hover.background');\n        border-color: dt('autocomplete.dropdown.hover.border.color');\n        color: dt('autocomplete.dropdown.hover.color');\n    }\n\n    .p-autocomplete-dropdown:not(:disabled):active {\n        background: dt('autocomplete.dropdown.active.background');\n        border-color: dt('autocomplete.dropdown.active.border.color');\n        color: dt('autocomplete.dropdown.active.color');\n    }\n\n    .p-autocomplete-dropdown:focus-visible {\n        box-shadow: dt('autocomplete.dropdown.focus.ring.shadow');\n        outline: dt('autocomplete.dropdown.focus.ring.width') dt('autocomplete.dropdown.focus.ring.style') dt('autocomplete.dropdown.focus.ring.color');\n        outline-offset: dt('autocomplete.dropdown.focus.ring.offset');\n    }\n\n    .p-autocomplete-overlay {\n        position: absolute;\n        top: 0;\n        left: 0;\n        background: dt('autocomplete.overlay.background');\n        color: dt('autocomplete.overlay.color');\n        border: 1px solid dt('autocomplete.overlay.border.color');\n        border-radius: dt('autocomplete.overlay.border.radius');\n        box-shadow: dt('autocomplete.overlay.shadow');\n        min-width: 100%;\n    }\n\n    .p-autocomplete-list-container {\n        overflow: auto;\n    }\n\n    .p-autocomplete-list {\n        margin: 0;\n        list-style-type: none;\n        display: flex;\n        flex-direction: column;\n        gap: dt('autocomplete.list.gap');\n        padding: dt('autocomplete.list.padding');\n    }\n\n    .p-autocomplete-option {\n        cursor: pointer;\n        white-space: nowrap;\n        position: relative;\n        overflow: hidden;\n        display: flex;\n        align-items: center;\n        padding: dt('autocomplete.option.padding');\n        border: 0 none;\n        color: dt('autocomplete.option.color');\n        background: transparent;\n        transition:\n            background dt('autocomplete.transition.duration'),\n            color dt('autocomplete.transition.duration'),\n            border-color dt('autocomplete.transition.duration');\n        border-radius: dt('autocomplete.option.border.radius');\n    }\n\n    .p-autocomplete-option:not(.p-autocomplete-option-selected):not(.p-disabled).p-focus {\n        background: dt('autocomplete.option.focus.background');\n        color: dt('autocomplete.option.focus.color');\n    }\n\n    .p-autocomplete-option-selected {\n        background: dt('autocomplete.option.selected.background');\n        color: dt('autocomplete.option.selected.color');\n    }\n\n    .p-autocomplete-option-selected.p-focus {\n        background: dt('autocomplete.option.selected.focus.background');\n        color: dt('autocomplete.option.selected.focus.color');\n    }\n\n    .p-autocomplete-option-group {\n        margin: 0;\n        padding: dt('autocomplete.option.group.padding');\n        color: dt('autocomplete.option.group.color');\n        background: dt('autocomplete.option.group.background');\n        font-weight: dt('autocomplete.option.group.font.weight');\n    }\n\n    .p-autocomplete-input-multiple {\n        margin: 0;\n        list-style-type: none;\n        cursor: text;\n        overflow: hidden;\n        display: flex;\n        align-items: center;\n        flex-wrap: wrap;\n        padding: calc(dt('autocomplete.padding.y') / 2) dt('autocomplete.padding.x');\n        gap: calc(dt('autocomplete.padding.y') / 2);\n        color: dt('autocomplete.color');\n        background: dt('autocomplete.background');\n        border: 1px solid dt('autocomplete.border.color');\n        border-radius: dt('autocomplete.border.radius');\n        width: 100%;\n        transition:\n            background dt('autocomplete.transition.duration'),\n            color dt('autocomplete.transition.duration'),\n            border-color dt('autocomplete.transition.duration'),\n            outline-color dt('autocomplete.transition.duration'),\n            box-shadow dt('autocomplete.transition.duration');\n        outline-color: transparent;\n        box-shadow: dt('autocomplete.shadow');\n    }\n\n    .p-autocomplete-input-multiple.p-disabled {\n        opacity: 1;\n        background: dt('inputtext.disabled.background');\n        color: dt('inputtext.disabled.color');\n    }\n\n    .p-autocomplete-input-multiple:not(.p-disabled):hover {\n        border-color: dt('autocomplete.hover.border.color');\n    }\n\n    .p-autocomplete.p-focus .p-autocomplete-input-multiple:not(.p-disabled) {\n        border-color: dt('autocomplete.focus.border.color');\n        box-shadow: dt('autocomplete.focus.ring.shadow');\n        outline: dt('autocomplete.focus.ring.width') dt('autocomplete.focus.ring.style') dt('autocomplete.focus.ring.color');\n        outline-offset: dt('autocomplete.focus.ring.offset');\n    }\n\n    .p-autocomplete.p-invalid .p-autocomplete-input-multiple {\n        border-color: dt('autocomplete.invalid.border.color');\n    }\n\n    .p-variant-filled.p-autocomplete-input-multiple {\n        background: dt('autocomplete.filled.background');\n    }\n\n    .p-autocomplete-input-multiple.p-variant-filled:not(.p-disabled):hover {\n        background: dt('autocomplete.filled.hover.background');\n    }\n\n    .p-autocomplete.p-focus .p-autocomplete-input-multiple.p-variant-filled:not(.p-disabled) {\n        background: dt('autocomplete.filled.focus.background');\n    }\n\n    .p-autocomplete-chip.p-chip {\n        padding-block-start: calc(dt('autocomplete.padding.y') / 2);\n        padding-block-end: calc(dt('autocomplete.padding.y') / 2);\n        border-radius: dt('autocomplete.chip.border.radius');\n    }\n\n    .p-autocomplete-input-multiple:has(.p-autocomplete-chip) {\n        padding-inline-start: calc(dt('autocomplete.padding.y') / 2);\n        padding-inline-end: calc(dt('autocomplete.padding.y') / 2);\n    }\n\n    .p-autocomplete-chip-item.p-focus .p-autocomplete-chip {\n        background: dt('autocomplete.chip.focus.background');\n        color: dt('autocomplete.chip.focus.color');\n    }\n\n    .p-autocomplete-input-chip {\n        flex: 1 1 auto;\n        display: inline-flex;\n        padding-block-start: calc(dt('autocomplete.padding.y') / 2);\n        padding-block-end: calc(dt('autocomplete.padding.y') / 2);\n    }\n\n    .p-autocomplete-input-chip input {\n        border: 0 none;\n        outline: 0 none;\n        background: transparent;\n        margin: 0;\n        padding: 0;\n        box-shadow: none;\n        border-radius: 0;\n        width: 100%;\n        font-family: inherit;\n        font-feature-settings: inherit;\n        font-size: 1rem;\n        color: inherit;\n    }\n\n    .p-autocomplete-input-chip input::placeholder {\n        color: dt('autocomplete.placeholder.color');\n    }\n\n    .p-autocomplete.p-invalid .p-autocomplete-input-chip input::placeholder {\n        color: dt('autocomplete.invalid.placeholder.color');\n    }\n\n    .p-autocomplete-empty-message {\n        padding: dt('autocomplete.empty.message.padding');\n    }\n\n    .p-autocomplete-fluid {\n        display: flex;\n    }\n\n    .p-autocomplete-fluid:has(.p-autocomplete-dropdown) .p-autocomplete-input {\n        width: 1%;\n    }\n\n    .p-autocomplete:has(.p-inputtext-sm) .p-autocomplete-dropdown {\n        width: dt('autocomplete.dropdown.sm.width');\n    }\n\n    .p-autocomplete:has(.p-inputtext-sm) .p-autocomplete-dropdown .p-icon {\n        font-size: dt('form.field.sm.font.size');\n        width: dt('form.field.sm.font.size');\n        height: dt('form.field.sm.font.size');\n    }\n\n    .p-autocomplete:has(.p-inputtext-lg) .p-autocomplete-dropdown {\n        width: dt('autocomplete.dropdown.lg.width');\n    }\n\n    .p-autocomplete:has(.p-inputtext-lg) .p-autocomplete-dropdown .p-icon {\n        font-size: dt('form.field.lg.font.size');\n        width: dt('form.field.lg.font.size');\n        height: dt('form.field.lg.font.size');\n    }\n\n    .p-autocomplete-clear-icon {\n        position: absolute;\n        top: 50%;\n        margin-top: -0.5rem;\n        cursor: pointer;\n        color: dt('form.field.icon.color');\n        inset-inline-end: dt('autocomplete.padding.x');\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-clear-icon {\n        inset-inline-end: calc(dt('autocomplete.padding.x') + dt('autocomplete.dropdown.width'));\n    }\n\n    .p-autocomplete:has(.p-autocomplete-clear-icon) .p-autocomplete-input {\n        padding-inline-end: calc((dt('form.field.padding.x') * 2) + dt('icon.size'));\n    }\n\n    .p-inputgroup .p-autocomplete-dropdown {\n        border-radius: 0;\n    }\n\n    .p-inputgroup > .p-autocomplete:last-child:has(.p-autocomplete-dropdown) > .p-autocomplete-input {\n        border-start-end-radius: 0;\n        border-end-end-radius: 0;\n    }\n\n    .p-inputgroup > .p-autocomplete:last-child .p-autocomplete-dropdown {\n        border-start-end-radius: dt('autocomplete.dropdown.border.radius');\n        border-end-end-radius: dt('autocomplete.dropdown.border.radius');\n    }\n";
 
 // node_modules/primeng/fesm2022/primeng-autocomplete.mjs
-var _c02 = ["item"];
-var _c12 = ["empty"];
+var _c0 = ["item"];
+var _c1 = ["empty"];
 var _c2 = ["header"];
 var _c3 = ["footer"];
 var _c4 = ["selecteditem"];
@@ -715,7 +158,7 @@ var _c8 = ["loadingicon"];
 var _c9 = ["clearicon"];
 var _c10 = ["dropdownicon"];
 var _c11 = ["focusInput"];
-var _c122 = ["multiIn"];
+var _c12 = ["multiIn"];
 var _c13 = ["multiContainer"];
 var _c14 = ["ddBtn"];
 var _c15 = ["items"];
@@ -1404,10 +847,10 @@ function AutoComplete_ng_template_7_Template(rf, ctx) {
     ɵɵtextInterpolate1(" ", ctx_r2.selectedMessageText, " ");
   }
 }
-var style3 = (
+var style2 = (
   /*css*/
   `
-    ${style2}
+    ${style}
 
     /* For PrimeNG */
     p-autoComplete.ng-invalid.ng-dirty .p-autocomplete-input,
@@ -1445,7 +888,7 @@ var inlineStyles = {
     position: "relative"
   }
 };
-var classes2 = {
+var classes = {
   root: ({
     instance
   }) => ["p-autocomplete p-component p-inputwrapper", {
@@ -1500,8 +943,8 @@ var classes2 = {
 };
 var AutoCompleteStyle = class _AutoCompleteStyle extends BaseStyle {
   name = "autocomplete";
-  style = style3;
-  classes = classes2;
+  style = style2;
+  classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵAutoCompleteStyle_BaseFactory;
@@ -2861,8 +2304,8 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     selectors: [["p-autoComplete"], ["p-autocomplete"], ["p-auto-complete"]],
     contentQueries: function AutoComplete_ContentQueries(rf, ctx, dirIndex) {
       if (rf & 1) {
-        ɵɵcontentQuery(dirIndex, _c02, 5);
-        ɵɵcontentQuery(dirIndex, _c12, 5);
+        ɵɵcontentQuery(dirIndex, _c0, 5);
+        ɵɵcontentQuery(dirIndex, _c1, 5);
         ɵɵcontentQuery(dirIndex, _c2, 5);
         ɵɵcontentQuery(dirIndex, _c3, 5);
         ɵɵcontentQuery(dirIndex, _c4, 5);
@@ -2893,7 +2336,7 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     viewQuery: function AutoComplete_Query(rf, ctx) {
       if (rf & 1) {
         ɵɵviewQuery(_c11, 5);
-        ɵɵviewQuery(_c122, 5);
+        ɵɵviewQuery(_c12, 5);
         ɵɵviewQuery(_c13, 5);
         ɵɵviewQuery(_c14, 5);
         ɵɵviewQuery(_c15, 5);

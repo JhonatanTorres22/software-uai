@@ -2,7 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { ApiResponse } from "@/shared/models/api-response.model";
 import { TramiteRepository } from "../../application/ports/tramite.repository";
-import { CrearFormatoSolicitud, CrearTramite, EditarTramite, EliminarTramite, ListarFormatoSolicitud, ListarTramite } from "../../domain/entity/tramite.entity";
+import { CrearFormatoSolicitud, CrearTramite, EditarFormatoSolicitud, EditarTramite, EliminarFormatoSolicitud, EliminarTramite, ListarFormatoSolicitud, ListarTramite } from "../../domain/entity/tramite.entity";
 import { ListarTramiteDTO } from "../dto/tramite.dto";
 import { TramiteMapper } from "../mappers/tramite.mapper";
 import { TramitesService } from "../services/tramite.service";
@@ -55,8 +55,8 @@ export class TramiteRepositoryImpl extends TramiteRepository {
     }
 
     /* FORMATO DE SOLICITUD */
-    override obtenerFormatoSolicitud(): Observable<ApiResponse<ListarFormatoSolicitud[]>> {
-        return this.service.obtenerFormatoSolicitud().pipe(
+    override obtenerFormatoSolicitudPorTramite(idTramite: number): Observable<ApiResponse<ListarFormatoSolicitud[]>> {
+        return this.service.obtenerFormatoSolicitudPorTramite(idTramite).pipe(
             map((response) => ({
                 ...response,
                 data: (response.data ?? []).map((item) => TramiteMapper.toDomainFormatoSolicitud(item))
@@ -69,11 +69,20 @@ export class TramiteRepositoryImpl extends TramiteRepository {
         return this.service.crearFormatoSolicitud(crearFormatoSolicitudDTO);
     }
 
+    override actualizarFormatoSolicitud(formato: EditarFormatoSolicitud): Observable<ApiResponse<unknown>> {
+        const editarFormatoSolicitudDTO = TramiteMapper.toApiEditarFormatoSolicitud(formato);
+        return this.service.actualizarFormatoSolicitud(editarFormatoSolicitudDTO);
+    }
+
+    override eliminarFormatoSolicitud(formato: EliminarFormatoSolicitud): Observable<ApiResponse<unknown>> {
+        const eliminarFormatoSolicitudDTO = TramiteMapper.toApiEliminarFormatoSolicitud(formato);
+        return this.service.eliminarFormatoSolicitud(eliminarFormatoSolicitudDTO);
+    }
+
     private normalizeListData(data: ListarTramiteDTO[] | ListarTramiteDTO |  null | undefined ): ListarTramiteDTO[] {
         if (Array.isArray(data)) {
             return data;
         }
-
         return data ? [data] : [];
     }
 }

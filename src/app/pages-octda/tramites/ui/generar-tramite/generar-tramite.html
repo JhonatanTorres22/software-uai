@@ -1,37 +1,37 @@
 <!-- <div class="surface-ground h-full flex flex-column"> -->
 <div class="flex align-items-center justify-content-between">
     <div>
-        <h2 class="m-0 text-xl font-bold text-brand">Generar Trámite</h2>
+        <h2 class="m-0 text-xl font-bold text-brand">{{ isEditMode() ? 'Editar Trámite' : 'Generar Trámite' }}</h2>
     </div>
     <ui-icon-button icon="pi pi-times" color="danger" (onClick)="closeDrawer()"></ui-icon-button>
 </div>
 
 <div class="flex-1 min-h-0 overflow-y-auto md:p-4">
-    <p-stepper [value]="activeStep()" class="w-full" [linear]="false">
+    <p-stepper [value]="activeStep()" class="w-full" [linear]="true">
         <p-step-list>
-            <p-step [value]="1" (click)="setStep(1)">Generar Trámite</p-step>
-            <p-step [value]="2" (click)="setStep(2)">Formato Solicitud</p-step>
+            <p-step [value]="1">{{ isEditMode() ? 'Editar Trámite' : 'Generar Trámite' }}</p-step>
+            <p-step [value]="2">{{ isEditMode() ? 'Editar Formato Solicitud' : 'Generar Formato Solicitud' }}</p-step>
         </p-step-list>
 
         <p-step-panels>
             <p-step-panel [value]="1">
-                <ng-template #content let-activateCallback="activateCallback">
+                <ng-template #content>
                     <div class="p-4 surface-card border-1 surface-border border-round-xl">
-                        <app-datos-tramite></app-datos-tramite>
+                        <app-datos-tramite (tramiteRegistrado)="onTramiteRegistrado($event)"></app-datos-tramite>
                         <div class="flex justify-content-end mt-4">
-                            <ui-button label="Continuar" icon="pi pi-arrow-right"
-                                (onClick)="activateCallback(2); setStep(2)"></ui-button>
+                            <ui-button [label]="actionLabel" icon="pi pi-arrow-right"
+                                (onClick)="registrarYContinuar()"></ui-button>
                         </div>
                     </div>
                 </ng-template>
             </p-step-panel>
 
             <p-step-panel [value]="2">
-                <ng-template #content let-activateCallback="activateCallback">
-                    <app-formato-solicitud></app-formato-solicitud>
+                <ng-template #content>
+                    <app-formato-solicitud [solicitudData]="solicitudData()"></app-formato-solicitud>
                     <div class="flex justify-content-start mt-4">
                         <p-button label="Volver" icon="pi pi-arrow-left" severity="secondary"
-                            (onClick)="activateCallback(1); setStep(1)" />
+                            (onClick)="setStep(1)" />
                     </div>
                 </ng-template>
             </p-step-panel>

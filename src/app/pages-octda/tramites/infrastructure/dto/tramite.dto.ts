@@ -54,6 +54,7 @@ export interface ListarFormatoSolicitudDTO{
     fundamento: string;
     fechaCreacion: string;
 }
-
+export type EditarFormatoSolicitudDTO = Omit<ListarFormatoSolicitudDTO, 'fechaCreacion'>;
 export type CrearFormatoSolicitudDTO = Omit<ListarFormatoSolicitudDTO, 'codigoFormatoSolicitud' | 'fechaCreacion'>;
+export type EliminarFormatoSolicitudDTO = Pick<ListarFormatoSolicitudDTO, 'codigoFormatoSolicitud'>;
 // export type ListarteTramiteDTO = ListarTramiteDTO;

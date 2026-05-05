@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ApiResponse } from '@/shared/models/api-response.model';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../../../../environments/environment';
 import { AsignarPermisosDTO, EliminarPermisosDTO, ModuloPermisoDTO } from '../dto/permiso.dto';
 
 @Injectable({

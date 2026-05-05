@@ -1,112 +1,55 @@
 <form [formGroup]="formSolicitud" class="w-full surface-card border-1 surface-border border-round-xl p-4">
-    <div class="flex align-items-center justify-content-between mb-4">
-        <!-- <ui-icon-button icon="pi pi-times" color="danger" (onClick)="closeDrawer()"></ui-icon-button> -->
-        <div class="grid formgrid">
-            <div class="col-12">
-                <ui-input formControlName="destinatario" label="Destinatario" [maxlength]="120" [readonly]="true"
-                    ></ui-input>
-            </div>
+    <div class="grid formgrid">
+        <div class="col-12 md:col-6">
+            <ui-input formControlName="destinatario" label="Destinatario" [maxlength]="120" [readonly]="true"></ui-input>
+        </div>
 
-            <div class="col-12">
-                <ui-input formControlName="datosUsuario" label="Datos del Usuario (Apellido y Nombres)"
-                    [maxlength]="120" [minlength]="6" [expReg]="expRegNombre"
-                    [patternErrorMessage]="'Solo se permiten letras y espacios.'"></ui-input>
-            </div>
+        <div class="col-12 md:col-6">
+            <ui-input formControlName="fecha" label="Fecha" [maxlength]="20" [readonly]="true" [upperCase]="false"></ui-input>
+        </div>
 
-            <div class="col-12 md:col-4">
-                <ui-input formControlName="carreraProfesional" label="Carrera Profesional" [maxlength]="100"
-                    [minlength]="4"></ui-input>
-            </div>
+        <div class="col-12">
+            <ui-input formControlName="datosUsuario" label="Nombre completo" [maxlength]="120" [readonly]="true"></ui-input>
+        </div>
 
-            <div class="col-12 md:col-4">
-                <ui-input formControlName="semestreTurno" label="Semestre / Turno" [maxlength]="50" [minlength]="3"
-                    ></ui-input>
-            </div>
+        <div class="col-12 md:col-4">
+            <ui-input formControlName="numeroContacto" label="Numero de contacto" [maxlength]="9" [readonly]="true" [upperCase]="false"></ui-input>
+        </div>
 
-            <div class="col-12 md:col-4">
-                <ui-input formControlName="numeroContacto" label="N° Contacto" [maxlength]="9" [minlength]="9"
-                    [expReg]="expRegDocumento" [patternErrorMessage]="'Solo se permiten números.'" [upperCase]="false"
-                    ></ui-input>
-            </div>
+        <div class="col-12 md:col-4">
+            <ui-input formControlName="numeroDocumento" label="Numero de documento" [maxlength]="12" [readonly]="true" [upperCase]="false"></ui-input>
+        </div>
 
-            <div class="col-12 md:col-4">
-                <ui-input formControlName="numeroCarnet" label="N° de Carnet" [maxlength]="15" [minlength]="6"
-                    [upperCase]="false"></ui-input>
-            </div>
+        <div class="col-12 md:col-4">
+            <ui-input formControlName="email" label="Email" [maxlength]="120" [readonly]="true" [upperCase]="false"></ui-input>
+        </div>
 
-            <div class="col-12 md:col-4">
-                <ui-input formControlName="numeroDocumento" label="N° de Documento" [maxlength]="8" [minlength]="8"
-                    [expReg]="expRegDocumento" [patternErrorMessage]="'Solo se permiten números.'" [upperCase]="false"
-                    ></ui-input>
-            </div>
+        <div class="col-12">
+            <ui-text-area formControlName="fundamento" label="Fundamento" [rows]="5" [maxlength]="1000" [readonly]="true"></ui-text-area>
+        </div>
 
-            <div class="col-12 md:col-4">
-                <ui-input formControlName="email" label="EMail" [maxlength]="120" [upperCase]="false"
-                    ></ui-input>
-            </div>
+        <div class="col-12">
+            <ui-text-area formControlName="anexos" label="Anexos" [rows]="3" [maxlength]="500" [readonly]="true"></ui-text-area>
+        </div>
 
-            <div class="col-12 md:col-12">
-                <ui-input formControlName="domicilioUsuario" label="Domicilio del Usuario" [maxlength]="180"
-                    [minlength]="8"></ui-input>
-            </div>
+        <div class="col-12 md:col-8">
+            <ui-input formControlName="firma" label="Firma" [maxlength]="120"></ui-input>
+        </div>
 
-            <div class="col-12">
-                <ui-text-area formControlName="fundamento" label="Fundamento (Justificación / Motivo del pedido)"
-                    [rows]="6" [maxlength]="1000" [minlength]="20"></ui-text-area>
-            </div>
-
-            <div class="col-12 lg:col-6">
-                <ui-text-area formControlName="anexos" label="Anexos" [rows]="6" [maxlength]="500"></ui-text-area>
-            </div>
-
-            <div class="col-12 lg:col-6 flex flex-column gap-3">
-                <div class="border-1 surface-border border-round p-3">
-                    <div class="text-sm font-medium mb-3">Recepción de la respuesta:</div>
-                    <div class="grid">
-                        <div class="col-12 md:col-4 flex flex-column gap-2">
-                            <div class="flex align-items-center gap-2">
-                                <p-checkbox formControlName="recepcionPresencial" [binary]="true"
-                                    inputId="recepcionPresencial"></p-checkbox>
-                                <label for="recepcionPresencial">Presencial</label>
-                            </div>
-                            <div class="flex align-items-center gap-2">
-                                <p-checkbox formControlName="recepcionVirtual" [binary]="true"
-                                    inputId="recepcionVirtual"></p-checkbox>
-                                <label for="recepcionVirtual">Virtual</label>
-                            </div>
-                        </div>
-
-                        <div class="col-6 md:col-4 flex align-items-start md:justify-content-center pt-1">
-                            <div class="flex align-items-center gap-2">
-                                <p-checkbox formControlName="sedeChincha" [binary]="true"
-                                    inputId="sedeChincha"></p-checkbox>
-                                <label for="sedeChincha">Chincha</label>
-                            </div>
-                        </div>
-
-                        <div class="col-6 md:col-4 flex align-items-start md:justify-content-end pt-1">
-                            <div class="flex align-items-center gap-2">
-                                <p-checkbox formControlName="sedeIca" [binary]="true" inputId="sedeIca"></p-checkbox>
-                                <label for="sedeIca">Ica</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid formgrid">
-                    <div class="col-12 md:col-6">
-                        <ui-input formControlName="fecha" label="Fecha" [maxlength]="20" [upperCase]="false"></ui-input>
-                    </div>
-
-                    <div class="col-12 md:col-6">
-                        <ui-input formControlName="firma" label="Firma" [maxlength]="120"></ui-input>
-                    </div>
-                </div>
+        <div class="col-12 md:col-4 flex align-items-center">
+            <div class="flex align-items-center gap-2 mt-3">
+                <p-checkbox formControlName="conformidad" [binary]="true" inputId="conformidad"></p-checkbox>
+                <label for="conformidad" class="text-sm">Declaro conformidad con la informacion registrada</label>
             </div>
         </div>
     </div>
+
     <div class="flex justify-content-end mt-4">
-        <ui-button label="Enviar Solicitud" [disabled]="invalid" (onClick)="generarTramite()"
-            icon="pi pi-save"></ui-button>
+        <ui-button 
+            [label]="isEditMode() ? 'Actualizar Formato' : 'Generar Formato'" 
+            [disabled]="invalid" 
+            (onClick)="generarTramite()"
+            [icon]="isEditMode() ? 'pi pi-check' : 'pi pi-save'">
+        </ui-button>
     </div>
 </form>

@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { ApiResponse } from "@/shared/models/api-response.model";
 import { Observable } from "rxjs";
-import { environment } from "src/environments/environment";
+import { environment } from "../../../../../../environments/environment";
 import { ActualizarUsuario, CrearUsuario, EliminarUsuario } from "../../domain/entities/usuario.entity";
 import { ActualizarUsuarioDTO, CrearUsuarioDTO, EliminarUsuarioDTO, ListarUsuarioDTO } from "../dto/usuario.dto";
 

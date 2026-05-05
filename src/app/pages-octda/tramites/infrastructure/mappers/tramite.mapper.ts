@@ -1,6 +1,6 @@
 import { FormArray } from "@angular/forms";
-import { CrearFormatoSolicitud, CrearTramite, EditarTramite, EliminarTramite, EstadoTramite, ListarFormatoSolicitud, ListarTramite, RolSolicitante } from "../../domain/entity/tramite.entity";
-import { CrearFormatoSolicitudDTO, CrearTramiteDTO, EditarTramiteDTO, EliminarTramiteDTO, ListarFormatoSolicitudDTO, ListarTramiteDTO } from "../dto/tramite.dto";
+import { CrearFormatoSolicitud, CrearTramite, EditarFormatoSolicitud, EditarTramite, EliminarFormatoSolicitud, EliminarTramite, EstadoTramite, ListarFormatoSolicitud, ListarTramite, RolSolicitante } from "../../domain/entity/tramite.entity";
+import { CrearFormatoSolicitudDTO, CrearTramiteDTO, EditarFormatoSolicitudDTO, EditarTramiteDTO, EliminarFormatoSolicitudDTO, EliminarTramiteDTO, ListarFormatoSolicitudDTO, ListarTramiteDTO } from "../dto/tramite.dto";
 
 export class TramiteMapper {
     static toDomainTramite(tramite: ListarTramiteDTO): ListarTramite {
@@ -98,6 +98,31 @@ export class TramiteMapper {
             damicilioDelUsuario: formato.domicilioSolicitante,
             facebook: formato.facebook,
             fundamento: formato.fundamento,
+        }
+    }
+
+    static toApiEditarFormatoSolicitud(formato: EditarFormatoSolicitud) : EditarFormatoSolicitudDTO{
+        return{
+            codigoFormatoSolicitud: formato.idFormatoSolicitud,
+            codigoTramite: formato.idTramite,
+            destinatario: formato.nombreDestinatario,
+            datosDelUsuario: formato.mombresYApellidos,
+            carreraProfesional: formato.carreraProfesional,
+            semestre: formato.semestre,
+            turno: formato.turno,
+            numeroContacto: formato.celularSolicitante,
+            numeroCarnet: formato.nCarnet,
+            numeroDocumento: formato.nDocumento,
+            email: formato.correoSolicitante,
+            damicilioDelUsuario: formato.domicilioSolicitante,
+            facebook: formato.facebook,
+            fundamento: formato.fundamento,
+        }
+    }
+
+    static toApiEliminarFormatoSolicitud(formato: EliminarFormatoSolicitud) : EliminarFormatoSolicitudDTO{
+        return{
+            codigoFormatoSolicitud: formato.idFormatoSolicitud,
         }
     }
 

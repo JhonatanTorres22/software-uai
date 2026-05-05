@@ -2,7 +2,7 @@ import { ApiResponse } from "@/shared/models/api-response.model";
 import { HttpClient } from "@angular/common/http";
 import { inject, Inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { environment } from "src/environments/environment";
+import { environment } from "../../../../../environments/environment";
 import { CrearCategoria, ListarCategoria } from "../../domain/entity/categoria.model";
 import { CrearCategoriaDTO, EditarCategoriaDTO, EliminarCategoriaDTO, ListarCategoriaDTO } from "../dto/categoria.dto";
 

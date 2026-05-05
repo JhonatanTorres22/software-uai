@@ -1,3 +1,7 @@
+@if (loading()) {
+    <app-ui-loading></app-ui-loading>
+}
+
 <form [formGroup]="formGenerarTramite" class="flex flex-column gap-4">
     <section class="border-1 surface-border border-round p-3 md:p-4 surface-card">
         <h3 class="m-0 mb-3 text-900 text-base font-semibold">Datos del usuario</h3>
@@ -106,9 +110,4 @@
             </div>
         </div>
     </section>
-
-    <div class="flex justify-content-end">
-        <ui-button label="Registrar tramite" icon="pi pi-check"  (onClick)="guardarTramite()">
-        </ui-button>
-    </div>
 </form>
