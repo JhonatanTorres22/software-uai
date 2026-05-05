@@ -2,7 +2,7 @@ import { ApiResponse } from "@/shared/models/api-response.model";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { environment } from "src/environments/environment";
+import { environment } from "../../../../../environments/environment";
 import { EditarMarca, EliminarMarca, ListarMarca } from "../../domain/entity/marca.entity";
 import { CrearMarcaDTO, EditarMarcaDTO, EliminarMarcaDTO, ListarMarcaDTO } from "../dto/marca.dto";
 

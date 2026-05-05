@@ -5,10 +5,10 @@ import { TramiteRepository } from "../../ports/tramite.repository";
     providedIn: 'root'
 })
 
-export class ObtenerFormatoSolicitudUseCase {
+export class ObtenerFormatoSolicitudPorTramiteUseCase {
     private readonly repository = inject(TramiteRepository);
 
-    execute() {
-        return this.repository.obtenerFormatoSolicitud();
+    execute(idTramite:number) {
+        return this.repository.obtenerFormatoSolicitudPorTramite(idTramite);
     }
 }

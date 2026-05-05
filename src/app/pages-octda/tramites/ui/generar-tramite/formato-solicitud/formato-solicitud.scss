@@ -6,3 +6,8 @@ form {
 	// max-width: 1040px;
 	margin: 0 auto;
 }
+
+:host ::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+	background: var(--brand-500);
+	border-color: var(--brand-500);
+}

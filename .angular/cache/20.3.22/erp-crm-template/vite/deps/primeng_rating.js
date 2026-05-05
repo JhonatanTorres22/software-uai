@@ -1,30 +1,30 @@
 import {
-  BaseEditableHolder
-} from "./chunk-42LCFZRW.js";
-import "./chunk-RYW2AAZP.js";
-import {
   AutoFocus
-} from "./chunk-SDOY2KJX.js";
-import "./chunk-D6ZMXBQT.js";
+} from "./chunk-BSHQ3KWR.js";
+import "./chunk-LDMVDPSI.js";
 import {
   StarFillIcon,
   StarIcon
-} from "./chunk-VGUMJRUP.js";
-import "./chunk-XOJNRJZL.js";
+} from "./chunk-T2JVYUH3.js";
+import {
+  BaseEditableHolder
+} from "./chunk-EBLIEMP5.js";
+import "./chunk-55SR5P5J.js";
+import "./chunk-3CVZMLBL.js";
 import {
   PARENT_INSTANCE
-} from "./chunk-YOUFDIEG.js";
+} from "./chunk-KKIAOJ6R.js";
 import {
   BaseStyle
-} from "./chunk-GCS42ZZ5.js";
+} from "./chunk-IXTTFP3M.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-IARIKJPR.js";
+} from "./chunk-RC5NSD6W.js";
 import {
   Bind,
   BindModule
-} from "./chunk-D7V4T7K5.js";
+} from "./chunk-UBENEQNF.js";
 import {
   bt,
   s3 as s,
@@ -32,7 +32,7 @@ import {
 } from "./chunk-SURNEC3S.js";
 import {
   NG_VALUE_ACCESSOR
-} from "./chunk-IERP5MBR.js";
+} from "./chunk-EYG6JFHN.js";
 import {
   CommonModule,
   NgClass,
@@ -40,7 +40,7 @@ import {
   NgIf,
   NgStyle,
   NgTemplateOutlet
-} from "./chunk-SJYUZVEH.js";
+} from "./chunk-GVQGPKFB.js";
 import "./chunk-6UNWJBON.js";
 import {
   ChangeDetectionStrategy,
@@ -89,9 +89,9 @@ import {
   ɵɵresetView,
   ɵɵrestoreView,
   ɵɵtemplate
-} from "./chunk-E44JF3YN.js";
+} from "./chunk-UVAQJZ2N.js";
 import "./chunk-RSS3ODKE.js";
-import "./chunk-WDMUDEB6.js";
+import "./chunk-3OV72XIM.js";
 
 // node_modules/@primeuix/styles/dist/rating/index.mjs
 var style = "\n    .p-rating {\n        position: relative;\n        display: inline-flex;\n        align-items: center;\n        gap: dt('rating.gap');\n    }\n\n    .p-rating-option {\n        display: inline-flex;\n        align-items: center;\n        cursor: pointer;\n        outline-color: transparent;\n        border-radius: 50%;\n        transition:\n            background dt('rating.transition.duration'),\n            color dt('rating.transition.duration'),\n            border-color dt('rating.transition.duration'),\n            outline-color dt('rating.transition.duration'),\n            box-shadow dt('rating.transition.duration');\n    }\n\n    .p-rating-option.p-focus-visible {\n        box-shadow: dt('rating.focus.ring.shadow');\n        outline: dt('rating.focus.ring.width') dt('rating.focus.ring.style') dt('rating.focus.ring.color');\n        outline-offset: dt('rating.focus.ring.offset');\n    }\n\n    .p-rating-icon {\n        color: dt('rating.icon.color');\n        transition:\n            background dt('rating.transition.duration'),\n            color dt('rating.transition.duration'),\n            border-color dt('rating.transition.duration'),\n            outline-color dt('rating.transition.duration'),\n            box-shadow dt('rating.transition.duration');\n        font-size: dt('rating.icon.size');\n        width: dt('rating.icon.size');\n        height: dt('rating.icon.size');\n    }\n\n    .p-rating:not(.p-disabled):not(.p-readonly) .p-rating-option:hover .p-rating-icon {\n        color: dt('rating.icon.hover.color');\n    }\n\n    .p-rating-option-active .p-rating-icon {\n        color: dt('rating.icon.active.color');\n    }\n\n    .p-rating-icon.p-invalid {\n        /* @todo */\n        stroke: dt('rating.invalid.icon.color');\n    }\n\n    .p-rating.p-readonly .p-rating-option {\n        cursor: not-allowed;\n    }\n";

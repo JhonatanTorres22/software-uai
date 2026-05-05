@@ -1,0 +1,183 @@
+<div class="grid w-full">
+    
+    <!-- COLUMNA IZQUIERDA: DETALLES DEL TRÁMITE -->
+    <div class="col-12 lg:col-6 p-4">
+        
+        <!-- HEADER -->
+        <div class="flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+
+            <div class="flex align-items-center gap-3">
+
+                <p-avatar
+                    [label]="selectTramite().nombreSolicitante.charAt(0) + selectTramite().apePaternoSolicitante.charAt(0)"
+                    shape="circle" size="large" styleClass="bg-brand text-white font-bold text-lg">
+                </p-avatar>
+
+                <div>
+                    <p class="text-lg font-semibold m-0">
+                        {{ selectTramite().nombreSolicitante + ' ' +
+                        selectTramite().apePaternoSolicitante + ' ' +
+                        selectTramite().apeMaternoSolicitante }}
+                    </p>
+
+                    <div class="flex gap-2 mt-2 flex-wrap">
+                        <p-tag icon="pi pi-user" severity="info" [value]="selectTramite().tipoSolicitante">
+                        </p-tag>
+
+                        <p-tag icon="pi pi-id-card" severity="info"
+                            [value]="selectTramite().tipoDoc + ' ' + selectTramite().numeroDoc">
+                        </p-tag>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-column align-items-end gap-2">
+                <p-tag [value]="getEstadoConfig(selectTramite().estado).label"
+                    [severity]="getEstadoConfig(selectTramite().estado).severity"
+                    [icon]="getEstadoConfig(selectTramite().estado).icon" styleClass="px-3 py-2 text-sm">
+                </p-tag>
+            </div>
+
+        </div>
+
+        <p-divider></p-divider>
+
+        <!-- CONTACTO -->
+        <div class="p-2">
+
+            <div class="flex align-items-center gap-2 mb-3">
+                <i class="pi pi-phone text-brand"></i>
+                <span class="text-sm font-semibold text-color-secondary uppercase">
+                    Información de contacto
+                </span>
+            </div>
+
+            <div class="grid">
+
+                <div class="col-12 md:col-6">
+                    <div class="flex align-items-center gap-3 p-2 border-round hover:bg-blue-100 transition-duration-200">
+                        <i class="pi pi-mobile text-xl text-color-secondary"></i>
+                        <div>
+                            <p class="text-xs text-color-secondary m-0">Celular</p>
+                            <p class="font-semibold m-0">
+                                {{ selectTramite().celularSolicitante }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-6">
+                    <div class="flex align-items-center gap-3 p-2 border-round hover:bg-blue-100 transition-duration-200">
+                        <i class="pi pi-envelope text-xl text-color-secondary"></i>
+                        <div>
+                            <p class="text-xs text-color-secondary m-0">Correo</p>
+                            <p class="font-semibold m-0">
+                                {{ selectTramite().correoSolicitante }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <p-divider></p-divider>
+
+        <div class="p-2">
+
+            <div class="flex align-items-center justify-content-between mb-3">
+
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-briefcase text-brand"></i>
+                    <span class="text-sm font-semibold text-color-secondary uppercase">
+                        Detalle del trámite
+                    </span>
+                </div>
+
+            </div>
+            
+            <!-- Subcategoría -->
+            <div class="mb-3">
+                <p class="text-xs text-color-secondary mb-1 uppercase">Subcategoría</p>
+                <p-tag [value]="selectTramite().nombreSubcategoriaTramite" severity="info"></p-tag>
+            </div>
+
+            <div class="grid">
+
+                <div class="col-12 md:col-6">
+                    <p class="text-xs text-color-secondary mb-1">Código de expediente</p>
+
+                    @if (!selectTramite().codigoExpediente) {
+                    <p-tag value="Sin expediente" severity="danger" icon="pi pi-times-circle"></p-tag>
+                    } @else {
+                    <p class="font-semibold m-0">
+                        {{ selectTramite().codigoExpediente }}
+                    </p>
+                    }
+                </div>
+
+                <!-- FECHA -->
+                <div class="col-12 md:col-6">
+                    <p class="text-xs text-color-secondary mb-1">Fecha de registro</p>
+                    <p class="font-semibold m-0">
+                        {{ selectTramite().fechaTramiteCreacion | date:'dd/MM/yyyy HH:mm' }}
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <p-divider></p-divider>
+
+        <!-- ASUNTO -->
+        <div class="mb-4">
+            <p class="text-xs text-color-secondary mb-2 uppercase">Asunto</p>
+
+            <div class="p-3 border-1 border-dashed border-blue-700 border-round-xl">
+                <p class="font-medium m-0 line-height-3">
+                    {{ selectTramite().asunto }}
+                </p>
+            </div>
+        </div>
+
+        <!-- ARCHIVO -->
+        <div class="p-1">
+
+            <div class="flex align-items-center justify-content-between">
+
+                <div class="flex align-items-center gap-3">
+                    <i class="pi pi-file-pdf text-red-500 text-3xl"></i>
+
+                    <div>
+                        <p class="font-semibold m-0">
+                            {{ selectTramite().archivoAnexo }}
+                        </p>
+                        <p class="text-xs text-color-secondary m-0">
+                            Documento PDF adjunto
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- COLUMNA DERECHA: PREVISUALIZADOR PDF -->
+    <div class="col-12 lg:col-6 p-4">
+        <div class="sticky-pdf">
+            <div class="flex align-items-center gap-2 mb-3">
+                <i class="pi pi-file-pdf text-red-500"></i>
+                <span class="text-sm font-semibold text-color-secondary uppercase">
+                    Previsualizador de Solicitud
+                </span>
+            </div>
+            <!-- <app-generate-pdf-formato-solicitud></app-generate-pdf-formato-solicitud> -->
+            <app-pdf-formato-solicitud></app-pdf-formato-solicitud>
+        </div>
+    </div>
+
+</div>

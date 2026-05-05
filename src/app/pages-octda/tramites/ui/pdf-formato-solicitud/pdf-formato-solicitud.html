@@ -1,0 +1,20 @@
+<div class="pdf-viewer-container w-full h-full">
+  @if (isGenerating()) {
+    <div class="flex align-items-center justify-content-center h-full">
+      <div class="text-center">
+        <i class="pi pi-spin pi-spinner text-4xl text-brand mb-3"></i>
+        <p class="text-sm text-color-secondary">Generando PDF...</p>
+      </div>
+    </div>
+  } @else if (pdfUrl()) {
+    <iframe 
+      [src]="pdfUrl()!" 
+      class="pdf-iframe" 
+      frameborder="0">
+    </iframe>
+  } @else {
+    <div class="flex align-items-center justify-content-center h-full">
+      <p class="text-color-secondary">No se pudo generar el PDF</p>
+    </div>
+  }
+</div>

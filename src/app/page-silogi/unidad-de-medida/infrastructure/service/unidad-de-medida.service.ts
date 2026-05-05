@@ -2,9 +2,8 @@ import { ApiResponse } from "@/shared/models/api-response.model";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { environment } from "src/environments/environment";
-import { ListarUnidadDeMedida } from "../../domain/entity/unidad-de-medida.entity";
 import { CrearUnidadDeMedidaDTO, EditarUnidadDeMedidaDTO, EliminarUnidadDeMedidaDTO, ListarUnidadDeMedidaDTO } from "../../../unidad-de-medida/infrastructure/dto/unidad-de-medida.dto";
+import { environment } from "../../../../../environments/environment";
 
 @Injectable({
     providedIn: 'root'
