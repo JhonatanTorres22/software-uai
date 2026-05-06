@@ -1,0 +1,32 @@
+<div class="chart-card">
+  <div class="chart-header">
+    <div>
+      <h3 class="chart-title">Trámites por Mes</h3>
+      <p class="chart-subtitle">Total: {{ totalTramites() }} trámites en el año</p>
+    </div>
+    <p-button 
+      label="Exportar" 
+      icon="pi pi-download" 
+      severity="secondary"
+      [outlined]="true"
+      size="small"
+      (onClick)="exportToExcel()"
+      [disabled]="totalTramites() === 0"
+    />
+  </div>
+
+  <div class="chart-body">
+    @if (totalTramites() > 0) {
+      <div echarts 
+        [options]="chartOption()" 
+        class="bar-chart"
+        [style.height.px]="400">
+      </div>
+    } @else {
+      <div class="no-data">
+        <i class="pi pi-chart-bar" style="font-size: 3rem; color: #cbd5e1;"></i>
+        <p>No hay datos disponibles</p>
+      </div>
+    }
+  </div>
+</div>

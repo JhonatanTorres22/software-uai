@@ -1,16 +1,17 @@
 import { ApiResponse } from "@/shared/models/api-response.model";
 import { Observable } from "rxjs";
-import { CrearFormatoSolicitud, CrearTramite, EditarFormatoSolicitud, EditarTramite, EliminarFormatoSolicitud, EliminarTramite, InsertarTramiteResponse, ListarFormatoSolicitud, ListarTramite } from "../../domain/entity/tramite.entity";
+import { ActualizarEstadoTramite, CrearFormatoSolicitud, CrearTramite, EditarFormatoSolicitud, EditarTramite, EliminarFormatoSolicitud, EliminarTramite, InsertarTramiteResponse, ListarFormatoSolicitud, ListarTramite } from "../../domain/entity/tramite.entity";
 
 export abstract class TramiteRepository {
     abstract obtenerTramites(): Observable<ApiResponse<ListarTramite[]>>;
     abstract obtenerTramitesPorSubCategoria(codigoSubCategoriaTramite: number): Observable<ApiResponse<ListarTramite[]>>;
     abstract obtenerTramitesPorCodigo(codigo: string): Observable<ApiResponse<ListarTramite[]>>;
+    abstract obtenerTramitesPorUsuario(): Observable<ApiResponse<ListarTramite[]>>;
     abstract crearTramite(crear: CrearTramite): Observable<ApiResponse<unknown>>;
     abstract crearTramiteConRetorno(crear: CrearTramite): Observable<ApiResponse<InsertarTramiteResponse>>;
     abstract actualizarTramite(tramite: EditarTramite): Observable<ApiResponse<unknown>>;
     abstract eliminarTramite(eliminar: EliminarTramite): Observable<ApiResponse<unknown>>;
-
+    abstract actualizarEstadoTramite(tramite: ActualizarEstadoTramite): Observable<ApiResponse<unknown>>;
     /* FORMATO DE SOLICITUD */
     abstract obtenerFormatoSolicitudPorTramite(idTramite:number): Observable<ApiResponse<ListarFormatoSolicitud[]>>;
     abstract crearFormatoSolicitud(crear: CrearFormatoSolicitud): Observable<ApiResponse<unknown>>;

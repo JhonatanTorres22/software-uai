@@ -1,6 +1,9 @@
 <div class="grid w-full">
     <!-- <pre> {{selectTramite() | json}} </pre> -->
     <div class="col-12 px-4 py-3">
+        @if (loading()) {
+        <app-ui-loading></app-ui-loading>
+        }
 
         <div class="flex flex-wrap align-items-center justify-content-between mb-4">
 
@@ -19,8 +22,7 @@
                     </p>
 
                     <div class="flex gap-2 mt-2">
-                        <p-tag icon="pi pi-user" severity="info" [value]="selectTramite().tipoSolicitante">
-                        </p-tag>
+                        <p-tag icon="pi pi-user" severity="info" [value]="selectTramite().tipoSolicitante"></p-tag>
 
                         <p-tag icon="pi pi-id-card" severity="info"
                             [value]="selectTramite().tipoDoc + ' ' + selectTramite().numeroDoc">
@@ -71,8 +73,7 @@
                 @if (!selectTramite().codigoExpediente) {
                 <p-tag value="Sin expediente" severity="danger"></p-tag>
                 } @else {
-                <p-tag icon="pi pi-hashtag" severity="secondary" [value]="selectTramite().codigoExpediente">
-                </p-tag>
+                <p-tag icon="pi pi-hashtag" severity="secondary" [value]="selectTramite().codigoExpediente"></p-tag>
                 }
 
                 <p-tag icon="pi pi-calendar" severity="secondary"
@@ -122,14 +123,9 @@
 
                 @for (pago of listPagoTramite(); track pago.idPagoTramite) {
 
-                <p-tag icon="pi pi-ticket" severity="success" [value]=" 'Nª de Operación' + ': ' + pago.constanciaPago">
-                </p-tag>
-
-                <p-tag icon="pi pi-calendar" severity="secondary" [value]="(pago.fechaPago | date:'dd/MM/yyyy') || ''">
-                </p-tag>
-
-                <p-tag icon="pi pi-clock" severity="secondary" [value]="pago.horaPago + ':' + pago.minutoPago">
-                </p-tag>
+                <p-tag icon="pi pi-ticket" severity="success" [value]=" 'Nª de Operación' + ': ' + pago.constanciaPago"></p-tag>
+                <p-tag icon="pi pi-calendar" severity="secondary" [value]="(pago.fechaPago | date:'dd/MM/yyyy') || ''"></p-tag>
+                <p-tag icon="pi pi-clock" severity="secondary" [value]="pago.horaPago + ':' + pago.minutoPago"></p-tag>
 
                 }
 
@@ -157,17 +153,13 @@
 
                 @for (entidad of listEntidad(); track entidad.idEntidad) {
 
-                <p-tag icon="pi pi-id-card" severity="info" [value]="'RUC: ' + entidad.ruc">
-                </p-tag>
+                <p-tag icon="pi pi-id-card" severity="info" [value]="'RUC: ' + entidad.ruc"></p-tag>
 
-                <p-tag icon="pi pi-building" severity="secondary" [value]="entidad.razonSocial">
-                </p-tag>
+                <p-tag icon="pi pi-building" severity="secondary" [value]="entidad.razonSocial"></p-tag>
 
                 @if (entidad.direccion) {
-                <p-tag icon="pi pi-map-marker" severity="warn" [value]="entidad.direccion">
-                </p-tag>
+                <p-tag icon="pi pi-map-marker" severity="warn" [value]="entidad.direccion"></p-tag>
                 }
-
                 }
 
                 } @else {
@@ -178,4 +170,6 @@
         </div>
         }
     </div>
+
+    <!-- <app-pdf-formato-solicitud></app-pdf-formato-solicitud> -->
 </div>

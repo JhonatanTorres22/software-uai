@@ -4,7 +4,7 @@ import { UiSelectComponent } from "@/shared/components/ui-select/ui-select.compo
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UiInputComponent } from "@/shared/components/ui-input/ui-input.component";
 import { UiTextAreaComponent } from "@/shared/components/ui-text-area/ui-text-area.component";
-import { UiDatePickerComponent } from "@/shared/components/ui-date-picker/ui-date-picker.component";
+import { UiDatePickerComponent } from "@/shared/components/ui-date-picker";
 import { CommonModule } from '@angular/common';
 import { TramiteValidation } from '../../../domain/validation/tramite.validation';
 import { ObtenerCategoriaUseCase } from '@/pages-octda/categoria/application/use-cases/categorias/obtenerCategoria.use-case';
@@ -36,6 +36,8 @@ import { UiButtonComponent } from "@/shared/components/ui-button/ui-button.compo
 })
 export class DatosTramite implements OnInit {
   private readonly tramiteValidation = inject(TramiteValidation);
+  expLockNumber = this.tramiteValidation.lockInputNumber;
+  expLockText = this.tramiteValidation.lockInputText
   private readonly obtenerCategoriaUseCase = inject(ObtenerCategoriaUseCase);
   private readonly obtenerSubCategoriaPorCategoriaUseCase = inject(ObtenerSubCategoriaPorCategoriaUseCase);
   private readonly obtenerSubCategoriaPorIdUseCase = inject(ObtenerSubCategoriaPorIdUseCase);
@@ -54,7 +56,6 @@ export class DatosTramite implements OnInit {
   selectTramite = this.tramiteSignal.selectTramite
   loading = this.tramiteSignal.loading;
 
-  // Estado del flujo
   idTramite: number | null = null;
   idPagoTramite: number | null = null;
   idEntidad: number | null = null;
@@ -64,6 +65,11 @@ export class DatosTramite implements OnInit {
   tramiteGuardado: boolean = false;
   entidadGuardada: boolean = false;
   mostrarFormularioEntidad: boolean = false;
+  
+  // Fecha máxima para el date picker (fecha actual)
+  get maxFechaPago(): Date {
+    return new Date();
+  }
 
   readonly listTipoDocumento: UiSelect[] = [
     { text: 'DNI', value: 'DNI' },

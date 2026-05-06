@@ -1,0 +1,24 @@
+<div class="chart-card">
+  <div class="chart-header">
+    <div>
+      <h3 class="chart-title">Trámites por Estado</h3>
+      <p class="chart-subtitle">Distribución de estados actuales</p>
+    </div>
+    <ui-button label="Exportar" icon="pi pi-download" color="secondary" (onClick)="exportToExcel()" [disabled]="estadosData().length === 0"></ui-button>
+  </div>
+
+  <div class="chart-body">
+    @if (estadosData().length > 0) {
+      <div echarts 
+        [options]="chartOption()" 
+        class="donut-chart"
+        [style.height.px]="400">
+      </div>
+    } @else {
+      <div class="no-data">
+        <i class="pi pi-chart-pie" style="font-size: 3rem; color: #cbd5e1;"></i>
+        <p>No hay datos disponibles</p>
+      </div>
+    }
+  </div>
+</div>

@@ -18,9 +18,9 @@
                     <div class="p-3 border-left-3 border-primary bg-blue-50 border-round">
                         <div class="flex align-items-center gap-2 mb-2">
                             <i class="pi pi-info-circle text-primary"></i>
-                            <span class="font-semibold text-sm">Información del Solicitante</span>
+                            <span class="font-semibold text-sm">Información del Solicitante (Solo Lectura)</span>
                         </div>
-                        <p class="text-xs text-600 m-0">Los siguientes datos son de solo lectura y provienen del paso anterior</p>
+                        <p class="text-xs text-600 m-0">Los siguientes datos provienen del paso anterior y no pueden ser modificados</p>
                     </div>
                 </div>
 
@@ -60,10 +60,34 @@
                     <div class="p-3 border-left-3 border-yellow-500 bg-yellow-50 border-round">
                         <div class="flex align-items-center gap-2 mb-2">
                             <i class="pi pi-pencil text-yellow-700"></i>
-                            <span class="font-semibold text-sm text-yellow-900">Completar información</span>
+                            <span class="font-semibold text-sm text-yellow-900">Información Adicional (Editable)</span>
                         </div>
-                        <p class="text-xs text-600 m-0">Complete los siguientes campos para finalizar el formato de solicitud</p>
+                        <p class="text-xs text-600 m-0">Complete los siguientes campos con información adicional para su trámite</p>
                     </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <ui-input formControlName="carreraProfesional" label="Carrera profesional" [maxlength]="120"></ui-input>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <ui-input formControlName="semestre" label="Semestre" [maxlength]="20" [upperCase]="false"></ui-input>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <ui-input formControlName="turno" label="Turno" [maxlength]="20"></ui-input>
+                </div>
+
+                <div class="col-12 md:col-6">
+                    <ui-input formControlName="nCarnet" label="Número de carnet" [maxlength]="20" [upperCase]="false"></ui-input>
+                </div>
+
+                <div class="col-12 md:col-6">
+                    <ui-input formControlName="domicilioSolicitante" label="Domicilio" [maxlength]="200" [upperCase]="false"></ui-input>
+                </div>
+
+                <div class="col-12">
+                    <ui-input formControlName="facebook" label="Facebook (Opcional)" [maxlength]="100" [upperCase]="false"></ui-input>
                 </div>
 
                 <div class="col-12 md:col-8">
@@ -86,10 +110,10 @@
     <!-- Barra de acciones -->
     <div class="flex justify-content-end p-3 surface-50 border-1 surface-border border-round-xl shadow-1">
         <ui-button 
-            [label]="isEditMode() ? 'Actualizar Formato' : 'Generar Formato'" 
+            [label]="isEditingFormato ? 'Actualizar Formato' : 'Generar Formato'" 
             [disabled]="invalid || loading()" 
             (onClick)="generarTramite()"
-            [icon]="isEditMode() ? 'pi pi-check' : 'pi pi-save'">
+            [icon]="isEditingFormato ? 'pi pi-pencil' : 'pi pi-save'">
         </ui-button>
     </div>
 </div>

@@ -22,4 +22,7 @@ export class TramiteValidation{
     readonly soloLetras = /^[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F][a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\s]*[a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F]$/;
     readonly emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+    readonly lockInputNumber = /[^0-9]/
+    readonly lockInputText = /[^a-zA-ZáÁéÉíÍóÓúÚ\u00C0-\u017F\s]/
+
 }

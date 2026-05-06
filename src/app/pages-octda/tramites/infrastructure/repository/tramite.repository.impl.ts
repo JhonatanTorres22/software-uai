@@ -2,7 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { ApiResponse } from "@/shared/models/api-response.model";
 import { TramiteRepository } from "../../application/ports/tramite.repository";
-import { CrearFormatoSolicitud, CrearTramite, EditarFormatoSolicitud, EditarTramite, EliminarFormatoSolicitud, EliminarTramite, InsertarTramiteResponse, ListarFormatoSolicitud, ListarTramite } from "../../domain/entity/tramite.entity";
+import { ActualizarEstadoTramite, CrearFormatoSolicitud, CrearTramite, EditarFormatoSolicitud, EditarTramite, EliminarFormatoSolicitud, EliminarTramite, InsertarTramiteResponse, ListarFormatoSolicitud, ListarTramite } from "../../domain/entity/tramite.entity";
 import { ListarTramiteDTO } from "../dto/tramite.dto";
 import { TramiteMapper } from "../mappers/tramite.mapper";
 import { TramitesService } from "../services/tramite.service";
@@ -38,6 +38,20 @@ export class TramiteRepositoryImpl extends TramiteRepository {
                 data: this.normalizeListData(response.data).map((item) => TramiteMapper.toDomainTramite(item))
             }))
         );
+    }
+
+    override obtenerTramitesPorUsuario(): Observable<ApiResponse<ListarTramite[]>> {
+        return this.service.obtenerTramitesPorUsuario().pipe(
+            map((response) => ({
+                ...response,
+                data: this.normalizeListData(response.data).map((item) => TramiteMapper.toDomainTramite(item))
+            }))
+        );
+    }
+
+    override actualizarEstadoTramite(tramite: ActualizarEstadoTramite): Observable<ApiResponse<unknown>> {
+        const actualizarEstadoTramiteDTO = TramiteMapper.toActualizarEstadoTramite(tramite);
+        return this.service.actualizarEstadoTramite(actualizarEstadoTramiteDTO);
     }
 
     override actualizarTramite(tramite: EditarTramite): Observable<ApiResponse<unknown>> {

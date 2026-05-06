@@ -36,6 +36,7 @@ export type EditarTramiteDTO = CrearTramiteDTO & {
 }
 
 export type EliminarTramiteDTO = Pick<ListarTramiteDTO, 'codigoTramite'>;
+export type ActualizarEstadoTramiteDTO = Pick<ListarTramiteDTO, 'codigoTramite' | 'estado'>;
 
 export interface ListarFormatoSolicitudDTO{
     codigoFormatoSolicitud: number;
@@ -49,7 +50,7 @@ export interface ListarFormatoSolicitudDTO{
     numeroCarnet: string,
     numeroDocumento: string;
     email:string,
-    damicilioDelUsuario: string;
+    domicilioDelUsuario: string;
     facebook: string;
     fundamento: string;
     fechaCreacion: string;

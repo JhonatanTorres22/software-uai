@@ -48,6 +48,8 @@ export interface ListarTramite {
 
  export type EliminarTramite = Pick<ListarTramite, 'idTramite'>;
 
+ export type ActualizarEstadoTramite = Pick<ListarTramite, 'idTramite' | 'estado'>; 
+
  export type InsertarTramiteResponse = {
    codigoTramite: number;
  };

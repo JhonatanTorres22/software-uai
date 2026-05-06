@@ -11,6 +11,27 @@ import { authenticatedInterceptor } from '@/authenticated/infrastructure/interce
 import { apiResponseInterceptor } from './shared/interceptors/api-response.interceptor';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
+import { provideEchartsCore } from 'ngx-echarts';
+import * as echarts from 'echarts/core';
+
+// 👇 IMPORTS IMPORTANTES
+import { BarChart } from 'echarts/charts';
+import { GridComponent, TooltipComponent, TitleComponent } from 'echarts/components';
+import { CanvasRenderer } from 'echarts/renderers';
+import { LegendComponent } from 'echarts/components';
+import { PieChart } from 'echarts/charts';
+// 👇 REGISTRO
+echarts.use([
+  BarChart,
+  GridComponent,
+  TooltipComponent,
+  TitleComponent,
+  CanvasRenderer,
+  LegendComponent,
+  PieChart
+  
+]);
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,6 +46,9 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: Aura
       }
+    }),
+    provideEchartsCore({
+      echarts
     })
   ]
 };

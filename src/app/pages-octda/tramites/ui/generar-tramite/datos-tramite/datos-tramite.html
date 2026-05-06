@@ -25,31 +25,31 @@
 
                 <div class="col-12 md:col-6">
                     <ui-input formControlName="numeroDoc" label="Número de documento" [maxlength]="numeroDocMaxLength"
-                        [minlength]="8" [upperCase]="false" [patternErrorMessage]="'Solo números'">
+                        [minlength]="8" [expReg]="expLockNumber" [patternErrorMessage]="'Solo números'">
                     </ui-input>
                 </div>
 
                 <div class="col-12 md:col-6">
                     <ui-input formControlName="celularSolicitante" label="Celular" [maxlength]="9" [minlength]="9"
-                        [patternErrorMessage]="'Solo números'">
+                        [expReg]="expLockNumber" [patternErrorMessage]="'Solo números'">
                     </ui-input>
                 </div>
 
                 <div class="col-12 md:col-4">
                     <ui-input formControlName="nombreSolicitante" label="Nombres" [maxlength]="80" [minlength]="2"
-                        [patternErrorMessage]="'Solo letras y espacios'">
+                        [expReg]="expLockText" [patternErrorMessage]="'Solo letras y espacios'">
                     </ui-input>
                 </div>
 
                 <div class="col-12 md:col-4">
                     <ui-input formControlName="apePaternoSolicitante" label="Apellido paterno" [maxlength]="60" [minlength]="2"
-                        [patternErrorMessage]="'Solo letras y espacios'">
+                        [expReg]="expLockText" [patternErrorMessage]="'Solo letras y espacios'">
                     </ui-input>
                 </div>
 
                 <div class="col-12 md:col-4">
                     <ui-input formControlName="apeMaternoSolicitante" label="Apellido materno" [maxlength]="60" [minlength]="2"
-                        [patternErrorMessage]="'Solo letras y espacios'">
+                        [expReg]="expLockText" [patternErrorMessage]="'Solo letras y espacios'">
                     </ui-input>
                 </div>
 
@@ -195,14 +195,22 @@
 
         <form [formGroup]="formPagoRealizado" class="p-3">
             <div class="grid">
-                <div class="col-12 md:col-6">
+                <div class="col-12 md:col-4">
                     <ui-input formControlName="numeroVoucher" label="Número de voucher" [upperCase]="false"
                         [maxlength]="50"></ui-input>
                 </div>
-                <div class="col-12 md:col-6">
-                    <ui-date-picker formControlName="fechaPago" label="Fecha y hora de pago" [showTime]="true"
-                        [showSeconds]="false" placeholder="Seleccionar fecha y hora">
+                <div class="col-12 md:col-4">
+                    <ui-date-picker 
+                        formControlName="fechaPago" 
+                        label="Fecha y hora de pago" 
+                        [showTime]="true"
+                        [showSeconds]="false" 
+                        [maxDate]="maxFechaPago"
+                        placeholder="Seleccionar fecha y hora">
                     </ui-date-picker>
+                </div>
+                <div class="col-12 md:col-4">
+                    <ui-input formControlName="montoPago" label="Monto (S/)" [upperCase]="false" [readonly]="true"></ui-input>
                 </div>
             </div>
         </form>

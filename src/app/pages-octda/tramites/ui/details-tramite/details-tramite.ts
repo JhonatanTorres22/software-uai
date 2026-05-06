@@ -15,6 +15,7 @@ import { NotificationService } from '@/shared/services/notification.service';
 import { PagoTramiteSignal } from '../../domain/signals/pagoTramite.signal';
 import { ObtenerEntidadesPorTramiteUseCase } from '../../application/use-cases/entidad/obtenerEntidadPorTramite.use-case';
 import { EntidadSignal } from '../../domain/signals/entidad.signal';
+import { UiLoading } from "@/shared/components/ui-loading/ui-loading";
 
 
 @Component({
@@ -26,8 +27,10 @@ import { EntidadSignal } from '../../domain/signals/entidad.signal';
     TagModule,
     DividerModule,
     ButtonModule,
-    CommonModule
-  ],
+    CommonModule,
+    UiLoading,
+    PdfFormatoSolicitud
+],
   templateUrl: './details-tramite.html',
   styleUrl: './details-tramite.scss',
 })
@@ -46,7 +49,7 @@ export class DetailsTramite implements OnInit {
 
   ngOnInit(): void {
     this.obtenerPagoPorTramite();
-    if (this.selectTramite().tipoSolicitante === 'DOCENTE') {
+    if (this.selectTramite().tipoSolicitante === 'EXTERNO') {
       this.obtenerEntidadPorTramite()
     }
   }

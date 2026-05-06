@@ -1,6 +1,6 @@
 import { FormArray } from "@angular/forms";
-import { CrearFormatoSolicitud, CrearTramite, EditarFormatoSolicitud, EditarTramite, EliminarFormatoSolicitud, EliminarTramite, EstadoTramite, ListarFormatoSolicitud, ListarTramite, RolSolicitante } from "../../domain/entity/tramite.entity";
-import { CrearFormatoSolicitudDTO, CrearTramiteDTO, EditarFormatoSolicitudDTO, EditarTramiteDTO, EliminarFormatoSolicitudDTO, EliminarTramiteDTO, ListarFormatoSolicitudDTO, ListarTramiteDTO } from "../dto/tramite.dto";
+import { ActualizarEstadoTramite, CrearFormatoSolicitud, CrearTramite, EditarFormatoSolicitud, EditarTramite, EliminarFormatoSolicitud, EliminarTramite, EstadoTramite, ListarFormatoSolicitud, ListarTramite, RolSolicitante } from "../../domain/entity/tramite.entity";
+import { ActualizarEstadoTramiteDTO, CrearFormatoSolicitudDTO, CrearTramiteDTO, EditarFormatoSolicitudDTO, EditarTramiteDTO, EliminarFormatoSolicitudDTO, EliminarTramiteDTO, ListarFormatoSolicitudDTO, ListarTramiteDTO } from "../dto/tramite.dto";
 
 export class TramiteMapper {
     static toDomainTramite(tramite: ListarTramiteDTO): ListarTramite {
@@ -76,7 +76,7 @@ export class TramiteMapper {
             nCarnet: formato.numeroCarnet,
             nDocumento: formato.numeroDocumento,
             correoSolicitante: formato.email,
-            domicilioSolicitante: formato.damicilioDelUsuario,
+            domicilioSolicitante: formato.domicilioDelUsuario,
             facebook: formato.facebook,
             fundamento: formato.fundamento,
             fechaCreacion: formato.fechaCreacion,
@@ -95,7 +95,7 @@ export class TramiteMapper {
             numeroCarnet: formato.nCarnet,
             numeroDocumento: formato.nDocumento,
             email: formato.correoSolicitante,
-            damicilioDelUsuario: formato.domicilioSolicitante,
+            domicilioDelUsuario: formato.domicilioSolicitante,
             facebook: formato.facebook,
             fundamento: formato.fundamento,
         }
@@ -114,7 +114,7 @@ export class TramiteMapper {
             numeroCarnet: formato.nCarnet,
             numeroDocumento: formato.nDocumento,
             email: formato.correoSolicitante,
-            damicilioDelUsuario: formato.domicilioSolicitante,
+            domicilioDelUsuario: formato.domicilioSolicitante,
             facebook: formato.facebook,
             fundamento: formato.fundamento,
         }
@@ -123,6 +123,13 @@ export class TramiteMapper {
     static toApiEliminarFormatoSolicitud(formato: EliminarFormatoSolicitud) : EliminarFormatoSolicitudDTO{
         return{
             codigoFormatoSolicitud: formato.idFormatoSolicitud,
+        }
+    }
+
+    static toActualizarEstadoTramite(tramite: ActualizarEstadoTramite): ActualizarEstadoTramiteDTO {
+        return {
+            codigoTramite: tramite.idTramite,
+            estado: tramite.estado,
         }
     }
 
