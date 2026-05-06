@@ -15,7 +15,7 @@ export class TramiteSignal {
         nombreSubcategoriaTramite: "",
         tipoDoc: "",
         numeroDoc: "",
-        tipoSolicitante: "alumno",
+        tipoSolicitante: "ALUMNO",
         nombreSolicitante: "",
         apePaternoSolicitante: "",
         apeMaternoSolicitante: "",

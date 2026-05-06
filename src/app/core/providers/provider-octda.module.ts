@@ -7,15 +7,21 @@ import { SubCategoriaRepositoryImpl } from "@/pages-octda/categoria/infrastructu
 import { SubCategoriaRepository } from "@/pages-octda/categoria/application/ports/subCategoria.repository";
 import { TramiteRepository } from "@/pages-octda/tramites/application/ports/tramite.repository";
 import { TramiteRepositoryImpl } from "@/pages-octda/tramites/infrastructure/repository/tramite.repository.impl";
+import { PagoTramiteRepository } from "@/pages-octda/tramites/application/ports/pagoTramite.repository";
+import { PagoTramiteRepositoryImpl } from "@/pages-octda/tramites/infrastructure/repository/pagoTramite.repository.impl";
+import { EntidadRepositoryImpl } from "@/pages-octda/tramites/infrastructure/repository/entidad.repository.impl";
+import { EntidadRepository } from "@/pages-octda/tramites/application/ports/entidad.repository";
 
 @NgModule({
     exports: [],
     imports: [],
     providers: [
         { provide: AuthenticatedRepository, useExisting: AuthenticatedRepositoryImpl },
-        {provide : CategoriaRepository, useExisting : CategoriaRepositoryImpl},
-        {provide : SubCategoriaRepository, useExisting : SubCategoriaRepositoryImpl},
-        {provide : TramiteRepository, useExisting : TramiteRepositoryImpl}
+        { provide: CategoriaRepository, useExisting: CategoriaRepositoryImpl },
+        { provide: SubCategoriaRepository, useExisting: SubCategoriaRepositoryImpl },
+        { provide: TramiteRepository, useExisting: TramiteRepositoryImpl },
+        { provide: PagoTramiteRepository, useExisting: PagoTramiteRepositoryImpl },
+        { provide: EntidadRepository, useExisting: EntidadRepositoryImpl }
     ]
 })
 export class ProviderOctdaModule { }

@@ -1,13 +1,14 @@
-:host {
-	display: block;
-}
-
-form {
-	// max-width: 1040px;
-	margin: 0 auto;
-}
-
+// Solo estilos del checkbox que no se pueden hacer con PrimeFlex
 :host ::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
 	background: var(--brand-500);
 	border-color: var(--brand-500);
+}
+
+:host ::ng-deep .p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
+	border-color: var(--brand-400);
+}
+
+:host ::ng-deep .p-checkbox .p-checkbox-box.p-highlight:hover {
+	background: var(--brand-600);
+	border-color: var(--brand-600);
 }

@@ -28,7 +28,7 @@ import { TagModule } from "primeng/tag";
     UiTextAreaComponent,
     ToggleSwitchModule,
     TagModule
-],
+  ],
   templateUrl: './add-edit-subcategoria.html',
   styleUrls: ['./add-edit-subcategoria.scss'],
 })
@@ -57,7 +57,7 @@ export class AddEditSubcategoria implements OnInit {
   }
 
   get modalPrimaryDisabled(): boolean {
-    return this.formSubCategoria.invalid 
+    return this.formSubCategoria.invalid
   }
 
   get modoEdicion(): boolean {
@@ -70,10 +70,7 @@ export class AddEditSubcategoria implements OnInit {
     this.categoriaId = Number(payload.categoriaId ?? this.categoriaSignal.selectCategoria().idCategoriaTramite ?? 0);
 
     if (this.subcategoria) {
-      this.formSubCategoria.patchValue({
-        nombre: this.subcategoria.nombre,
-        descripcion: this.subcategoria.descripcion
-      });
+      this.patchValue();
     }
   }
 
@@ -112,7 +109,7 @@ export class AddEditSubcategoria implements OnInit {
         descripcion
       };
       console.log(payload);
-      
+
 
       this.editarSubCategoriaUseCase.execute(payload).subscribe({
         next: (response) => {
@@ -120,6 +117,8 @@ export class AddEditSubcategoria implements OnInit {
           this.ref.close({ success: true });
         },
         error: (err) => {
+          console.log(err);
+
           this.notificationService.error('No se pudo actualizar la subcategoría');
         }
       });
@@ -133,8 +132,8 @@ export class AddEditSubcategoria implements OnInit {
       montoTramite
     };
 
-    console.log(payload);
-    
+    console.log(payload, 'CREAR');
+
 
     this.crearSubCategoriaUseCase.execute(payload).subscribe({
       next: (response) => {
@@ -146,10 +145,14 @@ export class AddEditSubcategoria implements OnInit {
       }
     });
   }
-    patchValue() {
+  patchValue() {
+    const monto = Number(this.subcategoria?.montoTramite ?? 0);
+
     this.formSubCategoria.patchValue({
       nombre: this.subcategoria?.nombre,
       descripcion: this.subcategoria?.descripcion,
-    })
+      montoTramite: monto,
+      requiereCosto: monto > 0
+    });
   }
 }

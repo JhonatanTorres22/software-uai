@@ -14,10 +14,12 @@ import { EditarFormatoSolicitudUseCase } from '../../../application/use-cases/fo
 import { NotificationService } from '@/shared/services/notification.service';
 import { TramiteSignal } from '../../../domain/signals/tramite.signal';
 
+import { UiLoading } from "@/shared/components/ui-loading/ui-loading";
+
 @Component({
   selector: 'app-formato-solicitud',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, UiInputComponent, UiTextAreaComponent, ButtonModule, CheckboxModule, UiButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule, UiInputComponent, UiTextAreaComponent, ButtonModule, CheckboxModule, UiButtonComponent, UiLoading],
   templateUrl: './formato-solicitud.html',
   styleUrl: './formato-solicitud.scss',
 })
@@ -46,14 +48,17 @@ export class FormatoSolicitud implements OnInit, OnDestroy {
     conformidad: new FormControl(false, { nonNullable: true, validators: [Validators.requiredTrue] }),
   });
 
+  // Flag para controlar si ya cargamos el snapshot
+  private snapshotRestored = false;
+
   constructor() {
     effect(() => {
       const data = this.solicitudData();
       if (!data) return;
       
-      // Solo precargamos si no hay snapshot (primera vez que se accede al paso 2)
+      // SOLO precargamos si no hay snapshot Y no lo hemos restaurado ya
       const snapshot = this.tramiteState.formatoSolicitudSnapshot();
-      if (!snapshot) {
+      if (!snapshot && !this.snapshotRestored) {
         this.formSolicitud.patchValue({
           datosUsuario: data.nombreCompleto,
           numeroContacto: data.numeroContacto,
@@ -77,26 +82,25 @@ export class FormatoSolicitud implements OnInit, OnDestroy {
     console.log('  idTramite:', this.tramiteState.idTramite());
     console.log('  idFormatoSolicitud actual:', this.tramiteState.idFormatoSolicitud());
     
+    // Si hay snapshot, SIEMPRE tiene prioridad (usuario retrocedió y avanzó)
+    if (snapshot) {
+      console.log('  → Restaurando snapshot (tiene prioridad)');
+      this.restoreSnapshot(snapshot);
+      this.snapshotRestored = true;
+      return;
+    }
+    
+    // No hay snapshot, verificar si es modo edición
     if (isEditMode) {
-      // En modo EDICIÓN, verificar si ya tenemos el idFormatoSolicitud
-      const idFormatoSolicitud = snapshot?.idFormatoSolicitud ?? this.tramiteState.idFormatoSolicitud();
-      console.log('  idFormatoSolicitud del snapshot/state:', idFormatoSolicitud);
+      const idFormatoSolicitud = this.tramiteState.idFormatoSolicitud();
+      console.log('  idFormatoSolicitud del state:', idFormatoSolicitud);
       
       if (!idFormatoSolicitud || idFormatoSolicitud === 0) {
-        // NO tenemos el ID, debemos cargarlo desde la API
         console.log('  → Modo edición SIN idFormatoSolicitud, cargando desde API');
         this.cargarFormatoExistente();
-      } else if (snapshot) {
-        // Ya tenemos el ID en el snapshot, restaurarlo
-        console.log('  → Modo edición CON idFormatoSolicitud en snapshot, restaurando');
-        this.restoreSnapshot(snapshot);
       }
-    } else if (snapshot) {
-      // Modo creación con snapshot previo
-      console.log('  → Modo creación, restaurando snapshot');
-      this.restoreSnapshot(snapshot);
     } else {
-      console.log('  → Modo creación sin snapshot');
+      console.log('  → Modo creación, esperando datos de solicitudData');
     }
   }
 

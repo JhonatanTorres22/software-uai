@@ -151,6 +151,9 @@ export class TramiteMapper {
         if (normalized.includes('anul')) {
             return 'ANULADO';
         }
+        if (normalized.includes('registr')) {
+            return 'REGISTRANDO';
+        }
 
         return 'PENDIENTE';
     }
@@ -159,18 +162,18 @@ export class TramiteMapper {
         const normalized = tipoRemitente.trim().toLowerCase();
 
         if (normalized.includes('docen')) {
-            return 'docente';
+            return 'DOCENTE';
         }
 
         if (normalized.includes('admin')) {
-            return 'administrativo';
+            return 'ADMINISTRATIVO';
         }
 
         if (normalized.includes('extern')) {
-            return 'externo';
+            return 'EXTERNO';
         }
 
-        return 'alumno';
+        return 'ALUMNO';
     }
 
 

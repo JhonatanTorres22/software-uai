@@ -15,6 +15,7 @@ export class TramitesService {
   private readonly urlListarTramitePorSubcategoria = `${this.urlApi}/api/Tramite/ListarPorSubCategoriaTramite/`;
   private readonly urlActualizarTramite = `${this.urlApi}/api/Tramite/Actualizar`;
   private readonly urlCrearTramite = `${this.urlApi}/api/Tramite/Insertar`;
+  private readonly urlCrearTramiteConRetorno = `${this.urlApi}/api/Tramite/InsertarConRetorno`;
   private readonly urlEliminarTramite = `${this.urlApi}/api/Tramite/Eliminar`;
   private readonly urlObtenerFormatoSolicitudPorTramite = `${this.urlApi}/api/FormatoSolicitud/ListarPorTramite/`;
   private readonly urlCrearFormatoSolicitud = `${this.urlApi}/api/FormatoSolicitud/Insertar`;
@@ -36,6 +37,10 @@ export class TramitesService {
 
   crearTramite(crear: CrearTramiteDTO): Observable<ApiResponse<unknown>> {
     return this.http.post<ApiResponse<unknown>>(this.urlCrearTramite, crear);
+  }
+
+  crearTramiteConRetorno(crear: CrearTramiteDTO): Observable<ApiResponse<{ codigoTramite: number }>> {
+    return this.http.post<ApiResponse<{ codigoTramite: number }>>(this.urlCrearTramiteConRetorno, crear);
   }
 
   actualizarTramite(tramite: EditarTramiteDTO): Observable<ApiResponse<unknown>> {

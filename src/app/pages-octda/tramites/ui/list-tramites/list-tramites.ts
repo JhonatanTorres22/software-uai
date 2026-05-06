@@ -184,6 +184,7 @@ export class ListTramites {
 
   getEstadoConfig(estado: EstadoTramite): TagConfig {
     const configs: Record<EstadoTramite, TagConfig> = {
+      REGISTRANDO: { label: 'REGISTRANDO', severity: 'secondary', icon: 'pi pi-pencil' },
       INGRESADO: { label: 'INGRESADO', severity: 'info', icon: 'pi pi-file' },
       PENDIENTE: { label: 'PENDIENTE', severity: 'warn', icon: 'pi pi-clock' },
       APROBADO: { label: 'APROBADO', severity: 'success', icon: 'pi pi-check-circle' },
@@ -196,10 +197,10 @@ export class ListTramites {
 
   getRolConfig(rol: RolSolicitante): TagConfig {
     const configs: Record<RolSolicitante, TagConfig> = {
-      alumno: { label: 'ALUMNO', severity: 'info', icon: 'pi pi-user' },
-      docente: { label: 'DOCENTE', severity: 'success', icon: 'pi pi-book' },
-      administrativo: { label: 'ADMINISTRATIVO', severity: 'warn', icon: 'pi pi-briefcase' },
-      externo: { label: 'EXTERNO', severity: 'danger', icon: 'pi pi-globe' },
+      ALUMNO: { label: 'ALUMNO', severity: 'info', icon: 'pi pi-user' },
+      DOCENTE: { label: 'DOCENTE', severity: 'success', icon: 'pi pi-book' },
+      ADMINISTRATIVO: { label: 'ADMINISTRATIVO', severity: 'warn', icon: 'pi pi-briefcase' },
+      EXTERNO: { label: 'EXTERNO', severity: 'danger', icon: 'pi pi-globe' },
     };
     return configs[rol];
   }

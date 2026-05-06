@@ -1,113 +1,253 @@
 @if (loading()) {
-    <app-ui-loading></app-ui-loading>
+<app-ui-loading></app-ui-loading>
 }
 
-<form [formGroup]="formGenerarTramite" class="flex flex-column gap-4">
-    <section class="border-1 surface-border border-round p-3 md:p-4 surface-card">
-        <h3 class="m-0 mb-3 text-900 text-base font-semibold">Datos del usuario</h3>
-
-        <div class="grid">
-            <div class="col-12 md:col-6">
-                <ui-select [options]="listTipoDocumento" label="Tipo de documento"
-                    formControlName="tipoDoc"></ui-select>
-            </div>
-
-            <div class="col-12 md:col-6">
-                <ui-input formControlName="numeroDoc" label="Numero de documento" [maxlength]="numeroDocMaxLength"
-                    [minlength]="8" [upperCase]="false" [patternErrorMessage]="'Solo numeros'"
-                    (onInputEvent)="onOnlyNumbersInput('numeroDoc', $event)">
-                </ui-input>
-            </div>
-
-            <!-- <div class="col-12 md:col-4">
-                <ui-select [options]="listTipoSolicitante" label="Tipo de solicitante"
-                    formControlName="tipoSolicitante"></ui-select>
-            </div> -->
-
-            <div class="col-12 md:col-4">
-                <ui-input formControlName="nombreSolicitante" label="Nombres" [maxlength]="80" [minlength]="2"
-                    [patternErrorMessage]="'Solo letras y espacios'">
-                </ui-input>
-            </div>
-
-            <div class="col-12 md:col-4">
-                <ui-input formControlName="apePaternoSolicitante" label="Apellido paterno" [maxlength]="60"
-                    [minlength]="2" [patternErrorMessage]="'Solo letras y espacios'">
-                </ui-input>
-            </div>
-
-            <div class="col-12 md:col-4">
-                <ui-input formControlName="apeMaternoSolicitante" label="Apellido materno" [maxlength]="60"
-                    [minlength]="2" [patternErrorMessage]="'Solo letras y espacios'">
-                </ui-input>
-            </div>
-
-            <div class="col-12 md:col-4">
-                <ui-input formControlName="celularSolicitante" label="Celular" [maxlength]="9" [minlength]="9"
-                    [patternErrorMessage]="'Solo numeros'"
-                    (onInputEvent)="onOnlyNumbersInput('celularSolicitante', $event)">
-                </ui-input>
-            </div>
-
-            <div class="col-12 md:col-8">
-                <ui-input formControlName="correoSolicitante" label="Correo" [maxlength]="120"
-                    [patternErrorMessage]="'Correo invalido'">
-                </ui-input>
+<div class="flex flex-column gap-3">
+    <!-- Sección: Datos del Usuario -->
+    <section class="surface-card border-1 surface-border border-round-xl shadow-1 overflow-hidden">
+        <div class="p-3 surface-50 border-bottom-1 surface-border">
+            <div class="flex align-items-center gap-2">
+                <i class="pi pi-user text-brand"></i>
+                <h3 class="m-0 text-base font-semibold">Datos del Solicitante</h3>
             </div>
         </div>
+
+        <form [formGroup]="formGenerarTramite" class="p-3">
+            <div class="grid">
+                <div class="col-12 md:col-6">
+                    <ui-select [options]="listTipoSolicitante" label="Tipo de solicitante"
+                        formControlName="tipoSolicitante"></ui-select>
+                </div>
+
+                <div class="col-12 md:col-6">
+                    <ui-select [options]="listTipoDocumento" label="Tipo de documento" formControlName="tipoDoc"></ui-select>
+                </div>
+
+                <div class="col-12 md:col-6">
+                    <ui-input formControlName="numeroDoc" label="Número de documento" [maxlength]="numeroDocMaxLength"
+                        [minlength]="8" [upperCase]="false" [patternErrorMessage]="'Solo números'">
+                    </ui-input>
+                </div>
+
+                <div class="col-12 md:col-6">
+                    <ui-input formControlName="celularSolicitante" label="Celular" [maxlength]="9" [minlength]="9"
+                        [patternErrorMessage]="'Solo números'">
+                    </ui-input>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <ui-input formControlName="nombreSolicitante" label="Nombres" [maxlength]="80" [minlength]="2"
+                        [patternErrorMessage]="'Solo letras y espacios'">
+                    </ui-input>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <ui-input formControlName="apePaternoSolicitante" label="Apellido paterno" [maxlength]="60" [minlength]="2"
+                        [patternErrorMessage]="'Solo letras y espacios'">
+                    </ui-input>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <ui-input formControlName="apeMaternoSolicitante" label="Apellido materno" [maxlength]="60" [minlength]="2"
+                        [patternErrorMessage]="'Solo letras y espacios'">
+                    </ui-input>
+                </div>
+
+                <div class="col-12">
+                    <ui-input formControlName="correoSolicitante" label="Correo electrónico" [maxlength]="120"
+                        [patternErrorMessage]="'Correo inválido'">
+                    </ui-input>
+                </div>
+            </div>
+        </form>
     </section>
 
-    <section class="border-1 surface-border border-round p-3 md:p-4 surface-card">
-        <h3 class="m-0 mb-3 text-900 text-base font-semibold">Datos del tramite</h3>
-
-        <div class="grid">
-            <div class="col-12 md:col-6">
-                <ui-select [options]="listCategorias" label="Categoria"
-                    formControlName="idCategoriaTramite"></ui-select>
+    <!-- Formulario de Entidad (solo si es externo) -->
+    @if (mostrarFormularioEntidad) {
+    <section class="surface-card border-1 surface-border border-round-xl shadow-1 overflow-hidden border-left-3 border-yellow-500">
+        <div class="p-3 yellow-50 border-bottom-1 surface-border">
+            <div class="flex align-items-center gap-2">
+                <i class="pi pi-building text-brand"></i>
+                <h3 class="m-0 text-base font-semibold">Datos de la Entidad</h3>
+                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 border-round text-xs font-semibold uppercase">Opcional</span>
             </div>
+        </div>
 
-            <div class="col-12 md:col-6">
-                <ui-select [options]="listSubCategorias" label="Subcategoria" formControlName="idSubCategoriaTramite"
-                    [readonly]="!formGenerarTramite.controls['idCategoriaTramite'].value">
-                </ui-select>
+        <form [formGroup]="formEntidad" class="p-3">
+            <div class="grid">
+                <div class="col-12 md:col-6">
+                    <ui-input formControlName="razonSocial" label="Razón social / Nombre de la entidad" [maxlength]="120"
+                        [upperCase]="false"></ui-input>
+                </div>
 
-                @if (formGenerarTramite.controls['idSubCategoriaTramite'].invalid) {
-                <small class="text-red-500 block mt-1">Selecciona una subcategoria.</small>
+                <div class="col-12 md:col-3">
+                    <ui-input formControlName="ruc" label="RUC" [maxlength]="11" [minlength]="11" [upperCase]="false"
+                        [patternErrorMessage]="'Solo números'"></ui-input>
+                </div>
+
+                <div class="col-12 md:col-3">
+                    <ui-input formControlName="direccion" label="Dirección" [maxlength]="150"
+                        [upperCase]="false"></ui-input>
+                </div>
+
+                <div class="col-12">
+                    <div class="flex justify-content-end">
+                        <ui-button
+                            [disabled]="loading() || !tramiteGuardado"
+                            [label]="entidadGuardada ? 'Actualizar Entidad' : 'Guardar Entidad'"
+                            [icon]="entidadGuardada ? 'pi pi-pencil' : 'pi pi-save'"
+                            (click)="registrarEntidad()"
+                            color="secondary">
+                        </ui-button>
+                    </div>
+
+                    @if (!tramiteGuardado) {
+                    <small class="flex align-items-center gap-1 p-2 bg-blue-50 border-left-3 border-primary border-round mt-2 text-xs">
+                        <i class="pi pi-info-circle text-primary"></i>
+                        <span class="text-600">Primero debe guardar el trámite para poder registrar la entidad</span>
+                    </small>
+                    }
+                </div>
+            </div>
+        </form>
+    </section>
+    }
+
+    <!-- Sección: Datos del Trámite -->
+    <section class="surface-card border-1 surface-border border-round-xl shadow-1 overflow-hidden">
+        <div class="p-3 surface-50 border-bottom-1 surface-border">
+            <div class="flex align-items-center gap-2">
+                <i class="pi pi-file-edit text-brand"></i>
+                <h3 class="m-0 text-base font-semibold">Información del Trámite</h3>
+            </div>
+        </div>
+
+        <form [formGroup]="formGenerarTramite" class="p-3">
+            <div class="grid">
+                <div class="col-12 md:col-6">
+                    <ui-select [options]="listCategorias" label="Categoría" formControlName="idCategoriaTramite"></ui-select>
+                </div>
+
+                <div class="col-12 md:col-6">
+                    <ui-select [options]="listSubCategorias" label="Subcategoría" formControlName="idSubCategoriaTramite"
+                        [readonly]="!formGenerarTramite.controls['idCategoriaTramite'].value">
+                    </ui-select>
+
+                    @if (formGenerarTramite.controls['idSubCategoriaTramite'].invalid) {
+                    <small class="flex align-items-center p-2 bg-red-50 border-left-3 border-red-500 border-round mt-2 text-sm font-medium">
+                        <i class="pi pi-exclamation-circle mr-1"></i>Selecciona una subcategoría
+                    </small>
+                    }
+
+                    @if (requierePago && !tramiteGuardado) {
+                    <div class="flex align-items-start gap-2 p-3 bg-blue-50 border-left-3 border-primary border-round mt-2">
+                        <i class="pi pi-info-circle text-primary mt-1"></i>
+                        <div class="flex-1">
+                            <p class="m-0 text-sm font-semibold text-primary">Esta subcategoría requiere pago</p>
+                            <p class="m-0 mt-1 text-xs text-600">Monto: <span class="font-bold">S/ {{ monto.toFixed(2) }}</span></p>
+                            <p class="m-0 mt-1 text-xs text-600">Deberá registrar el comprobante de pago después de guardar el trámite.</p>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <div class="col-12">
+                    <ui-text-area formControlName="asunto" label="Asunto del trámite" [maxlength]="250" [minlength]="10"></ui-text-area>
+                </div>
+
+                <div class="col-12">
+                    <div>
+                        <label class="flex align-items-center text-sm font-semibold mb-2">
+                            <i class="pi pi-paperclip mr-2"></i>Documento anexo
+                        </label>
+                        <div>
+                            <input type="file" class="file-input" (change)="onArchivoSeleccionado($event)" />
+                            @if (formGenerarTramite.controls['archivoAnexo'].value) {
+                            <div class="flex align-items-center mt-2 p-2 bg-primary-50 border-1 border-primary-200 border-round text-sm">
+                                <i class="pi pi-file text-primary mr-2"></i>
+                                <span class="overflow-hidden text-overflow-ellipsis white-space-nowrap">{{ formGenerarTramite.controls['archivoAnexo'].value }}</span>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <!-- Formulario de pago -->
+    @if (requierePago && tramiteGuardado) {
+    <section class="surface-card border-1 surface-border border-round-xl shadow-1">
+        <div class="p-3 surface-50 border-bottom-1 surface-border">
+            <div class="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-2 w-full">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-{{ pagoRegistrado ? 'pencil' : 'wallet' }} text-brand"></i>
+                    <h3 class="m-0 text-base font-semibold">{{ pagoRegistrado ? 'Editar Pago' : 'Registro de Pago' }}</h3>
+                </div>
+                @if (monto > 0) {
+                <span class="px-3 py-2 bg-blue-50 text-blue-700 border-1 border-blue-200 border-round text-sm font-semibold white-space-nowrap">Monto: S/ {{ monto.toFixed(2) }}</span>
                 }
             </div>
-
-            <div class="col-12">
-                <ui-text-area formControlName="asunto" label="Asunto" [maxlength]="250" [minlength]="10"></ui-text-area>
-            </div>
-
-            <div class="col-12 md:col-7">
-                <label class="block text-sm font-medium mb-2">Anexo</label>
-                <input type="file" class="w-full" (change)="onArchivoSeleccionado($event)" />
-                @if (formGenerarTramite.controls['archivoAnexo'].value) {
-                <small class="text-500 block mt-1">Archivo: {{ formGenerarTramite.controls['archivoAnexo'].value
-                    }}</small>
-                }
-            </div>
+            <p class="m-0 mt-2 text-sm text-600">
+                {{ pagoRegistrado ? 'Puede modificar los datos del pago si es necesario' : 'Complete los datos del pago realizado para continuar con el trámite' }}
+            </p>
         </div>
-    </section>
 
-    <section class="border-1 surface-border border-round p-3 md:p-4 surface-card" [formGroup]="formPagoRealizado">
-        <h3 class="m-0 mb-3 text-900 text-base font-semibold">Pago realizado</h3>
-        <p class="m-0 text-500 text-sm mb-3">Seccion preparada para futura integracion (sin logica por ahora).</p>
-
-        <div class="grid">
-            <div class="col-12 md:col-3">
-                <ui-input formControlName="numeroVoucher" label="Voucher" [upperCase]="false"></ui-input>
+        <form [formGroup]="formPagoRealizado" class="p-3">
+            <div class="grid">
+                <div class="col-12 md:col-6">
+                    <ui-input formControlName="numeroVoucher" label="Número de voucher" [upperCase]="false"
+                        [maxlength]="50"></ui-input>
+                </div>
+                <div class="col-12 md:col-6">
+                    <ui-date-picker formControlName="fechaPago" label="Fecha y hora de pago" [showTime]="true"
+                        [showSeconds]="false" placeholder="Seleccionar fecha y hora">
+                    </ui-date-picker>
+                </div>
             </div>
-            <div class="col-12 md:col-3">
-                <ui-input formControlName="fechaPago" label="Fecha pago" [upperCase]="false"></ui-input>
-            </div>
-            <div class="col-12 md:col-2">
-                <ui-input formControlName="horaPago" label="Hora pago" [upperCase]="false"></ui-input>
-            </div>
-            <div class="col-12 md:col-4">
-                <ui-input formControlName="montoPago" label="Monto" [upperCase]="false"></ui-input>
-            </div>
-        </div>
+        </form>
     </section>
-</form>
+    }
+
+    <!-- Barra de acciones -->
+    <div class="flex flex-column md:flex-row justify-content-end align-items-stretch md:align-items-center gap-2 p-3 surface-50 border-1 surface-border border-round-xl shadow-1">
+        @if (!tramiteGuardado) {
+            <ui-button 
+                [disabled]="loading() || formGenerarTramite.invalid" 
+                (click)="registrarTramite()" 
+                label="Guardar Trámite" 
+                icon="pi pi-save"
+                color="secondary">
+            </ui-button>
+        }
+
+        @if (tramiteGuardado) {
+            <ui-button 
+                [disabled]="loading() || formGenerarTramite.invalid" 
+                (click)="actualizarTramite()" 
+                label="Actualizar Trámite" 
+                icon="pi pi-refresh"
+                color="secondary">
+            </ui-button>
+        }
+
+        @if (requierePago && tramiteGuardado) {
+            <ui-button 
+                [disabled]="loading() || formPagoRealizado.invalid" 
+                [label]="pagoRegistrado ? 'Actualizar Pago' : 'Registrar Pago'" 
+                [icon]="pagoRegistrado ? 'pi pi-pencil' : 'pi pi-check'"
+                (click)="registrarPago()"
+                color="secondary">
+            </ui-button>
+        }
+
+        @if (puedeAvanzar()) {
+            <ui-button 
+                [label]="'Continuar al siguiente paso'" 
+                icon="pi pi-arrow-right" 
+                iconPos="right"
+                (click)="avanzarAlSiguientePaso()">
+            </ui-button>
+        }
+    </div>
+</div>
