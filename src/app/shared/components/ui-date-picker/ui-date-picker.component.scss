@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+::ng-deep {
+  .p-datepicker {
+    width: 100%;
+  }
+  
+  .p-datepicker-input {
+    width: 100%;
+  }
+}

@@ -1,15 +1,10 @@
 <form [formGroup]="formSubCategoria">
     <div class="flex align-items-center gap-4 w-full flex-wrap mb-4">
-
+<!-- <pre> {{ subcategoria | json }} </pre> -->
         <!-- Toggle más grande -->
         <div class="toggle-large">
             <p-toggleswitch formControlName="requiereCosto">
                 <ng-template #handle let-checked="checked">
-                    <i [ngClass]="[
-                    '!text-lg',
-                    'pi',
-                    checked ? 'pi-check' : 'pi-times'
-                ]"></i>
                 </ng-template>
             </p-toggleswitch>
         </div>

@@ -46,6 +46,7 @@ interface ProgressStep {
 }
 
 const ESTADO_ORDEN: Record<EstadoTramite, number> = {
+  REGISTRANDO: 0,
   INGRESADO: 1,
   PENDIENTE: 2,
   OBSERVADO: 3,
@@ -77,6 +78,7 @@ export class TimeLineTramite {
     const current = ESTADO_ORDEN[this.tramite.estado] ?? ESTADO_ORDEN.INGRESADO;
 
     return [
+      { id: 0, label: 'Registrando', icon: 'pi-pencil', done: current >= 0, active: current === 0 },
       { id: 1, label: 'Ingresado', icon: 'pi-file-import', done: current >= 1, active: current === 1 },
       { id: 2, label: 'En OCTDA', icon: 'pi-building', done: current >= 2, active: current === 2 },
       { id: 3, label: 'Revision', icon: 'pi-search', done: current >= 3, active: current === 3 },
@@ -102,6 +104,7 @@ export class TimeLineTramite {
 
   getEstadoSeverity(estado: EstadoTramite): 'success' | 'info' | 'warn' | 'danger' | 'contrast' | 'secondary' {
     const map: Record<EstadoTramite, 'success' | 'info' | 'warn' | 'danger' | 'contrast' | 'secondary'> = {
+      REGISTRANDO: 'secondary',
       INGRESADO:    'info',
       PENDIENTE:    'warn',
       APROBADO:     'success',
@@ -114,6 +117,7 @@ export class TimeLineTramite {
 
   getEstadoLabel(estado: EstadoTramite): string {
     const map: Record<EstadoTramite, string> = {
+      REGISTRANDO: 'REGISTRANDO',
       INGRESADO:    'INGRESADO',
       PENDIENTE:    'PENDIENTE',
       APROBADO:     'APROBADO',

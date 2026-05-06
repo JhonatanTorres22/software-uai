@@ -16,6 +16,7 @@ export class SubCategoriaService {
     private apiUrl: string = environment.EndPoint
     private urlObtenerSubCategoria: string = '/api/SubCategoriaTramite/Listar';
     private urlObtenerSubCategoriaPorCategoria: string = '/api/SubCategoriaTramite/ListarPorCategoriaTramite/';
+    private urlObtenerSubCategoriaPorId: string = '/api/SubCategoriaTramite/ListarPorCodigo/';
     private urlCrearSubCategoria: string = '/api/SubCategoriaTramite/Insertar'
     private urlEditarSubCategoria: string = '/api/SubCategoriaTramite/Actualizar'
     private urlEliminarSubCategoria: string = '/api/SubCategoriaTramite/Eliminar'
@@ -26,6 +27,10 @@ export class SubCategoriaService {
 
     obtenerSubCategoriaPorCategoria(idCategoria: number): Observable<ApiResponse<ListarSubCategoriaDTO[]>> {
         return this.http.get<ApiResponse<ListarSubCategoriaDTO[]>>(`${this.apiUrl}${this.urlObtenerSubCategoriaPorCategoria}${idCategoria}`);
+    }
+
+    obtenerSubCategoriaPorId(idSubCategoria: number): Observable<ApiResponse<ListarSubCategoriaDTO>> {
+        return this.http.get<ApiResponse<ListarSubCategoriaDTO>>(`${this.apiUrl}${this.urlObtenerSubCategoriaPorId}${idSubCategoria}`);
     }
 
     crearSubCategoria(subCategoria: CrearSubCategoriaDTO): Observable<ApiResponse<unknown>> {

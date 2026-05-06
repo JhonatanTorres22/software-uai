@@ -2,11 +2,9 @@
 <app-ui-loading></app-ui-loading>
 }
 @else {
-<!-- Sin categoría seleccionada -->
 @if (selectCategoria().idCategoriaTramite == 0) {
 <app-ui-card-no-items message="Selecciona una categoría para ver sus subcategorías"></app-ui-card-no-items>
 }
-<!-- Con categoría seleccionada -->
 @if (selectCategoria().idCategoriaTramite !== 0) {
 <ng-container>
   <div class="flex flex-column sm:flex-row sm:align-items-center justify-content-between mb-3 gap-2">
@@ -22,87 +20,71 @@
     </div>
   </div>
 
- 
+
   @if (listSubCategoria().length === 0) {
-    <app-ui-card-no-items  [message]="selectCategoria().nombre + ' no tiene subcategorías aún'"
-  buttonText="Crear SubCategoria" buttonIcon="pi pi-plus" (onClick)="openAddEditSubcategoria(selectSubCategoriaDefault)"></app-ui-card-no-items>
+  <app-ui-card-no-items [message]="selectCategoria().nombre + ' no tiene subcategorías aún'"
+    buttonText="Crear SubCategoria" buttonIcon="pi pi-plus"
+    (onClick)="openAddEditSubcategoria(selectSubCategoriaDefault)"></app-ui-card-no-items>
   } @else {
-<p-dataView [value]="listSubCategoria()">
-  <ng-template let-items #list>
-    <div class="flex flex-column gap-2">
+  <p-dataView [value]="listSubCategoria()">
+    <ng-template let-items #list>
+      <div class="flex flex-column gap-2">
 
-      @for (sub of items; track sub.idSubCategoriaTramite) {
-      <div
-        class="flex flex-column md:flex-row md:align-items-center justify-content-between p-3 border-1 border-round surface-border hover:bg-blue-50 cursor-pointer transition-colors transition-duration-150 gap-2"
-        [class.bg-blue-50]="subcategoriaActivaId === sub.idSubCategoriaTramite"
-        [class.blue-500]="subcategoriaActivaId === sub.idSubCategoriaTramite">
+        @for (sub of items; track sub.idSubCategoriaTramite) {
+        <div
+          class="flex flex-column md:flex-row md:align-items-center justify-content-between p-3 border-1 border-round surface-border hover:bg-blue-50 cursor-pointer transition-colors transition-duration-150 gap-2"
+          [class.bg-blue-50]="subcategoriaActivaId === sub.idSubCategoriaTramite"
+          [class.blue-500]="subcategoriaActivaId === sub.idSubCategoriaTramite">
 
-        <div class="flex align-items-center gap-3 flex-1 min-w-0" (click)="ver(sub)">
-          <div
-            class="w-2rem h-2rem border-circle bg-blue-100 flex align-items-center justify-content-center flex-shrink-0">
-            <i class="pi pi-file text-blue-500 text-sm"></i>
-          </div>
+          <div class="flex align-items-center gap-3 flex-1 min-w-0" (click)="ver(sub)">
+            <div
+              class="w-2rem h-2rem border-circle bg-blue-100 flex align-items-center justify-content-center flex-shrink-0">
+              <i class="pi pi-file text-blue-500 text-sm"></i>
+            </div>
 
-          <div class="min-w-0 flex-1">
+            <div class="min-w-0 flex-1">
 
-            <div class="flex align-items-center gap-2 flex-wrap">
+              <div class="flex align-items-center gap-2 flex-wrap">
 
-              <div
-                class="font-semibold text-900 white-space-nowrap overflow-hidden text-overflow-ellipsis">
-                {{ sub.nombre }}
+                <div class="font-semibold text-900 white-space-nowrap overflow-hidden text-overflow-ellipsis">
+                  {{ sub.nombre }}
+                </div>
+
+                <p-tag [value]="sub.montoTramite > 0 
+                  ? 'S/ ' + sub.montoTramite 
+                  : 'Sin Costo'" [severity]="sub.montoTramite > 0 ? 'info' : 'danger'"
+                  styleClass="text-sm px-3 py-2 font-semibold">
+                </p-tag>
+
               </div>
 
-              <p-tag
-                [value]="sub.montoTramite > 0 
-                  ? 'S/ ' + sub.montoTramite 
-                  : 'Sin Costo'"
-                [severity]="sub.montoTramite > 0 ? 'info' : 'danger'"
-                styleClass="text-base px-3 py-2 font-semibold">
-              </p-tag>
+              <div class="text-500 text-sm white-space-nowrap overflow-hidden text-overflow-ellipsis">
+                {{ sub.descripcion || 'Sin descripción' }}
+              </div>
 
             </div>
+          </div>
 
-            <div
-              class="text-500 text-sm white-space-nowrap overflow-hidden text-overflow-ellipsis">
-              {{ sub.descripcion || 'Sin descripción' }}
-            </div>
+          <div class="flex gap-1 flex-shrink-0 md:ml-2 align-self-end md:align-self-center"
+            (click)="$event.stopPropagation()">
+
+            <ui-icon-button icon="pi pi-eye" color="success" tooltip="Ver detalle" (onClick)="ver(sub)">
+            </ui-icon-button>
+
+            <ui-icon-button icon="pi pi-pencil" color="info" tooltip="Editar" (onClick)="openAddEditSubcategoria(sub)">
+            </ui-icon-button>
+
+            <ui-icon-button icon="pi pi-trash" color="danger" tooltip="Eliminar" (onClick)="eliminarSubCategoria(sub)">
+            </ui-icon-button>
 
           </div>
         </div>
+        }
 
-        <div
-          class="flex gap-1 flex-shrink-0 md:ml-2 align-self-end md:align-self-center"
-          (click)="$event.stopPropagation()">
-
-          <ui-icon-button
-            icon="pi pi-eye"
-            color="success"
-            tooltip="Ver detalle"
-            (onClick)="ver(sub)">
-          </ui-icon-button>
-
-          <ui-icon-button
-            icon="pi pi-pencil"
-            color="info"
-            tooltip="Editar"
-            (onClick)="openAddEditSubcategoria(sub)">
-          </ui-icon-button>
-
-          <ui-icon-button
-            icon="pi pi-trash"
-            color="danger"
-            tooltip="Eliminar"
-            (onClick)="eliminarSubCategoria(sub)">
-          </ui-icon-button>
-
-        </div>
       </div>
-      }
+    </ng-template>
+  </p-dataView>
 
-    </div>
-  </ng-template>
-</p-dataView>
-  
   }
 </ng-container>
 }

@@ -14,10 +14,15 @@ import { EditarFormatoSolicitudUseCase } from '../../../application/use-cases/fo
 import { NotificationService } from '@/shared/services/notification.service';
 import { TramiteSignal } from '../../../domain/signals/tramite.signal';
 
+import { UiLoading } from "@/shared/components/ui-loading/ui-loading";
+import { ActualizarEstadoTramite, CrearFormatoSolicitud, EditarFormatoSolicitud, ListarTramite } from '@/pages-octda/tramites/domain/entity/tramite.entity';
+import { ActualizarEstadoTramiteUseCase } from '@/pages-octda/tramites/application/use-cases/tramites/actualizarEstadoTramite.use-case';
+import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
+
 @Component({
   selector: 'app-formato-solicitud',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, UiInputComponent, UiTextAreaComponent, ButtonModule, CheckboxModule, UiButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule, UiInputComponent, UiTextAreaComponent, ButtonModule, CheckboxModule, UiButtonComponent, UiLoading],
   templateUrl: './formato-solicitud.html',
   styleUrl: './formato-solicitud.scss',
 })
@@ -29,16 +34,24 @@ export class FormatoSolicitud implements OnInit, OnDestroy {
   private readonly crearFormatoSolicitudUseCase = inject(CrearFormatoSolicitudUseCase);
   private readonly editarFormatoSolicitudUseCase = inject(EditarFormatoSolicitudUseCase);
   private readonly notificationService = inject(NotificationService);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
   private readonly tramiteSignal = inject(TramiteSignal);
+  private readonly actualizarEstadoTramiteUseCase = inject(ActualizarEstadoTramiteUseCase);
 
   loading = this.tramiteSignal.loading;
 
   formSolicitud = new FormGroup({
     destinatario: new FormControl('OCTDA', [Validators.required, Validators.maxLength(120)]),
     datosUsuario: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(120)]),
+    carreraProfesional: new FormControl('', [Validators.maxLength(120)]),
+    semestre: new FormControl('', [Validators.maxLength(20)]),
+    turno: new FormControl('', [Validators.maxLength(20)]),
     numeroContacto: new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]),
+    nCarnet: new FormControl('', [Validators.maxLength(20)]),
     numeroDocumento: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]),
     email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(120)]),
+    domicilioSolicitante: new FormControl('', [Validators.maxLength(200)]),
+    facebook: new FormControl('', [Validators.maxLength(100)]),
     fundamento: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]),
     anexos: new FormControl('', [Validators.maxLength(500)]),
     fecha: new FormControl(this.getFechaActual(), [Validators.required, Validators.maxLength(20)]),
@@ -46,14 +59,15 @@ export class FormatoSolicitud implements OnInit, OnDestroy {
     conformidad: new FormControl(false, { nonNullable: true, validators: [Validators.requiredTrue] }),
   });
 
+  private snapshotRestored = false;
+
   constructor() {
     effect(() => {
       const data = this.solicitudData();
       if (!data) return;
-      
-      // Solo precargamos si no hay snapshot (primera vez que se accede al paso 2)
+
       const snapshot = this.tramiteState.formatoSolicitudSnapshot();
-      if (!snapshot) {
+      if (!snapshot && !this.snapshotRestored) {
         this.formSolicitud.patchValue({
           datosUsuario: data.nombreCompleto,
           numeroContacto: data.numeroContacto,
@@ -70,33 +84,25 @@ export class FormatoSolicitud implements OnInit, OnDestroy {
   ngOnInit(): void {
     const snapshot = this.tramiteState.formatoSolicitudSnapshot();
     const isEditMode = this.tramiteState.isEditMode();
-    
-    console.log('🚀 formato-solicitud ngOnInit');
-    console.log('  snapshot:', snapshot);
-    console.log('  isEditMode:', isEditMode);
-    console.log('  idTramite:', this.tramiteState.idTramite());
-    console.log('  idFormatoSolicitud actual:', this.tramiteState.idFormatoSolicitud());
-    
+
+    // Si hay snapshot, SIEMPRE tiene prioridad (usuario retrocedió y avanzó)
+    if (snapshot) {
+      this.restoreSnapshot(snapshot);
+      this.snapshotRestored = true;
+      return;
+    }
+
+    // No hay snapshot, verificar si es modo edición
     if (isEditMode) {
-      // En modo EDICIÓN, verificar si ya tenemos el idFormatoSolicitud
-      const idFormatoSolicitud = snapshot?.idFormatoSolicitud ?? this.tramiteState.idFormatoSolicitud();
-      console.log('  idFormatoSolicitud del snapshot/state:', idFormatoSolicitud);
-      
+      const idFormatoSolicitud = this.tramiteState.idFormatoSolicitud();
+      console.log('  idFormatoSolicitud del state:', idFormatoSolicitud);
+
       if (!idFormatoSolicitud || idFormatoSolicitud === 0) {
-        // NO tenemos el ID, debemos cargarlo desde la API
         console.log('  → Modo edición SIN idFormatoSolicitud, cargando desde API');
         this.cargarFormatoExistente();
-      } else if (snapshot) {
-        // Ya tenemos el ID en el snapshot, restaurarlo
-        console.log('  → Modo edición CON idFormatoSolicitud en snapshot, restaurando');
-        this.restoreSnapshot(snapshot);
       }
-    } else if (snapshot) {
-      // Modo creación con snapshot previo
-      console.log('  → Modo creación, restaurando snapshot');
-      this.restoreSnapshot(snapshot);
     } else {
-      console.log('  → Modo creación sin snapshot');
+      console.log('  → Modo creación, esperando datos de solicitudData');
     }
   }
 
@@ -112,6 +118,11 @@ export class FormatoSolicitud implements OnInit, OnDestroy {
     return this.tramiteState.isEditMode;
   }
 
+  get isEditingFormato(): boolean {
+    const idFormatoSolicitud = this.tramiteState.idFormatoSolicitud();
+    return idFormatoSolicitud !== null && idFormatoSolicitud !== undefined && idFormatoSolicitud > 0;
+  }
+
   generarTramite(): void {
     if (this.formSolicitud.invalid) {
       this.formSolicitud.markAllAsTouched();
@@ -121,87 +132,117 @@ export class FormatoSolicitud implements OnInit, OnDestroy {
 
     const idTramite = this.tramiteState.idTramite();
     const idFormatoSolicitud = this.tramiteState.idFormatoSolicitud();
-    
-    console.log('🔍 DEBUG - generarTramite()');
-    console.log('  idTramite:', idTramite);
-    console.log('  idFormatoSolicitud:', idFormatoSolicitud);
-    console.log('  isEditMode:', this.tramiteState.isEditMode());
 
     const basePayload = {
       idTramite,
       nombreDestinatario: this.formSolicitud.controls['destinatario'].value ?? 'OCTDA',
       mombresYApellidos: this.formSolicitud.controls['datosUsuario'].value ?? '',
-      carreraProfesional: '',
-      semestre: '',
-      turno: '',
+      carreraProfesional: this.formSolicitud.controls['carreraProfesional'].value ?? '',
+      semestre: this.formSolicitud.controls['semestre'].value ?? '',
+      turno: this.formSolicitud.controls['turno'].value ?? '',
       celularSolicitante: this.formSolicitud.controls['numeroContacto'].value ?? '',
-      nCarnet: '',
+      nCarnet: this.formSolicitud.controls['nCarnet'].value ?? '',
       nDocumento: this.formSolicitud.controls['numeroDocumento'].value ?? '',
       correoSolicitante: this.formSolicitud.controls['email'].value ?? '',
-      domicilioSolicitante: '',
-      facebook: '',
+      domicilioSolicitante: this.formSolicitud.controls['domicilioSolicitante'].value ?? '',
+      facebook: this.formSolicitud.controls['facebook'].value ?? '',
       fundamento: this.formSolicitud.controls['fundamento'].value ?? '',
     };
 
-    this.loading.set(true);
+    this.confirmDialogService.open({
+      type: 'question',
+      message: idFormatoSolicitud && idFormatoSolicitud > 0
+        ? '¿Estás seguro de que deseas actualizar el formato de solicitud?'
+        : '¿Estás seguro de que deseas crear el formato de solicitud? Al guardarlo, el trámite será derivado inmediatamente al área de OCTDA.',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      onAccept: () => {
+        this.loading.set(true);
 
-    // Si tiene idFormatoSolicitud > 0, es EDICIÓN
-    if (idTramite > 0) {
-      const editPayload = { ...basePayload, idFormatoSolicitud };
-      this.editarFormatoSolicitudUseCase.execute(editPayload).subscribe({
-        next: (response) => {
-          this.loading.set(false);
-          this.notificationService.success(response.message + ', formato actualizado correctamente');
-        },
-        error: () => {
-          this.loading.set(false);
-          this.notificationService.error('No se pudo actualizar el formato de solicitud');
+        if (idFormatoSolicitud && idFormatoSolicitud > 0) {
+          const editPayload = { ...basePayload, idFormatoSolicitud };
+
+          this.editarFormatoSolicitud(editPayload);
+        } else {
+          if (!idTramite) {
+            this.notificationService.warn('No se pudo identificar el trámite. Regrese al paso 1.');
+            this.loading.set(false);
+            return;
+          }
+          this.crearFormatoSolicitud(basePayload)
         }
-      });
-    } else {
-      // Crear nuevo formato
-      if (!idTramite) {
-        this.notificationService.warn('No se pudo identificar el tramite. Regrese al paso 1.');
-        this.loading.set(false);
-        return;
       }
-      this.crearFormatoSolicitudUseCase.execute(basePayload).subscribe({
-        next: (response) => {
-          this.loading.set(false);
-          this.notificationService.success(response.message + ', formato de solicitud creado correctamente');
-        },
-        error: () => {
-          this.loading.set(false);
-          this.notificationService.error('No se pudo crear el formato de solicitud');
+    })
+  }
+
+  crearFormatoSolicitud(crear: CrearFormatoSolicitud) {
+    this.crearFormatoSolicitudUseCase.execute(crear).subscribe({
+      next: (response) => {
+        this.loading.set(false);
+        this.notificationService.success(`${response.message}, formato de solicitud creado correctamente`);
+        if (response.isSuccess) {
+          this.actualizarEstadoTramite(this.tramiteSignal.selectTramite());
         }
-      });
-    }
+      },
+      error: (err) => {
+        console.error('Error al crear formato:', err);
+        this.loading.set(false);
+        this.notificationService.error('No se pudo crear el formato de solicitud');
+      }
+    });
+  }
+
+  editarFormatoSolicitud(editar: EditarFormatoSolicitud) {
+    this.editarFormatoSolicitudUseCase.execute(editar).subscribe({
+      next: (response) => {
+        this.loading.set(false);
+        this.notificationService.success(`${response.message}, formato de solicitud actualizado correctamente`);
+        if (response.isSuccess) {
+          this.actualizarEstadoTramite(this.tramiteSignal.selectTramite());
+        }
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this.notificationService.error('No se pudo actualizar el formato de solicitud');
+      }
+    });
+
   }
 
   private cargarFormatoExistente(): void {
     const idTramite = this.tramiteState.idTramite();
-    console.log('📥 Cargando formato existente para idTramite:', idTramite);
     this.loading.set(true);
     this.obtenerFormatoSolicitudUseCase.execute(idTramite).subscribe({
       next: (response) => {
-        console.log('📦 Response obtenerFormatoSolicitud:', response);
         const formatos = response.data ?? [];
+
         if (formatos.length > 0) {
+          // Existe formato → Modo EDICIÓN
           const formato = formatos[0];
-          console.log('✅ Formato encontrado, idFormatoSolicitud:', formato.idFormatoSolicitud);
           this.tramiteState.idFormatoSolicitud.set(formato.idFormatoSolicitud);
           this.formSolicitud.patchValue({
             destinatario: formato.nombreDestinatario,
             datosUsuario: formato.mombresYApellidos,
+            carreraProfesional: formato.carreraProfesional,
+            semestre: formato.semestre,
+            turno: formato.turno,
             numeroContacto: formato.celularSolicitante,
+            nCarnet: formato.nCarnet,
             numeroDocumento: formato.nDocumento,
             email: formato.correoSolicitante,
+            domicilioSolicitante: formato.domicilioSolicitante,
+            facebook: formato.facebook,
             fundamento: formato.fundamento,
           });
+        } else {
+          this.tramiteState.idFormatoSolicitud.set(0);
         }
         this.loading.set(false);
       },
-      error: () => {
+      error: (err) => {
+        console.error('Error al cargar formato:', err);
+        // Si hay error, asumir que no existe → Modo CREACIÓN
+        this.tramiteState.idFormatoSolicitud.set(0);
         this.loading.set(false);
       }
     });
@@ -236,7 +277,7 @@ export class FormatoSolicitud implements OnInit, OnDestroy {
     console.log('🔄 Restaurando snapshot con idFormatoSolicitud:', snapshot.idFormatoSolicitud);
     // Restaurar el idFormatoSolicitud al state
     this.tramiteState.idFormatoSolicitud.set(snapshot.idFormatoSolicitud);
-    
+
     this.formSolicitud.patchValue({
       destinatario: snapshot.destinatario,
       datosUsuario: snapshot.datosUsuario,
@@ -249,6 +290,26 @@ export class FormatoSolicitud implements OnInit, OnDestroy {
       firma: snapshot.firma,
       conformidad: snapshot.conformidad,
     });
+  }
+
+  actualizarEstadoTramite(tramite: ListarTramite) {
+    let actualizarTramite: ActualizarEstadoTramite = {
+      estado: 'INGRESADO',
+      idTramite: tramite.idTramite
+    }
+
+    this.loading.set(true);
+
+    this.actualizarEstadoTramiteUseCase.execute(actualizarTramite).subscribe({
+      next: (response) => {
+        this.loading.set(false);
+        this.notificationService.success(`${response.message}, estado del trámite actualizado a INGRESADO`)
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this.notificationService.error(`Error al actualizar estado del trámite: ${err.message || 'Error desconocido'}`)
+      }
+    })
   }
 
 }

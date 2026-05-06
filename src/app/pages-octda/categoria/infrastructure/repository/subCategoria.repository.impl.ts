@@ -32,6 +32,15 @@ export class SubCategoriaRepositoryImpl extends SubCategoriaRepository {
         )
     }
 
+    override obtenerSubCategoriaPorId(idSubCategoria: number): Observable<ApiResponse<ListarSubCategoria>> {
+        return this.service.obtenerSubCategoriaPorId(idSubCategoria).pipe(
+            map((response) => ({
+                ...response,
+                data: SubCategoriaMapper.toDomainSubCategoria(response.data)
+            }))
+        )
+    }
+
     override crearSubCategoria(subCategoria: CrearSubCategoria): Observable<ApiResponse<unknown>> {
         return this.service.crearSubCategoria(SubCategoriaMapper.toApiCrearSubCategoria(subCategoria));
     }

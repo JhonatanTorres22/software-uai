@@ -27,6 +27,7 @@ import { EliminarTramiteUseCase } from '../../application/use-cases/tramites/eli
 import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
 import { NotificationService } from '@/shared/services/notification.service';
 import { DetailsTramite } from '../details-tramite/details-tramite';
+import { ObtenerTramitesPorUsuarioUseCase } from '../../application/use-cases/tramites/obtenerTramitePorUsuario.use-case';
 
 interface TagConfig {
   label: string;
@@ -45,6 +46,7 @@ interface TagConfig {
 export class ListTramites {
   private readonly tramiteSignal = inject(TramiteSignal);
   private readonly obtenerTramitesUseCase = inject(ObtenerTramitesUseCase);
+  private readonly obtenerTramitesPorUsuarioUseCase = inject(ObtenerTramitesPorUsuarioUseCase);
   private readonly eliminarTramiteUseCase = inject(EliminarTramiteUseCase);
   private readonly obtenerTramitesPorSubCategoriaUseCase = inject(ObtenerTramitesPorSubCategoriaUseCase);
   private readonly notificationService = inject(NotificationService);
@@ -61,7 +63,6 @@ export class ListTramites {
   visibleTimeLine = signal(false);
   visibleGenerarTramiteDrawer = signal(false);
 
-  // Opciones para filtro de estado
   estadoOpciones: UiSelect[] = [
     { text: 'Todos los estados', value: '' },
     { text: 'INGRESADO', value: 'INGRESADO' },
@@ -94,6 +95,7 @@ export class ListTramites {
 
   ngOnInit(): void {
     this.cargarTramites();
+    // this.obtenerTramitesPorUsuario()
   }
 
   tramitesFiltrados = computed(() => {
@@ -157,9 +159,24 @@ export class ListTramites {
       },
       error: (err) => {
         console.log(err);
-        
+
         this.loading.set(false);
         this.notificationService.error('Error, No se pudo cargar la lista de trámites.');
+      },
+    });
+  }
+
+  obtenerTramitesPorUsuario(){
+    this.loading.set(true);
+    this.obtenerTramitesPorUsuarioUseCase.execute().subscribe({
+      next: (response) => {
+        this.listTramite.set(response.data);
+        this.notificationService.success(`${response.message}, trámites del usuario cargados`)
+        this.loading.set(false);
+      },
+      error: (err) => {        console.log(err);
+        this.loading.set(false);
+        this.notificationService.error('Error, No se pudo cargar la lista de trámites del usuario.');
       },
     });
   }
@@ -184,6 +201,7 @@ export class ListTramites {
 
   getEstadoConfig(estado: EstadoTramite): TagConfig {
     const configs: Record<EstadoTramite, TagConfig> = {
+      REGISTRANDO: { label: 'REGISTRANDO', severity: 'secondary', icon: 'pi pi-pencil' },
       INGRESADO: { label: 'INGRESADO', severity: 'info', icon: 'pi pi-file' },
       PENDIENTE: { label: 'PENDIENTE', severity: 'warn', icon: 'pi pi-clock' },
       APROBADO: { label: 'APROBADO', severity: 'success', icon: 'pi pi-check-circle' },
@@ -196,10 +214,10 @@ export class ListTramites {
 
   getRolConfig(rol: RolSolicitante): TagConfig {
     const configs: Record<RolSolicitante, TagConfig> = {
-      alumno: { label: 'ALUMNO', severity: 'info', icon: 'pi pi-user' },
-      docente: { label: 'DOCENTE', severity: 'success', icon: 'pi pi-book' },
-      administrativo: { label: 'ADMINISTRATIVO', severity: 'warn', icon: 'pi pi-briefcase' },
-      externo: { label: 'EXTERNO', severity: 'danger', icon: 'pi pi-globe' },
+      ALUMNO: { label: 'ALUMNO', severity: 'info', icon: 'pi pi-user' },
+      DOCENTE: { label: 'DOCENTE', severity: 'success', icon: 'pi pi-book' },
+      ADMINISTRATIVO: { label: 'ADMINISTRATIVO', severity: 'warn', icon: 'pi pi-briefcase' },
+      EXTERNO: { label: 'EXTERNO', severity: 'danger', icon: 'pi pi-globe' },
     };
     return configs[rol];
   }
@@ -248,38 +266,38 @@ export class ListTramites {
     this.visibleGenerarTramiteDrawer.set(false);
   }
 
-openModal(tramite: ListarTramite, tipo: 'detalle' | 'encuesta'): void {
-  this.selectTramite.set(tramite);
+  openModal(tramite: ListarTramite, tipo: 'detalle' | 'encuesta'): void {
+    this.selectTramite.set(tramite);
 
-  let component: any;
-  let header = '';
+    let component: any;
+    let header = '';
 
-  if (tipo === 'detalle') {
-    component = DetailsTramite;
-    header = 'Detalle del trámite';
-  } else {
-    component = EncuestaSatisfaccion;
-    header = 'Encuesta de Satisfacción';
-  }
-
-  const ref = this.modalService.open(component, {
-    header,
-    width: 'min(90vw, 820px)',
-    maximizable: true,
-    data: { tramite }
-  });
-
-  ref?.onClose.subscribe((result: { success?: boolean } | null) => {
-    if (result?.success) {
-      // refrescar si quieres
+    if (tipo === 'detalle') {
+      component = DetailsTramite;
+      header = 'Detalle del trámite';
+    } else {
+      component = EncuestaSatisfaccion;
+      header = 'Encuesta de Satisfacción';
     }
-  });
-}
+
+    const ref = this.modalService.open(component, {
+      header,
+      width: 'min(90vw, 820px)',
+      maximizable: true,
+      data: { tramite }
+    });
+
+    ref?.onClose.subscribe((result: { success?: boolean } | null) => {
+      if (result?.success) {
+        // refrescar si quieres
+      }
+    });
+  }
 
   anularTramite(tramite: ListarTramite): void {
     console.log('tramite completo:', tramite);
-console.log('idTramite:', tramite.idTramite);
-    
+    console.log('idTramite:', tramite.idTramite);
+
     this.confirmDialogService.open({
       type: 'question',
       title: 'Anular trámite',
@@ -288,21 +306,21 @@ console.log('idTramite:', tramite.idTramite);
       rejectLabel: 'Cancelar',
       onAccept: () => {
         this.loading.set(true);
-        const payload : EliminarTramite = {
+        const payload: EliminarTramite = {
           idTramite: tramite.idTramite,
         }
 
         console.log(payload);
 
         this.eliminarTramiteUseCase.execute(payload).subscribe({
-          next : (res) => {
+          next: (res) => {
             this.loading.set(false);
             this.notificationService.success(`${res.message}, trámite anulado correctamente`);
             this.cargarTramites();
           },
           error: (err) => {
             console.log(err);
-            
+
             this.loading.set(false);
             this.notificationService.error('Error, No se pudo anular el trámite.');
           }

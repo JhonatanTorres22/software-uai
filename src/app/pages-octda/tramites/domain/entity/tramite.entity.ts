@@ -1,4 +1,5 @@
 export type EstadoTramite =
+  | 'REGISTRANDO'
   | 'INGRESADO'
   | 'PENDIENTE'
   | 'APROBADO'
@@ -6,7 +7,7 @@ export type EstadoTramite =
   | 'OBSERVADO'
   | 'ANULADO';
 
-export type RolSolicitante = 'alumno' | 'docente' | 'administrativo' | 'externo';
+export type RolSolicitante = 'ALUMNO' | 'DOCENTE' | 'ADMINISTRATIVO' | 'EXTERNO';
 
 
 export interface ListarTramite {
@@ -46,6 +47,12 @@ export interface ListarTramite {
  }
 
  export type EliminarTramite = Pick<ListarTramite, 'idTramite'>;
+
+ export type ActualizarEstadoTramite = Pick<ListarTramite, 'idTramite' | 'estado'>; 
+
+ export type InsertarTramiteResponse = {
+   codigoTramite: number;
+ };
 
  export interface ListarFormatoSolicitud{
     idFormatoSolicitud: number;

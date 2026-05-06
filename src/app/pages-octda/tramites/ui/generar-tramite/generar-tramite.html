@@ -1,5 +1,5 @@
 <!-- <div class="surface-ground h-full flex flex-column"> -->
-<div class="flex align-items-center justify-content-between">
+<div class="flex align-items-center justify-content-between mb-3">
     <div>
         <h2 class="m-0 text-xl font-bold text-brand">{{ isEditMode() ? 'Editar Trámite' : 'Generar Trámite' }}</h2>
     </div>
@@ -18,10 +18,6 @@
                 <ng-template #content>
                     <div class="p-4 surface-card border-1 surface-border border-round-xl">
                         <app-datos-tramite (tramiteRegistrado)="onTramiteRegistrado($event)"></app-datos-tramite>
-                        <div class="flex justify-content-end mt-4">
-                            <ui-button [label]="actionLabel" icon="pi pi-arrow-right"
-                                (onClick)="registrarYContinuar()"></ui-button>
-                        </div>
                     </div>
                 </ng-template>
             </p-step-panel>

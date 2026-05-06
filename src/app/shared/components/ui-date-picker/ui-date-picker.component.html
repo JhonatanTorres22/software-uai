@@ -1,0 +1,48 @@
+@if (useExternalLabel()) {
+  <p-datepicker 
+    [formControl]="formControl"
+    [showTime]="showTime()"
+    [showSeconds]="showSeconds()"
+    [hourFormat]="hourFormat()"
+    [dateFormat]="dateFormat()"
+    [placeholder]="placeholder()"
+    [minDate]="minDate()"
+    [maxDate]="maxDate()"
+    [disabled]="disabled || readonly()"
+    [showIcon]="true"
+    iconDisplay="input"
+    [style]="{'width': '100%'}"
+    styleClass="w-full"
+    (onSelect)="onDateChange($event)"
+    (onBlur)="onTouched()">
+  </p-datepicker>
+} @else {
+  <p-floatlabel>
+    <p-datepicker 
+      [formControl]="formControl"
+      [showTime]="showTime()"
+      [showSeconds]="showSeconds()"
+      [hourFormat]="hourFormat()"
+      [dateFormat]="dateFormat()"
+      [placeholder]="placeholder()"
+      [minDate]="minDate()"
+      [maxDate]="maxDate()"
+      [disabled]="disabled || readonly()"
+      [showIcon]="true"
+      iconDisplay="input"
+      [style]="{'width': '100%'}"
+      styleClass="w-full"
+      (onSelect)="onDateChange($event)"
+      (onBlur)="onTouched()">
+    </p-datepicker>
+    <label>{{ label() }}</label>
+  </p-floatlabel>
+}
+
+@if (formControl.invalid && (formControl.dirty || formControl.touched)) {
+  <small class="text-red-500 block mt-1">
+    @if (formControl.hasError('required')) {
+      Este campo es obligatorio.
+    }
+  </small>
+}

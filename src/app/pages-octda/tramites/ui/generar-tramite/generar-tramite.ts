@@ -5,7 +5,6 @@ import { StepperModule } from 'primeng/stepper';
 import { DatosTramite } from "./datos-tramite/datos-tramite";
 import { FormatoSolicitud } from "./formato-solicitud/formato-solicitud";
 import { UiIconButton } from "@/shared/components/ui-icon-button/ui-icon-button";
-import { UiButtonComponent } from "@/shared/components/ui-button/ui-button.component";
 import { FormatoSolicitudData } from '../../domain/entity/formato-solicitud.model';
 import { TramiteStateService } from '../../domain/services/tramite-state.service';
 import { TramiteSignal } from '../../domain/signals/tramite.signal';
@@ -13,7 +12,7 @@ import { NotificationService } from '@/shared/services/notification.service';
 
 @Component({
   selector: 'app-generar-tramite',
-  imports: [ButtonModule, StepperModule, CommonModule, DatosTramite, FormatoSolicitud, UiIconButton, UiButtonComponent],
+  imports: [ButtonModule, StepperModule, CommonModule, DatosTramite, FormatoSolicitud, UiIconButton],
   templateUrl: './generar-tramite.html',
   styleUrl: './generar-tramite.scss',
 })
@@ -38,7 +37,6 @@ export class GenerarTramite implements OnInit, OnDestroy {
     this.tramiteState.idTramite.set(id);
 
     if (id > 0) {
-      // Modo edición: pre-poblar datos del trámite seleccionado
       const prePopulated: FormatoSolicitudData = {
         idTramite: tramite.idTramite,
         idFormatoSolicitud: 0,
@@ -74,8 +72,22 @@ export class GenerarTramite implements OnInit, OnDestroy {
     this.datosTramiteStep?.registrarTramite();
   }
 
-  onTramiteRegistrado(data: FormatoSolicitudData): void {
-    this.tramiteState.solicitudData.set(data);
+  onTramiteRegistrado(idTramite: number): void {
+    const tramite = this.tramiteSignal.selectTramite();
+    
+    const solicitudData: FormatoSolicitudData = {
+      idTramite: idTramite,
+      idFormatoSolicitud: 0,
+      nombreCompleto: [tramite.nombreSolicitante, tramite.apePaternoSolicitante, tramite.apeMaternoSolicitante]
+        .filter(Boolean).join(' ').trim(),
+      numeroContacto: tramite.celularSolicitante,
+      numeroDocumento: tramite.numeroDoc,
+      email: tramite.correoSolicitante,
+      fundamento: tramite.asunto,
+      anexos: tramite.archivoAnexo,
+    };
+    
+    this.tramiteState.solicitudData.set(solicitudData);
     this.activeStep.set(2);
   }
 

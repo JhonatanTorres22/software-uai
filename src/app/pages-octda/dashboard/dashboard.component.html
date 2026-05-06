@@ -1,288 +1,35 @@
-<div class="dash-page">
-
-  <!-- ══ PAGE HEADER ══════════════════════════════════════════════════════════ -->
-  <div class="dash-header flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+<div class="dashboard-page">
+  <!-- Header -->
+  <div class="dashboard-header mb-4">
     <div>
-      <h1 class="dash-title">Trámite Documentario y Archivo</h1>
-      <p class="dash-sub">Panel general · Actualizado hoy, Abril 2025</p>
-    </div>
-    <div class="flex gap-2 flex-wrap">
-      <p-button label="Filtrar periodo" icon="pi pi-calendar"
-        severity="secondary" [outlined]="true" size="small" />
-      <p-button label="Nuevo trámite" icon="pi pi-plus" size="small" />
+      <h1 class="dashboard-title">Dashboard de Trámites</h1>
+    
     </div>
   </div>
 
-  <!-- ══ MÉTRICAS (4 cards) ═══════════════════════════════════════════════════ -->
-  <div class="metrics-grid mb-4">
-    @for (m of metrics; track $index) {
-      <div class="metric-card flex justify-content-between align-items-start">
-        <div class="flex flex-column gap-2">
-          <span class="metric-label">{{ m.label }}</span>
-          <span class="metric-value">{{ m.value }}</span>
-          <span class="metric-delta">{{ m.delta }}</span>
-        </div>
-        <div class="metric-icon" [ngClass]="m.iconClass">
-          <i [class]="m.icon"></i>
-        </div>
+  <!-- Loading State -->
+  @if (loading()) {
+    <app-ui-loading></app-ui-loading>
+  }
+  @else {
+    <!-- Cards de Estados -->
+    <app-cards-dashboard />
+
+    <!-- Gráficos Row 1: Donut + Mensual -->
+    <div class="grid mb-4">
+      <div class="col-12 lg:col-6">
+        <app-dashboard-donut-chart  />
       </div>
-    }
-  </div>
-
-  <!-- ══ FILA 1: Barras + Donut ════════════════════════════════════════════════ -->
-  <div class="grid mb-3">
-
-    <!-- Barras mensuales -->
-    <div class="col-12 md:col-6 lg:col-7">
-      <div class="erp-card h-full">
-        <div class="erp-card-hd">
-          <span class="erp-card-title">Trámites por mes</span>
-          <a class="erp-card-link">Ver reporte <i class="pi pi-arrow-right"></i></a>
-        </div>
-        <div class="erp-card-body">
-          <div class="flex justify-content-between mb-2">
-            <span class="chart-range">Ene – Dic 2025</span>
-            <span class="chart-total">Total: 847 trámites</span>
-          </div>
-          <div class="bar-chart">
-            @for (h of barData; track $index; let i = $index) {
-              <div class="bar"
-                [style.height.%]="barHeight(h)"
-                [class.bar-active]="i === activeBar"
-                [pTooltip]="months[i] + ': ' + h"
-                tooltipPosition="top">
-              </div>
-            }
-          </div>
-          <div class="chart-labels">
-            @for (m of months; track $index; let i = $index) {
-              <span [class.label-active]="i === activeBar">{{ m }}</span>
-            }
-          </div>
-        </div>
+      <div class="col-12 lg:col-6">
+        <app-dashboard-tramites-mes-chart />
       </div>
     </div>
 
-    <!-- Donut + progreso -->
-    <div class="col-12 md:col-6 lg:col-5">
-      <div class="erp-card h-full">
-        <div class="erp-card-hd">
-          <span class="erp-card-title">Distribución por estado</span>
-          <a class="erp-card-link">Detalle <i class="pi pi-arrow-right"></i></a>
-        </div>
-        <div class="erp-card-body">
-          <div class="flex align-items-center gap-3 mb-3 flex-wrap">
-            <!-- SVG Donut -->
-            <svg width="90" height="90" viewBox="0 0 100 100" style="flex-shrink:0">
-              <circle cx="50" cy="50" r="36" fill="none" stroke="#E6F1FB" stroke-width="16"/>
-              <circle cx="50" cy="50" r="36" fill="none" stroke="#3B6D11" stroke-width="16"
-                stroke-dasharray="82 144" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
-              <circle cx="50" cy="50" r="36" fill="none" stroke="#EF9F27" stroke-width="16"
-                stroke-dasharray="54 144" stroke-dashoffset="-82" transform="rotate(-90 50 50)"/>
-              <circle cx="50" cy="50" r="36" fill="none" stroke="#E24B4A" stroke-width="16"
-                stroke-dasharray="26 144" stroke-dashoffset="-136" transform="rotate(-90 50 50)"/>
-              <circle cx="50" cy="50" r="36" fill="none" stroke="#7F77DD" stroke-width="16"
-                stroke-dasharray="18 144" stroke-dashoffset="-162" transform="rotate(-90 50 50)"/>
-              <text x="50" y="46" text-anchor="middle" font-size="14" font-weight="500" fill="currentColor">243</text>
-              <text x="50" y="58" text-anchor="middle" font-size="8" fill="currentColor" opacity=".6">este mes</text>
-            </svg>
-            <!-- Leyenda -->
-            <div class="flex flex-column gap-2 flex-1">
-              @for (s of donutStats; track $index) {
-                <div class="flex align-items-center gap-2">
-                  <span class="leg-dot" [style.background]="s.fill"></span>
-                  <span class="leg-label">{{ s.label }}</span>
-                  <span class="leg-pct ml-auto" [style.color]="s.color">{{ s.pct }}%</span>
-                </div>
-              }
-            </div>
-          </div>
-          <!-- Barras de progreso -->
-          @for (s of donutStats; track $index) {
-            <div class="prog-wrap">
-              <div class="flex justify-content-between mb-1">
-                <span class="prog-label" [style.color]="s.color">{{ s.label }}</span>
-                <span class="prog-count">{{ s.val }} / 243</span>
-              </div>
-              <div class="prog-track">
-                <div class="prog-fill" [style.width.%]="s.pct" [style.background]="s.fill"></div>
-              </div>
-            </div>
-          }
-        </div>
+    <!-- Gráfico Row 2: Subcategorías -->
+    <div class="grid">
+      <div class="col-12">
+        <app-dashboard-subcategoria-chart />
       </div>
     </div>
-  </div>
-
-  <!-- ══ FILA 2: Sparklines + Actividad ═══════════════════════════════════════ -->
-  <div class="grid mb-3">
-
-    <!-- Sparklines por área -->
-    <div class="col-12 md:col-6">
-      <div class="erp-card h-full">
-        <div class="erp-card-hd">
-          <span class="erp-card-title">Trámites por área</span>
-          <a class="erp-card-link">Ver todas <i class="pi pi-arrow-right"></i></a>
-        </div>
-        <div class="erp-card-body py-2">
-          @for (sp of sparkAreas; track $index) {
-            <div class="spark-row flex align-items-center gap-2">
-              <span class="spark-label">{{ sp.area }}</span>
-              <svg class="spark-svg" height="24" viewBox="0 0 80 24">
-                <polyline [attr.points]="sparkPolyline(sp.pts)"
-                  fill="none" stroke="#185FA5" stroke-width="1.5"
-                  stroke-linejoin="round" opacity=".7"/>
-                <circle [attr.cx]="sparkLastX(sp.pts)" [attr.cy]="sparkLastY(sp.pts)"
-                  r="2.5" fill="#185FA5"/>
-              </svg>
-              <span class="spark-val">{{ sp.val }}</span>
-            </div>
-          }
-        </div>
-      </div>
-    </div>
-
-    <!-- Actividad reciente -->
-    <div class="col-12 md:col-6">
-      <div class="erp-card h-full">
-        <div class="erp-card-hd">
-          <span class="erp-card-title">Actividad reciente</span>
-          <a class="erp-card-link">Ver todo <i class="pi pi-arrow-right"></i></a>
-        </div>
-        <div class="erp-card-body py-1">
-          @for (a of activities; track $index) {
-            <div class="act-item flex gap-2">
-              <span class="act-dot" [style.background]="a.dotColor"></span>
-              <div>
-                <div class="act-text">
-                  {{ a.text }}
-                  <strong class="act-entity"> {{ a.entity }}</strong>
-                  @if (a.text2) { <span> {{ a.text2 }}</span> }
-                </div>
-                <div class="act-time">{{ a.time }}</div>
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ PIPELINE ══════════════════════════════════════════════════════════════ -->
-  <div class="erp-card mb-3">
-    <div class="erp-card-hd">
-      <span class="erp-card-title">Pipeline de trámites — flujo por estado</span>
-      <a class="erp-card-link">Gestionar <i class="pi pi-arrow-right"></i></a>
-    </div>
-    <div class="pipeline">
-      @for (stage of pipeline; track $index) {
-        <div class="pipeline-stage">
-          <div class="stage-hd" [ngClass]="stage.borderClass">
-            <span class="stage-label">{{ stage.label }}</span>
-            <span class="stage-count">{{ stage.count }}</span>
-          </div>
-          <div class="stage-body">
-            @for (deal of stage.deals; track $index) {
-              <div class="deal-card">
-                <div class="deal-nm">{{ deal.nm }}</div>
-                <div class="deal-type">{{ deal.type }}</div>
-                <div class="deal-days" [style.color]="stage.colorVar">{{ deal.days }}</div>
-              </div>
-            }
-          </div>
-        </div>
-      }
-    </div>
-  </div>
-
-  <!-- ══ TABLA CON TABS ═════════════════════════════════════════════════════════ -->
-  <div class="erp-card">
-    <p-tabs [(value)]="selectedTab" >
-
-      <!-- Tab headers -->
-      <p-tablist>
-        @for (tabName of tabNames; track $index) {
-          <p-tab [value]="$index">{{ tabName }}</p-tab>
-        }
-      </p-tablist>
-
-      <!-- Tab panels -->
-      <p-tabpanels>
-        @for (tabName of tabNames; track $index) {
-          <p-tabpanel [value]="$index">
-
-            <!-- Filtros -->
-            <div class="flex gap-2 mb-3 flex-wrap">
-              <input pInputText [(ngModel)]="searchQuery"
-                placeholder="🔍  Buscar expediente o asunto..."
-                class="search-input" />
-              <p-select
-                [options]="areaOptions"
-                [(ngModel)]="selectedArea"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Todas las áreas"
-                styleClass="select-area" />
-            </div>
-
-            <!-- Tabla -->
-            <p-table [value]="filteredTramites"
-              [tableStyle]="{'min-width':'700px'}"
-              styleClass="p-datatable-sm p-datatable-striped"
-              [paginator]="true" [rows]="6"
-              [showCurrentPageReport]="true"
-              currentPageReportTemplate="{first}–{last} de {totalRecords} trámites">
-              <ng-template pTemplate="header">
-                <tr>
-                  <th style="width:120px">Expediente</th>
-                  <th>Asunto</th>
-                  <th style="width:130px">Área</th>
-                  <th style="width:150px">Responsable</th>
-                  <th style="width:110px">Fecha</th>
-                  <th style="width:90px">Prioridad</th>
-                  <th style="width:120px">Estado</th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-t>
-                <tr class="tbl-row">
-                  <td><span class="exp-id">{{ t.id }}</span></td>
-                  <td class="asunto-cell">{{ t.asunto }}</td>
-                  <td><span class="area-tag">{{ t.area }}</span></td>
-                  <td>
-                    <div class="flex align-items-center gap-2">
-                      <p-avatar [label]="getInitials(t.responsable)"
-                        shape="circle" size="normal"
-                        styleClass="resp-avatar" />
-                      <span>{{ t.responsable }}</span>
-                    </div>
-                  </td>
-                  <td class="fecha-cell">{{ t.fecha }}</td>
-                  <td>
-                    <span class="prio-badge" [ngClass]="getPrioClass(t.prioridad)">
-                      {{ t.prioridad }}
-                    </span>
-                  </td>
-                  <td>
-                    <span class="status-badge" [ngClass]="getStatusClass(t.estado)">
-                      {{ t.estado }}
-                    </span>
-                  </td>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="emptymessage">
-                <tr>
-                  <td colspan="7" class="text-center py-4" style="color:var(--p-text-muted-color)">
-                    <i class="pi pi-inbox mr-2"></i>No se encontraron trámites con estos filtros.
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
-
-          </p-tabpanel>
-        }
-      </p-tabpanels>
-
-    </p-tabs>
-  </div>
-
+  }
 </div>
