@@ -30,13 +30,13 @@ export class DashboardDonutChart {
     const tramites = this.listTramite();
     
     const estadosMap = new Map<EstadoTramite, EstadoData>([
-      ['REGISTRANDO', { name: 'Registrando', value: 0, color: '#6b7280' }],
-      ['INGRESADO', { name: 'Ingresado', value: 0, color: '#3b82f6' }],
-      ['PENDIENTE', { name: 'Pendiente', value: 0, color: '#f59e0b' }],
-      ['APROBADO', { name: 'Aprobado', value: 0, color: '#10b981' }],
-      ['IMPROCEDENTE', { name: 'Improcedente', value: 0, color: '#ef4444' }],
-      ['OBSERVADO', { name: 'Observado', value: 0, color: '#f97316' }],
-      ['ANULADO', { name: 'Anulado', value: 0, color: '#374151' }]
+      ['REGISTRANDO', { name: 'Registrando', value: 0, color: '#64748b' }],
+      ['INGRESADO', { name: 'Ingresado', value: 0, color: '#2563eb' }],
+      ['PENDIENTE', { name: 'Pendiente', value: 0, color: '#ea580c' }],
+      ['APROBADO', { name: 'Aprobado', value: 0, color: '#059669' }],
+      ['IMPROCEDENTE', { name: 'Improcedente', value: 0, color: '#dc2626' }],
+      ['OBSERVADO', { name: 'Observado', value: 0, color: '#d97706' }],
+      ['ANULADO', { name: 'Anulado', value: 0, color: '#475569' }]
     ]);
 
     tramites.forEach(tramite => {
@@ -55,46 +55,71 @@ export class DashboardDonutChart {
     return {
       tooltip: {
         trigger: 'item',
-        formatter: '{b}: {c} ({d}%)'
+        formatter: '<strong>{b}</strong><br/>{c} trámites ({d}%)',
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderColor: '#e5e7eb',
+        borderWidth: 1,
+        textStyle: {
+          color: '#374151',
+          fontSize: 13
+        },
+        padding: [10, 14],
+        extraCssText: 'border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);'
       },
       legend: {
-        bottom: '5%',
+        bottom: 10,
         left: 'center',
+        itemGap: 16,
         textStyle: {
-          fontSize: 12
-        }
+          fontSize: 13,
+          color: '#4b5563'
+        },
+        icon: 'circle',
+        itemWidth: 10,
+        itemHeight: 10
       },
       series: [
         {
           name: 'Estados',
           type: 'pie',
-          radius: ['40%', '70%'],
+          radius: ['45%', '72%'],
+          center: ['50%', '45%'],
           avoidLabelOverlap: true,
           itemStyle: {
-            borderRadius: 10,
+            borderRadius: 8,
             borderColor: '#fff',
-            borderWidth: 2
+            borderWidth: 3
           },
           label: {
             show: true,
             position: 'outside',
-            formatter: '{b}: {c}',
-            fontSize: 12
+            formatter: '{b}\n{c}',
+            fontSize: 12,
+            color: '#374151',
+            fontWeight: 500
           },
           emphasis: {
             label: {
               show: true,
               fontSize: 14,
-              fontWeight: 'bold'
+              fontWeight: 600
             },
             itemStyle: {
-              shadowBlur: 10,
+              shadowBlur: 16,
               shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
+              shadowOffsetY: 4,
+              shadowColor: 'rgba(0, 0, 0, 0.2)'
+            },
+            scale: true,
+            scaleSize: 8
           },
           labelLine: {
-            show: true
+            show: true,
+            length: 12,
+            length2: 8,
+            lineStyle: {
+              color: '#d1d5db'
+            }
           },
           data: data.map(item => ({
             name: item.name,

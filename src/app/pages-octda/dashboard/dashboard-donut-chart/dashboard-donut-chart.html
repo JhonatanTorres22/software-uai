@@ -1,23 +1,29 @@
-<div class="chart-card">
-  <div class="chart-header">
+<div class="surface-card border-round-lg shadow-2 h-full transition-all transition-duration-200 hover:shadow-4">
+  <div class="flex align-items-center justify-content-between p-4 border-bottom-1 surface-border">
     <div>
-      <h3 class="chart-title">Trámites por Estado</h3>
-      <p class="chart-subtitle">Distribución de estados actuales</p>
+      <h3 class="text-xl font-semibold text-900 m-0 mb-1">Trámites por Estado</h3>
+      <p class="text-sm text-600 m-0">Distribución de estados actuales</p>
     </div>
-    <ui-button label="Exportar" icon="pi pi-download" color="secondary" (onClick)="exportToExcel()" [disabled]="estadosData().length === 0"></ui-button>
+    <ui-button 
+      label="Exportar" 
+      icon="pi pi-download" 
+      color="secondary" 
+      (onClick)="exportToExcel()" 
+      [disabled]="estadosData().length === 0"
+    ></ui-button>
   </div>
 
-  <div class="chart-body">
+  <div class="p-4">
     @if (estadosData().length > 0) {
       <div echarts 
         [options]="chartOption()" 
-        class="donut-chart"
-        [style.height.px]="400">
+        class="w-full"
+        [style.height.px]="420">
       </div>
     } @else {
-      <div class="no-data">
-        <i class="pi pi-chart-pie" style="font-size: 3rem; color: #cbd5e1;"></i>
-        <p>No hay datos disponibles</p>
+      <div class="flex flex-column align-items-center justify-content-center py-6">
+        <i class="pi pi-chart-pie text-6xl text-400 mb-3"></i>
+        <p class="text-600 m-0">No hay datos disponibles</p>
       </div>
     }
   </div>

@@ -1,100 +1,66 @@
-.cards-dashboard-container {
-  margin-bottom: 2rem;
-}
-
 .estado-card {
   position: relative;
   overflow: hidden;
-  transition: transform 0.22s ease;
   height: 100%;
   cursor: default;
+  
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.12) !important;
   }
-  &.card--pendiente     { background: #FEF3E2; }
-  &.card--aprobado      { background: #EDFAF0; }
-  &.card--improcedente  { background: #FEF0F0; }
-  &.card--observado     { background: #FEF0E8; }
-  &.card--registrando { background: #F3F4F6; }
+
+  &.card--pendiente     { background: linear-gradient(135deg, #fef3e2 0%, #fde9c8 100%); }
+  &.card--aprobado      { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); }
+  &.card--improcedente  { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); }
+  &.card--observado     { background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); }
+  &.card--registrando   { background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); }
 }
 
-// Shine circle en esquina superior derecha
 .card-shine {
   position: absolute;
-  top: -30px;
-  right: -30px;
-  width: 100px;
-  height: 100px;
+  top: -40px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  opacity: 0.12;
+  opacity: 0.08;
   pointer-events: none;
 
-  .card--pendiente &    { background: #F59E0B; }
-  .card--aprobado &     { background: #22C55E; }
-  .card--improcedente & { background: #EF4444; }
-  .card--observado &    { background: #F97316; }
-  .card--registrando & { background: #9CA3AF; }
+  .card--pendiente &    { background: #f59e0b; }
+  .card--aprobado &     { background: #10b981; }
+  .card--improcedente & { background: #ef4444; }
+  .card--observado &    { background: #f97316; }
+  .card--registrando &  { background: #6b7280; }
 }
 
-// Tag de estado
 .card-tag {
-//   letter-spacing: 0.1em;
-//   text-transform: uppercase;
-//   padding: 4px 10px;
-//   border-radius: 99px;
-
-  .card--pendiente &    { background: rgba(217, 119, 6, 0.12);  color: #92400E; }
-  .card--aprobado &     { background: rgba(21, 128, 61, 0.12);  color: #14532D; }
-  .card--improcedente & { background: rgba(185, 28, 28, 0.12);  color: #7F1D1D; }
-  .card--observado &    { background: rgba(194, 65, 12, 0.12);  color: #7C2D12; }
-  .card--registrando & { background: rgba(107, 114, 128, 0.12); color: #374151; }
+  .card--pendiente &    { background: rgba(217, 119, 6, 0.15);  color: #92400e; }
+  .card--aprobado &     { background: rgba(16, 185, 129, 0.15);  color: #065f46; }
+  .card--improcedente & { background: rgba(239, 68, 68, 0.15);   color: #7f1d1d; }
+  .card--observado &    { background: rgba(249, 115, 22, 0.15);  color: #7c2d12; }
+  .card--registrando &  { background: rgba(107, 114, 128, 0.15); color: #374151; }
 }
 
-// Ícono
 .card-icon-wrap {
-
-  i { font-size: 1.1rem; }
-
-  .card--pendiente &    { background: rgba(217, 119, 6, 0.15);  i { color: #D97706; } }
-  .card--aprobado &     { background: rgba(21, 128, 61, 0.15);  i { color: #16A34A; } }
-  .card--improcedente & { background: rgba(185, 28, 28, 0.15);  i { color: #DC2626; } }
-  .card--observado &    { background: rgba(194, 65, 12, 0.15);  i { color: #EA580C; } }
-  .card--registrando & { background: rgba(107, 114, 128, 0.15); i { color: #6B7280; } }
+  .card--pendiente &    { background: rgba(217, 119, 6, 0.12);   i { color: #d97706; } }
+  .card--aprobado &     { background: rgba(16, 185, 129, 0.12);  i { color: #059669; } }
+  .card--improcedente & { background: rgba(239, 68, 68, 0.12);   i { color: #dc2626; } }
+  .card--observado &    { background: rgba(249, 115, 22, 0.12);  i { color: #ea580c; } }
+  .card--registrando &  { background: rgba(107, 114, 128, 0.12); i { color: #6b7280; } }
 }
 
-// Número grande
 .card-num {
-  .card--pendiente &    { color: #92400E; }
-  .card--aprobado &     { color: #14532D; }
-  .card--improcedente & { color: #7F1D1D; }
-  .card--observado &    { color: #7C2D12; }
-  .card--registrando & { color: #374151; }
+  .card--pendiente &    { color: #92400e; }
+  .card--aprobado &     { color: #065f46; }
+  .card--improcedente & { color: #7f1d1d; }
+  .card--observado &    { color: #7c2d12; }
+  .card--registrando &  { color: #374151; }
 }
 
-// Label
-.card-label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  opacity: 0.65;
-
-  .card--pendiente &    { color: #92400E; }
-  .card--aprobado &     { color: #14532D; }
-  .card--improcedente & { color: #7F1D1D; }
-  .card--observado &    { color: #7C2D12; }
-  .card--registrando & { color: #374151; }
-}
-
-
-
-// Responsive
-@media (max-width: 576px) {
-  .estado-card {
-    padding: 1.1rem 1.2rem;
-  }
-
-  .card-num {
-    font-size: 2.8rem;
-  }
+.card-footer {
+  .card--pendiente &    { color: #92400e; }
+  .card--aprobado &     { color: #065f46; }
+  .card--improcedente & { color: #7f1d1d; }
+  .card--observado &    { color: #7c2d12; }
+  .card--registrando &  { color: #374151; }
 }
