@@ -1,10 +1,8 @@
-<div class="dashboard-page">
+<div class="dashboard-container p-4 md:p-5">
   <!-- Header -->
-  <div class="dashboard-header mb-4">
-    <div>
-      <h1 class="dashboard-title">Dashboard de Trámites</h1>
-    
-    </div>
+  <div class="flex flex-column gap-1 mb-5">
+    <h1 class="text-4xl font-bold text-900 m-0 line-height-3">Dashboard de Trámites</h1>
+    <!-- <p class="text-600 m-0 text-lg">Gestión y análisis de trámites en tiempo real</p> -->
   </div>
 
   <!-- Loading State -->
@@ -18,7 +16,7 @@
     <!-- Gráficos Row 1: Donut + Mensual -->
     <div class="grid mb-4">
       <div class="col-12 lg:col-6">
-        <app-dashboard-donut-chart  />
+        <app-dashboard-donut-chart />
       </div>
       <div class="col-12 lg:col-6">
         <app-dashboard-tramites-mes-chart />
@@ -28,7 +26,7 @@
     <!-- Gráfico Row 2: Subcategorías -->
     <div class="grid">
       <div class="col-12">
-        <app-dashboard-subcategoria-chart />
+        <app-dashboard-subcategoria-chart></app-dashboard-subcategoria-chart>
       </div>
     </div>
   }

@@ -3,11 +3,10 @@ import { CommonModule } from '@angular/common';
 import { CardsDashboard } from './cards-dashboard/cards-dashboard';
 import { DashboardDonutChart } from './dashboard-donut-chart/dashboard-donut-chart';
 import { DashboardTramitesMesChart } from './dashboard-tramites-mes-chart/dashboard-tramites-mes-chart';
-import { DashboardSubcategoriaChart } from './dashboard-subcategoria-chart/dashboard-subcategoria-chart';
 import { ObtenerTramitesUseCase } from '../tramites/application/use-cases/tramites/obtenerTramites.use-case';
-import { ListarTramite } from '../tramites/domain/entity/tramite.entity';
 import { TramiteSignal } from '../tramites/domain/signals/tramite.signal';
 import { UiLoading } from "@/shared/components/ui-loading/ui-loading";
+import { DashboardSubcategoriaChart } from './dashboard-subcategoria-chart/dashboard-subcategoria-chart';
 
 @Component({
   selector: 'app-dashboard',

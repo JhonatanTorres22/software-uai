@@ -68,15 +68,27 @@ export class DashboardTramitesMesChart {
       tooltip: {
         trigger: 'axis',
         axisPointer: {
-          type: 'shadow'
+          type: 'shadow',
+          shadowStyle: {
+            color: 'rgba(37, 99, 235, 0.05)'
+          }
         },
-        formatter: '{b}: {c} trámites'
+        formatter: '<strong>{b}</strong><br/>{c} trámites',
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderColor: '#e5e7eb',
+        borderWidth: 1,
+        textStyle: {
+          color: '#374151',
+          fontSize: 13
+        },
+        padding: [10, 14],
+        extraCssText: 'border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);'
       },
       grid: {
         left: '3%',
-        right: '4%',
-        bottom: '3%',
-        top: '3%',
+        right: '3%',
+        bottom: '8%',
+        top: '5%',
         containLabel: true
       },
       xAxis: {
@@ -84,13 +96,45 @@ export class DashboardTramitesMesChart {
         data: data.map(m => m.mes),
         axisLabel: {
           rotate: 45,
-          fontSize: 11
+          fontSize: 12,
+          color: '#6b7280',
+          fontWeight: 500
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#e5e7eb'
+          }
+        },
+        axisTick: {
+          show: false
         }
       },
       yAxis: {
         type: 'value',
         name: 'Cantidad',
-        minInterval: 1
+        nameTextStyle: {
+          color: '#6b7280',
+          fontSize: 12,
+          fontWeight: 500,
+          padding: [0, 0, 0, 0]
+        },
+        minInterval: 1,
+        axisLabel: {
+          fontSize: 12,
+          color: '#9ca3af'
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        splitLine: {
+          lineStyle: {
+            color: '#f3f4f6',
+            type: 'solid'
+          }
+        }
       },
       series: [
         {
@@ -98,15 +142,41 @@ export class DashboardTramitesMesChart {
           type: 'bar',
           data: data.map(m => m.cantidad),
           itemStyle: {
-            color: '#3b82f6',
-            borderRadius: [4, 4, 0, 0]
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [
+                { offset: 0, color: '#3b82f6' },
+                { offset: 1, color: '#2563eb' }
+              ]
+            },
+            borderRadius: [6, 6, 0, 0]
           },
           emphasis: {
             itemStyle: {
-              color: '#2563eb'
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: '#2563eb' },
+                  { offset: 1, color: '#1d4ed8' }
+                ]
+              },
+              shadowBlur: 10,
+              shadowColor: 'rgba(37, 99, 235, 0.3)',
+              shadowOffsetY: 2
             }
           },
-          barWidth: '60%'
+          barWidth: '55%',
+          label: {
+            show: false
+          }
         }
       ]
     };

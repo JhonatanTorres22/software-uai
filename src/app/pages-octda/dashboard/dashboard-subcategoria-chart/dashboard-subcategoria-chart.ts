@@ -50,13 +50,25 @@ export class DashboardSubcategoriaChart {
       tooltip: {
         trigger: 'axis',
         axisPointer: {
-          type: 'shadow'
+          type: 'shadow',
+          shadowStyle: {
+            color: 'rgba(124, 58, 237, 0.05)'
+          }
         },
-        formatter: '{b}: {c} trámites'
+        formatter: '<strong>{b}</strong><br/>{c} trámites',
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderColor: '#e5e7eb',
+        borderWidth: 1,
+        textStyle: {
+          color: '#374151',
+          fontSize: 13
+        },
+        padding: [10, 14],
+        extraCssText: 'border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);'
       },
       grid: {
         left: '3%',
-        right: '4%',
+        right: '6%',
         bottom: '3%',
         top: '3%',
         containLabel: true
@@ -64,16 +76,47 @@ export class DashboardSubcategoriaChart {
       xAxis: {
         type: 'value',
         name: 'Cantidad',
-        minInterval: 1
+        nameTextStyle: {
+          color: '#6b7280',
+          fontSize: 12,
+          fontWeight: 500
+        },
+        minInterval: 1,
+        axisLabel: {
+          fontSize: 12,
+          color: '#9ca3af'
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        splitLine: {
+          lineStyle: {
+            color: '#f3f4f6',
+            type: 'solid'
+          }
+        }
       },
       yAxis: {
         type: 'category',
         data: data.map(s => s.nombre),
         axisLabel: {
-          fontSize: 11,
-          width: 150,
+          fontSize: 12,
+          width: 180,
           overflow: 'truncate',
-          ellipsis: '...'
+          ellipsis: '...',
+          color: '#4b5563',
+          fontWeight: 500
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#e5e7eb'
+          }
+        },
+        axisTick: {
+          show: false
         }
       },
       series: [
@@ -82,20 +125,45 @@ export class DashboardSubcategoriaChart {
           type: 'bar',
           data: data.map(s => s.cantidad),
           itemStyle: {
-            color: '#8b5cf6',
-            borderRadius: [0, 4, 4, 0]
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 1,
+              y2: 0,
+              colorStops: [
+                { offset: 0, color: '#a78bfa' },
+                { offset: 1, color: '#7c3aed' }
+              ]
+            },
+            borderRadius: [0, 6, 6, 0]
           },
           emphasis: {
             itemStyle: {
-              color: '#7c3aed'
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 1,
+                y2: 0,
+                colorStops: [
+                  { offset: 0, color: '#8b5cf6' },
+                  { offset: 1, color: '#6d28d9' }
+                ]
+              },
+              shadowBlur: 10,
+              shadowColor: 'rgba(124, 58, 237, 0.3)',
+              shadowOffsetX: 2
             }
           },
-          barWidth: '60%',
+          barWidth: '50%',
           label: {
             show: true,
             position: 'right',
-            fontSize: 11,
-            color: '#6b7280'
+            fontSize: 12,
+            color: '#6b7280',
+            fontWeight: 500,
+            distance: 8
           }
         }
       ]
