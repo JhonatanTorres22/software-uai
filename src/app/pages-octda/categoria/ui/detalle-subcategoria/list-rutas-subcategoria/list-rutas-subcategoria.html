@@ -1,0 +1,92 @@
+@if (loading()) {
+<app-ui-loading></app-ui-loading>
+}
+@else {
+<div class="flex align-items-center justify-content-between gap-2 mb-3 flex-wrap">
+    <div class="flex align-items-center gap-2">
+        <i class="pi pi-sitemap text-brand"></i>
+        <h3 class="m-0 text-900 text-base font-semibold">Areas asignadas del tramite</h3>
+    </div>
+    <p-tag [value]="'Tiempo estimado: ' + totalDuracion() + ' dias'" severity="info"></p-tag>
+</div>
+<p-timeline [value]="listRutas()" styleClass="tramite-timeline">
+
+    <ng-template pTemplate="marker" let-ruta>
+        <span class="inline-flex align-items-center justify-content-center
+             w-2rem h-2rem border-circle
+             bg-blue-500 text-white text-sm font-bold">
+            {{ ruta.orden }}
+        </span>
+    </ng-template>
+
+    <ng-template pTemplate="content" let-ruta>
+
+        <article class="border-1 surface-border border-round-lg
+             px-3 py-2 mb-3 bg-white">
+
+            <div class="flex justify-content-between align-items-start gap-3">
+
+                <div class="flex flex-column gap-2 w-full">
+
+                    <div class="flex gap-2 flex-wrap">
+
+                        <p-tag [value]="(ruta.fechaCreacion | date:'dd/MM/yyyy HH:mm') || 'Sin fecha'"
+                            severity="secondary" icon="pi pi-calendar">
+                        </p-tag>
+
+                        <p-tag [value]="ruta.duracion + ' día(s)'" severity="info" icon="pi pi-clock">
+                        </p-tag>
+
+                    </div>
+
+                    <div class="flex align-items-center gap-2 p-2 mt-2
+                   text-sm font-medium text-700 flex-wrap">
+
+                        <div class="bg-blue-50 border-1 border-blue-200
+                     border-round px-2 py-1">
+
+                            <i class="pi pi-send text-blue-600 mr-1"></i>
+                            #{{ ruta.idEmisor }}
+
+                        </div>
+
+                        <i class="pi pi-arrow-right text-500"></i>
+
+                        <div class="bg-green-50 border-1 border-green-200
+                     border-round px-2 py-1">
+
+                            <i class="pi pi-user text-green-600 mr-1"></i>
+                            #{{ ruta.idReceptor }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="flex gap-1">
+                    <ui-icon-button icon="pi pi-pencil" tooltip="Editar"
+                        (onClick)="openModalAddEditRuta(ruta)"></ui-icon-button>
+                    <ui-icon-button icon="pi pi-trash" tooltip="Eliminar" color="danger"
+                        (onClick)="eliminarRuta(ruta)"></ui-icon-button>
+                </div>
+            </div>
+
+        </article>
+
+    </ng-template>
+
+</p-timeline>
+
+<div class="border-2 border-dashed surface-border
+         border-round-lg py-3 px-4
+         flex align-items-center justify-content-center
+         gap-2 cursor-pointer hover:surface-100" (click)="openModalAddEditRuta(selectRutaDefault)">
+
+    <i class="pi pi-plus-circle text-brand"></i>
+
+    <span class="text-600 font-medium text-sm">
+        Insertar nueva ruta
+    </span>
+
+</div>
+}

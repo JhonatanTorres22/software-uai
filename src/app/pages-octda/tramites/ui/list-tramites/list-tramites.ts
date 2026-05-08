@@ -28,6 +28,7 @@ import { ConfirmDialogService } from '@/shared/services/confirm-dialog.service';
 import { NotificationService } from '@/shared/services/notification.service';
 import { DetailsTramite } from '../details-tramite/details-tramite';
 import { ObtenerTramitesPorUsuarioUseCase } from '../../application/use-cases/tramites/obtenerTramitePorUsuario.use-case';
+import { UiLoading } from "@/shared/components/ui-loading/ui-loading";
 
 interface TagConfig {
   label: string;
@@ -38,8 +39,8 @@ interface TagConfig {
 @Component({
   selector: 'app-list-tramites',
   imports: [CommonModule, TableModule, TagModule, IconFieldModule, InputIconModule, UiButtonComponent, InputTextModule,
-    UiCardNoItems, UiIconButton, CardModule, SelectModule, FormsModule, UiSelectComponent, TimeLineTramite, DrawerModule,
-    GenerarTramite],
+    CardModule, SelectModule, FormsModule, UiSelectComponent, TimeLineTramite, DrawerModule,
+    UiLoading, UiIconButton, UiCardNoItems, GenerarTramite],
   templateUrl: './list-tramites.html',
   styleUrl: './list-tramites.scss',
 })
@@ -64,7 +65,8 @@ export class ListTramites {
   visibleGenerarTramiteDrawer = signal(false);
 
   estadoOpciones: UiSelect[] = [
-    { text: 'Todos los estados', value: '' },
+    { text: 'TODOS', value: '' },
+    { text: 'REGISTRANDO', value: 'REGISTRANDO' },
     { text: 'INGRESADO', value: 'INGRESADO' },
     { text: 'PENDIENTE', value: 'PENDIENTE' },
     { text: 'APROBADO', value: 'APROBADO' },
@@ -94,7 +96,7 @@ export class ListTramites {
   });
 
   ngOnInit(): void {
-    this.cargarTramites();
+    this.obtenerTodosTramites();
     // this.obtenerTramitesPorUsuario()
   }
 
@@ -116,7 +118,7 @@ export class ListTramites {
     this.selectedCodigoSubCategoria.set(codigo);
 
     if (!codigo) {
-      this.cargarTramites();
+      this.obtenerTodosTramites();
       return;
     }
 
@@ -150,7 +152,7 @@ export class ListTramites {
     XLSX.writeFile(workbook, `tramites-${new Date().toISOString().slice(0, 10)}.xlsx`);
   }
 
-  cargarTramites(): void {
+  obtenerTodosTramites(): void {
     this.loading.set(true);
     this.obtenerTramitesUseCase.execute().subscribe({
       next: (response) => {
@@ -316,7 +318,7 @@ export class ListTramites {
           next: (res) => {
             this.loading.set(false);
             this.notificationService.success(`${res.message}, trámite anulado correctamente`);
-            this.cargarTramites();
+            this.obtenerTodosTramites();
           },
           error: (err) => {
             console.log(err);

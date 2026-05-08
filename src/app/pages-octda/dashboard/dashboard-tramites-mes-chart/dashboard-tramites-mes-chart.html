@@ -4,15 +4,13 @@
       <h3 class="text-xl font-semibold text-900 m-0 mb-1">Trámites por Mes</h3>
       <p class="text-sm text-600 m-0">Total: <span class="font-semibold text-primary">{{ totalTramites() }}</span> trámites en el año</p>
     </div>
-    <p-button 
-      label="Exportar" 
-      icon="pi pi-download" 
-      severity="secondary"
-      [outlined]="true"
-      size="small"
+    <ui-button 
+      label="Exportar"
+      icon="pi pi-download"
+      color="secondary"
       (onClick)="exportToExcel()"
-      [disabled]="totalTramites() === 0"
-    />
+      [disabled]="totalTramites() === 0">
+    </ui-button>
   </div>
 
   <div class="p-4">

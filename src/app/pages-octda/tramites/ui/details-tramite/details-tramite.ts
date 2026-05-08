@@ -29,7 +29,7 @@ import { UiLoading } from "@/shared/components/ui-loading/ui-loading";
     ButtonModule,
     CommonModule,
     UiLoading,
-    PdfFormatoSolicitud
+    // PdfFormatoSolicitud
 ],
   templateUrl: './details-tramite.html',
   styleUrl: './details-tramite.scss',

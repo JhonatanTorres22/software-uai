@@ -1,58 +1,23 @@
-<p-card styleClass="h-full detalle-subcategoria-card">
+<p-card styleClass="h-full">
 
   <ng-template #header>
-    <div class="p-2">
-      <div class="flex align-items-start justify-content-between gap-2">
-        <div class="min-w-0">
-          <h2 class="m-0 text-lg text-900 font-semibold white-space-nowrap overflow-hidden text-overflow-ellipsis">
-            {{ selectSubCategoria().nombre }}
-          </h2>
-          <div class="mt-2">
-            <p-tag [value]="'Costo: ' + costoLabel(detalle().costo)"
-              [severity]="detalle().costo === null ? 'info' : 'success'">
-            </p-tag>
-          </div>
-        </div>
-        <div class="flex align-items-center gap-1">
-          <ui-icon-button icon="pi pi-cog" pTooltip="Configurar subcategoria" color="info" (onClick)="abrirConfiguracion()"></ui-icon-button>
-          <ui-icon-button icon="pi pi-times" pTooltip="Cerrar" color="danger" (onClick)="cerrar.emit()"></ui-icon-button>
-        </div>
-      </div>
+    <div class="flex justify-content-between gap-2 p-2">
+      <h2 class="text-base text-900 font-semibold">
+        {{ selectSubCategoria().nombre }}
+      </h2>
+      <ui-icon-button icon="pi pi-times" pTooltip="Cerrar" color="danger" (onClick)="cerrar.emit()"></ui-icon-button>
     </div>
+    <p-divider styleClass=""></p-divider>
   </ng-template>
 
+  <!-- <pre> {{listRutas() | json}} </pre> -->
   <div class="px-3 md:px-4 pb-4">
-    <p-divider styleClass=""></p-divider>
+    <!-- <pre> {{listRutas() | json}} </pre> -->
 
-    <div class="flex align-items-center justify-content-between gap-2 mb-3 flex-wrap">
-      <div class="flex align-items-center gap-2">
-        <i class="pi pi-sitemap text-brand"></i>
-        <h3 class="m-0 text-900 text-base font-semibold">Areas asignadas del tramite</h3>
-      </div>
-      <p-tag [value]="'Tiempo estimado: ' + detalle().tiempoEstimadoTotalDias + ' dias'" severity="info"></p-tag>
-    </div>
+    <app-list-rutas-subcategoria></app-list-rutas-subcategoria>
 
-    <p-timeline [value]="detalle().etapasProceso" styleClass="tramite-timeline">
-      <ng-template pTemplate="marker" let-etapa>
-        <span
-          class="inline-flex align-items-center justify-content-center w-2rem h-2rem border-circle border-1 border-blue-200 bg-blue-50 text-blue-700 text-sm font-bold">
-          {{ etapa.orden }}
-        </span>
-      </ng-template>
+    <!-- INSERTAR -->
 
-      <ng-template pTemplate="content" let-etapa>
-        <article class="border-1 surface-border border-round p-3 mb-3 bg-white">
-          <div class="flex align-items-center justify-content-between gap-2 flex-wrap">
-            <h4 class="m-0 text-900 font-semibold">{{ etapa.nombreArea }}</h4>
-            <p-tag [value]="etapa.diasEstimados + ' dia(s)'" severity="info"></p-tag>
-          </div>
-          <p class="m-0 mt-2 text-900 font-semibold text-sm">{{ etapa.responsable || etapa.nombreArea }}</p>
-          <p class="m-0 mt-1 text-600 text-sm line-height-3">
-            {{ etapa.observaciones || 'Sin accion definida para esta area.' }}
-          </p>
-        </article>
-      </ng-template>
-    </p-timeline>
 
 
     <p-divider styleClass="my-3"></p-divider>

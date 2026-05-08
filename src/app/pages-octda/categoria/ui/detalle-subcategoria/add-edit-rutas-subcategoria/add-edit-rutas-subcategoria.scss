@@ -1,0 +1,174 @@
+// Timeline horizontal de posiciones
+.position-timeline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+}
+
+// Botón para insertar en posición
+.position-insert-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-width: 2.5rem;
+  height: 3rem;
+  padding: 0.5rem;
+  border: 2px dashed #cbd5e1;
+  border-radius: 0.5rem;
+  background: white;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+
+  i {
+    font-size: 0.875rem;
+  }
+
+  &:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background: #eff6ff;
+    border-style: solid;
+  }
+
+  &.selected {
+    border-color: #10b981;
+    border-style: solid;
+    background: #10b981;
+    color: white;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  }
+
+  &.current {
+    border-color: #f59e0b;
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  &.final {
+    border-style: solid;
+    border-color: #3b82f6;
+    color: #3b82f6;
+    
+    &:hover {
+      background: #dbeafe;
+    }
+    
+    &.selected {
+      background: #10b981;
+      border-color: #10b981;
+      color: white;
+    }
+  }
+}
+
+// Mini card de ruta existente
+.ruta-mini-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 140px;
+  padding: 0.75rem;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  &.editing {
+    border-color: #f59e0b;
+    background: #fffbeb;
+    box-shadow: 0 2px 12px rgba(245, 158, 11, 0.2);
+  }
+}
+
+.ruta-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--primary-color);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+.editing .ruta-badge {
+  background: #f59e0b;
+}
+
+.ruta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.ruta-roles {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #475569;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.ruta-duration {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+  background: #f1f5f9;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.editing-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: #f59e0b;
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  i {
+    font-size: 0.625rem;
+  }
+}
+
+
