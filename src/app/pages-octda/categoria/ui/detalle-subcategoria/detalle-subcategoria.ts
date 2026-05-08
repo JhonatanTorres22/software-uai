@@ -15,9 +15,10 @@ import {
   SubCategoriaDetalle,
   SubCategoriaEtapaProceso
 } from '../../domain/entity/subCategoria.entity';
+import { ListRutasSubcategoria } from "./list-rutas-subcategoria/list-rutas-subcategoria";
 @Component({
   selector: 'app-detalle-subcategoria',
-  imports: [DividerModule, TagModule, ButtonModule, CardModule, CommonModule, UiIconButton, TimelineModule],
+  imports: [DividerModule, TagModule, ButtonModule, CardModule, CommonModule, UiIconButton, TimelineModule, ListRutasSubcategoria],
   templateUrl: './detalle-subcategoria.html',
   styleUrl: './detalle-subcategoria.scss',
 })

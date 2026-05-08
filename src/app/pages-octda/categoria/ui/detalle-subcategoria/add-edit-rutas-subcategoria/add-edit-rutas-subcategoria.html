@@ -1,0 +1,281 @@
+  @if (signal.listRutas().length > 0) {
+    <div class="mb-4">
+      <div class="position-timeline mb-3">
+        @for (ruta of signal.listRutas(); track ruta.idRuta; let idx = $index) {
+          
+          <!-- Botón de posición ANTES de cada ruta -->
+          <button
+            type="button"
+            class="position-insert-btn"
+            [class.selected]="posicionSeleccionada === idx + 1"
+            [class.current]="selectRuta().idRuta !== 0 && selectRuta().orden === idx + 1"
+            (click)="seleccionarPosicion(idx + 1)"
+            [title]="'Posición ' + (idx + 1)">
+            <i class="pi pi-plus"></i>
+            <span>{{ idx + 1 }}</span>
+          </button>
+
+          <!-- Ruta existente (mini card) -->
+          <div class="ruta-mini-card" [class.editing]="selectRuta().idRuta === ruta.idRuta">
+            <div class="ruta-badge">{{ idx + 1 }}</div>
+            <div class="ruta-info">
+              <div class="ruta-roles">
+                <span class="text-xs">{{ getRoleName(ruta.idEmisor) }}</span>
+                <i class="pi pi-arrow-right text-xs mx-1"></i>
+                <!-- <span class="text-xs">{{ getRoleName(ruta.idReceptor) }}</span> -->
+              </div>
+              <div class="ruta-duration">{{ ruta.duracion }}d</div>
+            </div>
+            @if (selectRuta().idRuta === ruta.idRuta) {
+              <div class="editing-badge">
+                <i class="pi pi-pencil"></i> Editando
+              </div>
+            }
+          </div>
+
+        }
+        
+        <!-- Botón para insertar AL FINAL -->
+        <button
+          type="button"
+          class="position-insert-btn final"
+          [class.selected]="posicionSeleccionada === signal.listRutas().length + 1"
+          [class.current]="selectRuta().idRuta !== 0 && selectRuta().orden === signal.listRutas().length + 1"
+          (click)="seleccionarPosicion(signal.listRutas().length + 1)"
+          title="Al final">
+          <i class="pi pi-plus"></i>
+          <span>{{ signal.listRutas().length + 1 }}</span>
+        </button>
+      </div>
+
+      <!-- Info de la posición seleccionada -->
+      <div class="p-2 bg-blue-50 border-round text-sm">
+        <i class="pi pi-info-circle text-blue-600 mr-2"></i>
+        <span class="text-blue-900">
+          @if (selectRuta().idRuta === 0) {
+            <strong>Nueva ruta en posición {{ posicionSeleccionada }}</strong>
+            @if (posicionSeleccionada <= signal.listRutas().length) {
+              - Las rutas desde la posición {{ posicionSeleccionada }} se desplazarán
+            } @else {
+              - Se agregará al final del flujo
+            }
+          } @else {
+            @if (posicionSeleccionada === selectRuta().orden) {
+              <strong>Manteniendo posición actual ({{ posicionSeleccionada }})</strong>
+            } @else {
+              <strong>Moviendo de posición {{ selectRuta().orden }} a {{ posicionSeleccionada }}</strong>
+            }
+          }
+        </span>
+      </div>
+    </div>
+  }
+
+  <!-- FORMULARIO COMPACTO HORIZONTAL -->
+<form [formGroup]="formRuta" class="w-full">
+
+  <!-- FILA PRINCIPAL -->
+  <div class="flex align-items-start gap-4 w-full">
+
+    <!-- EMISOR -->
+    <div class="flex-1 min-w-0">
+
+      <label class="text-sm text-700 font-semibold mb-2 block">
+        <i class="pi pi-send text-xs mr-1"></i>
+        Emisor
+      </label>
+
+      <p-autoComplete
+        formControlName="idEmisor"
+        [suggestions]="filteredEmisores"
+        (completeMethod)="searchEmisor($event)"
+        optionLabel="text"
+        placeholder="Seleccionar rol"
+        [dropdown]="true"
+        appendTo="body"
+        styleClass="w-full">
+      </p-autoComplete>
+
+      @if (
+        formRuta.controls['idEmisor'].hasError('required') &&
+        formRuta.controls['idEmisor'].touched
+      ) {
+        <small class="text-red-500 block mt-1">
+          Emisor requerido
+        </small>
+      }
+
+    </div>
+
+    <!-- FLOW -->
+    <div class="flex align-items-center justify-content-center pt-5">
+
+      <div
+        class="flex align-items-center justify-content-center
+               border-circle surface-100
+               w-2rem h-2rem flex-shrink-0">
+
+        <i class="pi pi-arrow-right text-primary text-sm"></i>
+
+      </div>
+
+    </div>
+
+    <!-- RECEPTOR -->
+    <div class="flex-1 min-w-0">
+
+      <label class="text-sm text-700 font-semibold mb-2 block">
+        <i class="pi pi-user text-xs mr-1"></i>
+        Receptor
+      </label>
+
+      <p-autoComplete
+        formControlName="idReceptor"
+        [suggestions]="filteredReceptores"
+        (completeMethod)="searchReceptor($event)"
+        optionLabel="text"
+        placeholder="Seleccionar rol"
+        [dropdown]="true"
+        appendTo="body"
+        styleClass="w-full">
+      </p-autoComplete>
+
+      @if (
+        formRuta.controls['idReceptor'].hasError('required') &&
+        formRuta.controls['idReceptor'].touched
+      ) {
+        <small class="text-red-500 block mt-1">
+          Receptor requerido
+        </small>
+      }
+
+    </div>
+
+  </div>
+
+  <!-- DURACIÓN -->
+<div class="mt-4 w-full">
+
+  <label class="text-sm text-700 font-semibold mb-2 block">
+    <i class="pi pi-clock text-xs mr-1"></i>
+    Duración
+  </label>
+
+  <div class="flex align-items-center gap-3 w-full">
+
+    <!-- INPUT -->
+    <div class="flex-1 min-w-0">
+
+      <p-inputNumber
+        formControlName="duracion"
+        suffix=" día(s)"
+        [min]="1"
+        [max]="365"
+        [showButtons]="true"
+        buttonLayout="horizontal"
+        incrementButtonIcon="pi pi-plus"
+        decrementButtonIcon="pi pi-minus"
+        styleClass="w-full">
+      </p-inputNumber>
+
+    </div>
+
+    <!-- INFO -->
+    <div
+      class="flex align-items-center gap-2
+             surface-100
+             border-round-lg
+             px-3 py-2
+             flex-shrink-0
+             white-space-nowrap">
+
+      <i class="pi pi-clock text-500 text-xs"></i>
+
+      <span class="text-sm text-700">
+
+        Aproximadamente
+
+        <span class="font-semibold text-900">
+          {{ formRuta.controls['duracion'].value || 0 }}
+        </span>
+
+        {{ formRuta.controls['duracion'].value === 1
+          ? ' día hábil'
+          : ' días hábiles'
+        }}
+
+      </span>
+
+    </div>
+
+  </div>
+
+  @if (
+    formRuta.controls['duracion'].hasError('required') &&
+    formRuta.controls['duracion'].touched
+  ) {
+    <small class="text-red-500 block mt-1">
+      Duración requerida
+    </small>
+  }
+
+</div>
+
+  <!-- PREVIEW -->
+  @if (
+    formRuta.controls['idEmisor'].value &&
+    formRuta.controls['idReceptor'].value
+  ) {
+
+    <div
+      class="mt-4
+             surface-50
+             border-1 surface-border
+             border-round-xl
+             px-4 py-3">
+
+      <div class="flex align-items-center justify-content-center gap-3">
+
+        <!-- EMISOR -->
+        <div class="flex flex-column align-items-end">
+
+          <span class="text-xs text-500 mb-1">
+            Emisor
+          </span>
+
+          <span class="font-medium text-900">
+            {{ formRuta.controls['idEmisor'].value?.text }}
+          </span>
+
+        </div>
+
+        <!-- FLOW -->
+        <div
+          class="flex align-items-center justify-content-center
+                 border-circle bg-primary
+                 w-2rem h-2rem">
+
+          <i class="pi pi-arrow-right text-white text-xs"></i>
+
+        </div>
+
+        <!-- RECEPTOR -->
+        <div class="flex flex-column align-items-start">
+
+          <span class="text-xs text-500 mb-1">
+            Receptor
+          </span>
+
+          <span class="font-medium text-900">
+            {{ formRuta.controls['idReceptor'].value?.text }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</form>

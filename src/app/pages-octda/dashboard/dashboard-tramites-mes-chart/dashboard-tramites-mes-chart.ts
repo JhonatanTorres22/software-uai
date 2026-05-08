@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { ListarTramite } from '../../tramites/domain/entity/tramite.entity';
 import { TramiteSignal } from '@/pages-octda/tramites/domain/signals/tramite.signal';
+import { UiButtonComponent } from "@/shared/components/ui-button/ui-button.component";
 
 interface MesData {
   mes: string;
@@ -15,7 +16,7 @@ interface MesData {
 
 @Component({
   selector: 'app-dashboard-tramites-mes-chart',
-  imports: [CommonModule, NgxEchartsModule, ButtonModule],
+  imports: [CommonModule, NgxEchartsModule, ButtonModule, UiButtonComponent],
   templateUrl: './dashboard-tramites-mes-chart.html',
   styleUrl: './dashboard-tramites-mes-chart.scss',
 })

@@ -7,6 +7,7 @@ import { ObtenerTramitesUseCase } from '../tramites/application/use-cases/tramit
 import { TramiteSignal } from '../tramites/domain/signals/tramite.signal';
 import { UiLoading } from "@/shared/components/ui-loading/ui-loading";
 import { DashboardSubcategoriaChart } from './dashboard-subcategoria-chart/dashboard-subcategoria-chart';
+import { DividerModule } from "primeng/divider";
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +18,8 @@ import { DashboardSubcategoriaChart } from './dashboard-subcategoria-chart/dashb
     DashboardDonutChart,
     DashboardTramitesMesChart,
     DashboardSubcategoriaChart,
-    UiLoading
+    UiLoading,
+    DividerModule
 ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],

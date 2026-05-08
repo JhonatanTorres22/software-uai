@@ -4,15 +4,10 @@
       <h3 class="text-xl font-semibold text-900 m-0 mb-1">Trámites por Subcategoría</h3>
       <p class="text-sm text-600 m-0">Top 10 subcategorías más solicitadas</p>
     </div>
-    <p-button 
-      label="Exportar" 
-      icon="pi pi-download" 
-      severity="secondary"
-      [outlined]="true"
-      size="small"
-      (onClick)="exportToExcel()"
-      [disabled]="subcategoriasData().length === 0"
-    />
+    <ui-button label="Exportar" 
+      icon="pi pi-download" color="secondary" (onClick)="exportToExcel()"
+      [disabled]="subcategoriasData().length === 0">
+    </ui-button>
   </div>
 
   <div class="p-4">
